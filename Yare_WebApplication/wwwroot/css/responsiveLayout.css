@@ -1,0 +1,598 @@
+/* `sm` applies to x-small devices (portrait phones, less than 576px)*/
+@media (max-width: 575.98px) {
+    
+    #digitalStoreFront-Container {
+        display: none;
+    }
+    
+   .loadPg-Container {
+     display: flex;
+   }
+    .deviceNotSupported-Container {
+       display: none;
+    }
+    /*Admin*/
+    #admin-mainView{
+        display:none;
+    }
+
+    .admin-deviceNotSupported-Container {
+        display: flex;
+    }
+    /*Identity*/
+    .identity-mainView {
+        display: none;
+    }
+
+    .identity-deviceNotSupported-Container {
+        display: flex;
+    }
+}
+
+/* `sm` - Small devices (landscape phones, 576px and up)*/
+@media (min-width: 576px) and (max-width: 767.98px) {
+   #digitalStoreFront-Container {
+        display: none;
+    }
+    
+   .loadPg-Container {
+     display: flex;
+   }
+    .deviceNotSupported-Container {
+       display: none;
+    }
+    /*Admin*/
+    #admin-mainView {
+        display: none;
+    }
+
+    .admin-deviceNotSupported-Container {
+        display: flex;
+    }
+    /*Identity*/
+    .identity-mainView {
+        display: none;
+    }
+
+    .identity-deviceNotSupported-Container {
+        display: flex;
+    }
+}
+
+/* `md` - Medium devices (tablets, 768px and up)*/
+@media (min-width: 768px) and (max-width: 991.98px) {
+     #digitalStoreFront-Container {
+        display: none;
+    }
+    
+   .loadPg-Container {
+     display: flex;
+   }
+    .deviceNotSupported-Container {
+       display: none;
+    }
+
+    /*Admin*/
+    #admin-mainView {
+        display: none;
+    }
+
+    .admin-deviceNotSupported-Container {
+        display: flex;
+    }
+    /*Identity*/
+    .identity-mainView {
+        display: none;
+    }
+
+    .identity-deviceNotSupported-Container {
+        display: flex;
+    }
+}
+
+/* `lg` - Large devices (desktops, 992px and up)*/
+@media (min-width: 992px) and (max-width: 1199.98px) {
+     #digitalStoreFront-Container {
+        display: none;
+    }
+    
+   .loadPg-Container {
+     display: flex;
+   }
+    .deviceNotSupported-Container {
+       display: none;
+    }
+    /*Submenu*/
+    #yareJewellery-subMenu-tabWrapper-Left {
+        width: 35%;
+    }
+
+    #yareJewellery-subMenu-tabWrapper-Right {
+        width: 65%;
+    }
+
+    .yareCollections-slider-container {
+        width: 100%;
+        padding: 5px;
+    }
+
+    .yareCollections-eachSlide-Content {
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        width: 100%;
+    }
+
+    .yareCollections-eachItem-Container {
+        overflow: hidden;
+        width: 45%;
+        height: 65%;
+        display: flex;
+        flex-direction: row;
+        padding: 5px;
+        background-color: black;
+    }
+    /*Product List*/
+    .productSpecific-listRow {
+        overflow: hidden;
+        padding: 20px;
+        width: fit-content;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 10px;
+    }
+
+    /*Details Pg*/
+    .productDetailsPg-Top-Container {
+    }
+
+    .productDetailsPg-topLeft-Container {
+        width: 60%;
+    }
+
+    .productDetailsPg-topRight-Container {
+            width: 40%;
+
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    /*Admin Layout*/
+    aside {
+        width: 22%;
+    }
+    /*Table order history*/
+    #orderTableBody th {
+        font-size: 12px;
+    }
+
+    #orderTableBody td {
+        font-size: 12px;
+    }
+    /*Table product*/
+    #productListContainer th {
+        font-size: 12px;
+    }
+
+    #productListContainer td {
+        font-size: 12px;
+    }
+    /*Table search results*/
+    #searchLiveResultsContainer th {
+        font-size: 12px;
+    }
+
+    #searchLiveResultsContainer td {
+        font-size: 12px;
+    }
+
+    .imgDisplay-uploadViewer-Container {
+        height: 15%;
+    }
+
+    .imgDisplay-uploadViewer-Btn {
+        padding: 2px;
+    }
+    /*Identity*/
+
+    #loginLeftCol {
+        padding: 40px;
+    }
+
+    #registerLeft-Container {
+        padding: 40px;
+    }
+
+}
+
+/* `xl` X-Large devices (large desktops, 1200px and up)*/
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+    #digitalStoreFront-Container {
+        display: none;
+    }
+
+    .loadPg-Container {
+        display: flex;
+    }
+
+    .deviceNotSupported-Container {
+        display: none;
+    }
+
+    /*Submenu*/
+    .subMenu-Tabs {
+        width: 80%;
+    }
+    .subMenu-Tabs_Active {
+        animation: showHeight_subMenu-Tabs forwards ease-in-out 250ms;
+    }
+
+    @keyframes showHeight_subMenu-Tabs {
+        from {
+            height: 0px;
+            display: none;
+        }
+
+        to {
+            height: 460px;
+            display: block;
+        }
+    }
+
+    @keyframes search-subMenu-Tabs_Active {
+        from {
+            height: 0px;
+            display: none;
+        }
+
+        to {
+            height: 500px;
+            display: block;
+        }
+    }
+
+    .tabClose_Btn {
+        top: 5px;
+    }
+
+    #yareJewellery-tabWrapper {
+        padding-top:5px;
+    }
+
+    .yareCollections-eachSlide-Content {
+        width: 100%;
+    }
+
+    .yareCollections-eachItem-Container {
+
+        height: 65%;
+    }
+    .yareCollections-eachItem-Title {
+        font-size: 14px;
+        margin-top: 25px;
+        transition: all ease-in-out 250ms;
+    }
+
+    .yareCollections-eachItem-Title-Active {
+        margin-top: auto;
+        transition: all ease-in-out 250ms;
+    }
+
+    .yareCollections-eachItem-Link {
+        margin-top: 50px;
+    }
+    @keyframes yareCollections-eachItem-Link-Active {
+        from {
+            margin-top: 50px;
+        }
+
+        to {
+            margin-top: 5px;
+        }
+    }
+    /*Home Pg*/
+    #slider-hmPg-Container {
+        height: 460px;
+    }
+
+    #shopBy-category-Container {
+        height: 700px;
+    }
+    .productCard-slide-prev {
+        left: 40px;
+    }
+
+    .productCard-slide-next {
+        right: 40px;
+    }
+
+    #watch-brands-Wrapper {
+        height: 1000px;
+    }
+
+    #jewellery-category-Container {
+        height: 650px;
+    }
+
+    #collection-product-Container {
+        height: 1500px;
+    }
+
+    .news-item-Container {
+        height: 700px;
+    }
+
+    .news-itemTop-Left {
+        width: 40%;
+        height: 750px;
+    }
+
+    .news-itemTop-Right {
+        padding: 40px;
+        width: 60%;
+    }
+
+    .news-itemBottom-Left {
+        padding: 40px;
+        width: 60%;
+    }
+
+    .news-itemBottom-Right {
+        width: 40%;
+        height: 750px;
+    }
+    /*Details Pg*/
+    .productDetailsPg-Top-Container {
+        height: 800px;
+    }
+
+    .productDetailsPg-topLeft-Container {
+    }
+
+    .productDetailsPg-topRight-Container {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+    /*Order Confirmation*/
+    .orderConfirmation-Wrapper {
+        overflow: hidden;
+        width: 30%;
+    }
+    /*Products List Pg*/
+    .productList-ImgBanner-Container {
+        height: 400px;
+    }
+
+    /*Collection List Pg*/
+    .collectionsList-Item {
+        height: 440px;
+    }
+    /*Admin Layout*/
+    .mainImgDisplay-viewerWrapper {
+        height: 400px;
+    }
+
+    .imgDisplay-uploadViewer-Container {
+    }
+
+    .imgDisplay-uploadViewer-Btn {
+        padding: 4px;
+    }
+    /*Identity*/
+    #loginLeftCol {
+        padding: 60px;
+    }
+
+
+    #registerLeft-Container {
+        padding: 60px;
+    }
+
+}
+
+/* `xxl` XX-Large devices (larger desktops, 1400px and up)*/
+@media (min-width: 1400px) {
+    #digitalStoreFront-Container {
+        display: none;
+    }
+
+    .loadPg-Container {
+        display: flex;
+    }
+
+    .deviceNotSupported-Container {
+        display: none;
+    }
+
+    /*Submenu*/
+    .subMenu-Tabs {
+        width: 75%;
+    }
+    .subMenu-Tabs_Active {
+        animation: showHeight_subMenu-Tabs forwards ease-in-out 250ms;
+    }
+
+    @keyframes showHeight_subMenu-Tabs {
+        from {
+            height: 0px;
+            display: none;
+        }
+
+        to {
+            height: 520px;
+            display: block;
+        }
+    }
+
+    @keyframes search-subMenu-Tabs_Active {
+        from {
+            height: 0px;
+            display: none;
+        }
+
+        to {
+            height: 560px;
+            display: block;
+        }
+    }
+
+    .tabClose_Btn {
+        top: 5px;
+    }
+
+    #yareJewellery-tabWrapper {
+        padding-top: 5px;
+    }
+
+    .yareCollections-eachSlide-Content {
+        width: 100%;
+    }
+
+    .yareCollections-eachItem-Container {
+        height: 65%;
+    }
+
+    .yareCollections-eachItem-Title {
+        font-size: 14px;
+        margin-top: 25px;
+        transition: all ease-in-out 250ms;
+    }
+
+    .yareCollections-eachItem-Title-Active {
+        margin-top: auto;
+        transition: all ease-in-out 250ms;
+    }
+
+    .yareCollections-eachItem-Link {
+        margin-top: 50px;
+    }
+
+    @keyframes yareCollections-eachItem-Link-Active {
+        from {
+            margin-top: 50px;
+        }
+
+        to {
+            margin-top: 5px;
+        }
+    }
+    /*Home Pg*/
+    #slider-hmPg-Container {
+        overflow: hidden;
+        width: 100%;
+        height: 500px;
+    }
+    #shopBy-category-Container {
+        height: 800px;
+    }
+    .productCard-slide-prev {
+        left: 170px;
+    }
+
+    .productCard-slide-next {
+        right: 170px;
+    }
+
+    #watch-brands-Wrapper {
+        height: 1200px;
+    }
+
+    #jewellery-category-Container {
+        height: 650px;
+    }
+
+    #collection-product-Container {
+        height: 1600px;
+    }
+
+    .news-item-Container {
+        height: 750px;
+    }
+
+    .news-itemTop-Left {
+        width: 40%;
+        height: 850px;
+    }
+
+    .news-itemTop-Right {
+        padding: 80px;
+        width: 60%;
+    }
+
+    .news-itemBottom-Left {
+        padding: 80px;
+        width: 60%;
+    }
+
+    .news-itemBottom-Right {
+        width: 40%;
+        height: 850px;
+    }
+    /*Details Pg*/
+    .productDetailsPg-Top-Container {
+                min-height: 850px;
+    }
+    .productDetailsPg-topLeft-Container {
+        width: 60%;
+    }
+    .productDetailsPg-topRight-Container {
+        width: 40%;
+        padding-left: 70px;
+        padding-right: 70px;
+    }
+    /*Products List Pg*/
+    .productList-ImgBanner-Container {
+        height: 400px;
+    }
+    .productList-ImgBanner-Text {
+        padding: 50px;
+    }
+    /*Shopping Cart*/
+    #shoppingBag-Container {
+        width: 35%;
+    }
+    /*Checkout*/
+    .checkout-card-body {
+        margin:auto;
+        width: 90%;
+    }
+
+    .checkout-productLeft-Item {
+        width: 20%;
+    }
+
+    /*Order Confirmation*/
+    .orderConfirmation-Wrapper {
+        overflow: hidden;
+        width: 22%;
+    }
+
+    /*Admin Layout*/
+    aside {
+        width: 15%;
+    }
+    #admin-contentView {
+        overflow: hidden;
+        width: 85%;
+    }
+    .mainImgDisplay-viewerWrapper {
+        height: 500px;
+    }
+
+    .imgDisplay-uploadViewer-Btn {
+        padding: 5px;
+    }
+
+    /*Identity*/
+    #loginLeftCol {
+        padding: 80px;
+    }
+
+    #registerLeft-Container {
+        padding: 80px;
+    }
+
+}

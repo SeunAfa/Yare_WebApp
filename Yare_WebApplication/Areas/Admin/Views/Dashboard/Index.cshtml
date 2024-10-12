@@ -1,0 +1,1448 @@
+﻿@model Yare.Models.ApplicationUser;
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+<style>
+    .positive {
+        color: green;
+    }
+
+    .negative {
+        color: red;
+    }
+
+    .neutral {
+    color: white;
+}
+</style>
+
+<div id="dashboard-titleContainer">
+
+    <h1 id="DashboardTitle">Analytics</h1>
+
+    <div class="analyticsControls-Container">
+        <div class="analytics-Btn activeAnalytics-Btn" data-tab="1">Overview</div>
+        <div class="analytics-Btn" data-tab="2">Sales</div>
+        <div class="analytics-Btn" data-tab="3">Products</div>
+        <div class="analytics-Btn" data-tab="4">Inventory</div>
+    </div>
+
+</div>
+<hr />
+<div id="kpiCard-Container">
+
+    <div class="kpiCard-Item">
+        <div class="title-percentage">
+            <p class="custom-dt-Title">Revenue</p>
+            <p class="custom-dd-Percentage custom-dd-revenuePercentage">@ViewBag.RevenueChangePercentage%</p>
+        </div>
+        <div class="custom-dd-Amount custom-dd-revenueAmount">
+            @if (ViewBag.CurrentRevenue != null)
+            {
+                <p>@(((double)ViewBag.CurrentRevenue).ToString("c"))</p>
+            }
+            else
+            {
+                <p>0</p>
+            }
+        </div>
+        <p class="dataPeriod">15 Day Insights</p>
+    </div>
+
+    <div class="kpiCard-Item">
+        <div class="title-percentage">
+            <p class="custom-dt-Title">Average Order</dt>
+            <p class="custom-dd-Percentage custom-dd-averageOrderPercentage">@ViewBag.AverageOrderChangePercentage%</dd>
+        </div>
+        <div class="custom-dd-Amount">
+            @if (ViewBag.CurrentAverageOrderAverage != null)
+            {
+                <p>@(((double)ViewBag.CurrentAverageOrderAverage).ToString("c"))</p>
+            }
+            else
+            {
+                <p>0</p>
+            }
+        </div>
+        <p class="dataPeriod">15 Day Insights</p>
+    </div>
+
+    <div class="kpiCard-Item">
+        <div class="title-percentage">
+            <p class="custom-dt-Title">Accounts</p>
+            <p class="custom-dd-Percentage custom-dd-accountsPercentage">@ViewBag.AccountsTotalChangePercentage%</p>
+        </div>
+        <div class="custom-dd-Amount">
+            @if (ViewBag.CurrentAccountsTotal != null)
+            {
+                <p>@(((double)ViewBag.CurrentAccountsTotal).ToString())</p>
+            }
+            else
+            {
+                <p>0</p>
+            }
+        </div>
+        <p class="dataPeriod">15 Day Insights</p>
+    </div>
+
+    <div class="kpiCard-Item">
+        <div class="title-percentage">
+            <p class="custom-dt-Title">Processing Orders</p>
+            <p class="custom-dd-Percentage custom-dd-processingOrdersPercentage">@ViewBag.ProcessingOrdersChangePercentage%</p>
+        </div>
+        <div class="custom-dd-Amount">
+            @if (ViewBag.CurrentProcessingOrders != null)
+            {
+                <p>@(((double)ViewBag.CurrentProcessingOrders).ToString())</p>
+            }
+            else
+            {
+                <p>0</p>
+            }
+        </div>
+        <p class="dataPeriod">15 Day Insights</p>
+    </div>
+
+    <div class="kpiCard-Item">
+        <div class="title-percentage">
+            <p class="custom-dt-Title">Expenses</p>
+            <p class="custom-dd-Percentage custom-dd-expensesPercentage">@ViewBag.ExpensesChangePercentage%</p>
+        </div>
+        <div class="custom-dd-Amount">
+            @if (ViewBag.CurrentExpense != null)
+            {
+                <p>-@(((double)ViewBag.CurrentExpense).ToString("c"))</p>
+            }
+            else
+            {
+                <p>0</p>
+            }
+        </div>
+        <p class="dataPeriod">15 Day Insights</p>
+    </div>
+
+    <div class="kpiCard-Item">
+        <div class="title-percentage">
+            <p class="custom-dt-Title">Total Orders</p>
+            <p class="custom-dd-Percentage custom-dd-totalOrdersPercentage">@ViewBag.TotalOrdersChangePercentage%</p>
+        </div>
+        <div class="custom-dd-Amount">
+            @if (ViewBag.CurrentTotalOrders != null)
+            {
+                <p>@(((double)ViewBag.CurrentTotalOrders).ToString())</p>
+            }
+            else
+            {
+                <p>0</p>
+            }
+        </div>
+        <p class="dataPeriod">15 Day Insights</p>
+    </div>
+
+    <div class="kpiCard-Item">
+        <div class="title-percentage">
+            <p class="custom-dt-Title">Order Invoices</p>
+            <p class="custom-dd-Percentage custom-dd-orderInvoicesPercentage">@ViewBag.OrderInvoicesChangePercentage%</p>
+        </div>
+        <div class="custom-dd-Amount">
+            @if (ViewBag.CurrentOrderInvoices != null)
+            {
+                <p>@(((double)ViewBag.CurrentOrderInvoices).ToString())</p>
+            }
+            else
+            {
+                <p>0</p>
+            }
+        </div>
+        <p class="dataPeriod">15 Day Insights</p>
+    </div>
+
+    <div class="kpiCard-Item">
+        <div class="title-percentage">
+            <p class="custom-dt-Title">Cancelled Orders</p>
+            <p class="custom-dd-Percentage custom-dd-cancelledOrdersPercentage">@ViewBag.CancelledOrdersChangePercentage%</p>
+        </div>
+        <div class="custom-dd-Amount">
+            @if (ViewBag.currentCancelledOrders != null)
+            {
+                <p>@(((double)ViewBag.currentCancelledOrders).ToString())</p>
+            }
+            else
+            {
+                <p>0</p>
+            }
+        </div>
+        <p class="dataPeriod">15 Day Insights</p>
+    </div>
+
+</div>
+
+<sectcion id="Overview-Data" class="activeDataAnalytics-Tab dataAnalytics-Tab dataAnalytics_Tab-1">
+
+    <div id="overviewData-top-Container">
+
+        <div class="overviewData-top-Left">
+            <canvas class="revenueVsOrdersChart"></canvas>
+        </div>
+
+        <div class="overviewData-top-Right">
+            <canvas class="productsSoldByCategoryChart"></canvas>
+        </div>
+
+    </div>
+
+    <div id="overviewData-middle-Container">
+        <canvas class="bestSellingProductsChart"></canvas>
+    </div>
+
+    <div id="overviewData-bottom-Container">
+
+        <div id="overviewData-bottom-topContainer">
+            <canvas class="salesMultiPeriodChart"></canvas>
+        </div>
+
+        <div id="overviewData-bottom-bottomContainer">
+
+            <div class="overviewData-bottom-bottomLeftContainer">
+                <canvas id="DeliveryStatusChart"></canvas>
+            </div>
+
+            <div class="overviewData-bottom-bottomRightContainer">
+
+                @{
+                    var pendingOrders = ViewBag.PendingOrders;
+                    var approvedOrders = ViewBag.ApprovedOrders;
+                    var processingOrders = ViewBag.ProcessingOrders;
+                    var shippedOrders = ViewBag.ShippedOrders;
+                    var cancelledOrders = ViewBag.CancelledOrders;
+                    var refundedOrders = ViewBag.RefundedOrders;
+                }
+
+                <div class="deliveryStatusChart-Key">
+
+                    <div class="deliveryStatusChart-statusKey">
+
+                        <div class="deliveryStatusChart-statusKey-Colour deliveryStatusChart-statusKey-Colour-1"></div>
+                        <p>Pending</p>
+
+                    </div>
+
+                    <p class="text-black">@pendingOrders</p>
+
+                </div>
+
+                <div class="deliveryStatusChart-Key">
+
+                    <div class="deliveryStatusChart-statusKey">
+
+                        <div class="deliveryStatusChart-statusKey-Colour deliveryStatusChart-statusKey-Colour-2"></div>
+                        <p>Approved</p>
+
+                    </div>
+
+                    <p>@approvedOrders</p>
+
+                </div>
+
+                <div class="deliveryStatusChart-Key">
+
+                    <div class="deliveryStatusChart-statusKey">
+
+                        <div class="deliveryStatusChart-statusKey-Colour deliveryStatusChart-statusKey-Colour-3"></div>
+                        <p>Processing </p>
+
+                    </div>
+
+                    <p>@processingOrders</p>
+
+                </div>
+
+                <div class="deliveryStatusChart-Key">
+
+                    <div class="deliveryStatusChart-statusKey">
+
+                        <div class="deliveryStatusChart-statusKey-Colour deliveryStatusChart-statusKey-Colour-4"></div>
+                        <p>Shipped</p>
+
+                    </div>
+
+                    <p>@shippedOrders</p>
+
+                </div>
+
+                <div class="deliveryStatusChart-Key">
+
+                    <div class="deliveryStatusChart-statusKey">
+
+                        <div class="deliveryStatusChart-statusKey-Colour deliveryStatusChart-statusKey-Colour-5"></div>
+                        <p>Cancelled</p>
+
+                    </div>
+
+                    <p>@cancelledOrders</p>
+
+                </div>
+
+                <div class="deliveryStatusChart-Key">
+
+                    <div class="deliveryStatusChart-statusKey">
+
+                        <div class="deliveryStatusChart-statusKey-Colour deliveryStatusChart-statusKey-Colour-6"></div>
+                        <p>Refunded</p>
+
+                    </div>
+
+                    <p>@refundedOrders</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</sectcion>
+
+<section id="Sales-Data" class="dataAnalytics-Tab dataAnalytics_Tab-2">
+
+    <div id="salesData-top-Container">
+        <canvas class="bestSellingProductsChart"></canvas>
+    </div>
+
+    <div id="salesData-middle-Container">
+        <div id="salesData-middle-leftContainer">
+            <canvas class="revenueVsOrdersChart"></canvas>
+        </div>
+        <div id="salesData-middle-rightContainer">
+            <canvas class="productsSoldByCategoryChart"></canvas>
+        </div>
+    </div>
+
+    <div id="salesData-bottom-Container">
+        <div id="salesData-bottom-topContainer">
+            <canvas class="salesMultiPeriodChart"></canvas>
+        </div>
+        <div id="salesData-bottom-bottomContainer">
+            <canvas class="AllOrderTotalByUsers"></canvas>
+        </div>
+    </div>
+
+</section>
+
+<section id="Product-Data" class="dataAnalytics-Tab dataAnalytics_Tab-3">
+
+    <div id="productData-top-Container">
+        <div class="productData-top-leftContainer">
+            <canvas class="ProductsByCategoryChart"></canvas>
+        </div>
+        <div class="productData-top-rightContainer">
+            <canvas class="ProductsByGenderChart"></canvas>
+        </div>
+    </div>
+
+    <div id="productData-middle-Container">
+        <div class="productData-middle-topContainer">
+            <canvas class="ProductInventoryChart"></canvas>
+        </div>
+        <div class="productData-middle-bottomContainer">
+            <canvas class="ProductPriceChart"></canvas>
+        </div>
+    </div>
+
+    <div id="productData-bottom-Container">
+        <canvas class="bestSellingProductsChart"></canvas>
+    </div>
+
+</section>
+
+<section id="Logistic-Data" class="dataAnalytics-Tab dataAnalytics_Tab-4">
+
+    <div id="logisticData-top-Container">
+        <div class="logisticData-top-leftContainer">
+            <canvas class="ProductsByCategoryChart"></canvas>
+        </div>
+        <div class="logisticData-top-rightContainer">
+            <canvas class="ProductsByGenderChart"></canvas>
+        </div>
+    </div>
+
+    <div class="logisticData-Container">
+        <canvas class="ProductInventoryChart"></canvas>
+    </div>
+
+    <div class="logisticData-Container">
+        <canvas class="bestSellingProductsChart"></canvas>
+    </div>
+
+</section>
+
+@section scripts {
+
+    <script>
+
+        ////////////////////////////////////////////
+        //// Data Analaytics tab Component
+        const dataAnalyticsTabs = document.querySelectorAll(".dataAnalytics-Tab");
+        const analyticsBtns = document.querySelectorAll(".analytics-Btn");
+
+        const showDataAnalyticsTab = (e) => {
+            const clicked = e.target.closest(".analytics-Btn");
+            if (!clicked) return;
+
+            // Remove active classes from all buttons and tabs
+            analyticsBtns.forEach(btn => btn.classList.remove("activeAnalytics-Btn"));
+            dataAnalyticsTabs.forEach(tab => tab.classList.remove("activeDataAnalytics-Tab"));
+
+            // Add active class to clicked button
+            clicked.classList.add("activeAnalytics-Btn");
+
+            // Add active class to corresponding tab
+            const tabNumber = clicked.dataset.tab;
+            const activeTab = document.querySelector(`.dataAnalytics_Tab-${tabNumber}`);
+            if (activeTab) activeTab.classList.add("activeDataAnalytics-Tab");
+        };
+
+        const analyticsControlsContainer = document.querySelector(".analyticsControls-Container");
+        analyticsControlsContainer.addEventListener("click", showDataAnalyticsTab);
+
+        //Percentage Class Change KPI cards
+        function applyPercentageClass(percentageElement) {
+            const percentageText = percentageElement.textContent;
+            const percentageValue = parseFloat(percentageText.replace('%', ''));
+
+            if (percentageValue > 0) {
+                percentageElement.classList.add('positive');
+                percentageElement.classList.remove('negative');
+                percentageElement.classList.remove('neutral');
+            } else if (percentageValue < 0) {
+                percentageElement.classList.add('negative');
+                percentageElement.classList.remove('positive');
+                percentageElement.classList.remove('neutral');
+            } else {
+                percentageElement.classList.add('neutral');
+                percentageElement.classList.remove('positive');
+                percentageElement.classList.remove('negative');
+            }
+        }
+
+        // Apply to all KPI cards
+        document.querySelectorAll('.custom-dd-Percentage').forEach(applyPercentageClass);
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+                createRevenueVsExpensesCharts();
+                createProductsSoldByCategoryCharts();
+                createBestSellingProductsChart();
+                createDeliveryStatusChart();
+                createSalesMultiPeriodCharts();
+                createAllTotalOrdersByUser();
+                createProductsByCategoryCharts();
+                createProductsByGenderCharts();
+                createProductInventoryCharts();
+                createProductPriceCharts();
+            
+        });
+
+        function createRevenueVsExpensesCharts() {
+            var canvases = document.querySelectorAll(".revenueVsOrdersChart");
+
+            canvases.forEach(function (canvas) {
+                var ctx = canvas.getContext("2d");
+                var orderChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [
+                            {
+                                label: 'Total Revenue',
+                                data: [],
+                                backgroundColor: 'green',
+                                borderColor: 'green',
+                                borderWidth: 1,
+                                pointBackgroundColor: 'green',
+                                pointBorderWidth: 1,
+                                tension: 0.4,
+                                pointRadius: 2,
+                                pointHoverRadius: 4
+                            },
+                            {
+                                label: 'Total Expenses',
+                                data: [],
+                                backgroundColor: 'red',
+                                borderColor: 'red',
+                                borderWidth: 1,
+                                pointBackgroundColor: 'red',
+                                pointBorderWidth: 1,
+                                tension: 0.4,
+                                pointRadius: 2,
+                                pointHoverRadius: 4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                ticks: {
+                                    display: true,
+                                    color: 'black',
+                                    display: false
+                                },
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)',
+                                    borderWidth: 0.5,
+                                    borderColor: 'rgba(0, 0, 0, 0.1)'
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    color: 'black'
+                                },
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)',
+                                    borderWidth: 0.5,
+                                    borderColor: 'rgba(0, 0, 0, 0.1)'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    usePointStyle: true,
+                                    pointStyle: 'circle',
+                                    boxWidth: 5,
+                                    boxHeight: 5,
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Revenue VS Expenses',
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            tooltip: {
+                                enabled: true,
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        return tooltipItem.dataset.label + ': £' + Number(tooltipItem.raw).toLocaleString('en-GB', {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                $.when(
+                    $.ajax({
+                        url: '@Url.Action("Revenue")',
+                        type: 'GET'
+                    }),
+                    $.ajax({
+                        url: '@Url.Action("Expenses")',
+                        type: 'GET'
+                    })
+                ).done(function (revenueData, expensesData) {
+                    var revenueResponse = revenueData[0];
+                    var expensesResponse = expensesData[0];
+
+                    orderChart.data.labels = revenueResponse.days;
+                    orderChart.data.datasets[0].data = revenueResponse.orderTotals;
+                    orderChart.data.datasets[1].data = expensesResponse.orderExpenses;
+
+                    orderChart.update();
+                });
+            });
+        }
+
+        function createProductsSoldByCategoryCharts() {
+
+            var canvases = document.querySelectorAll(".productsSoldByCategoryChart");
+
+            canvases.forEach(function (canvas) {
+                var ctx = canvas.getContext("2d");
+                var productCategoryChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Products Sold',
+                            data: [],
+                            backgroundColor: [
+                                '#2d53de',
+                                '#553772',
+                                '#8f3b76'
+                            ],
+                            borderColor: [
+                                '#2d53de',
+                                '#553772',
+                                '#8f3b76'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    usePointStyle: true,
+                                    pointStyle: 'circle',
+                                    boxWidth: 5,
+                                    boxHeight: 5,
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Products Sold By Category',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("ProductsSoldByCategory")',
+                    type: 'GET',
+                    success: function (data) {
+                        productCategoryChart.data.labels = Object.keys(data);
+                        productCategoryChart.data.datasets[0].data = Object.values(data);
+                        productCategoryChart.update();
+                    },
+                    error: function (error) {
+                        console.error('Error fetching product category data:', error);
+                    }
+                });
+            });
+        }
+
+        function createBestSellingProductsChart() {
+
+            var canvases = document.querySelectorAll(".bestSellingProductsChart");
+
+            canvases.forEach(function (canvas) {
+                var ctx = canvas.getContext("2d");
+                var bestSellingProductsChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Sold Count',
+                            data: [],
+                            backgroundColor: '#2d53de',
+                            borderColor: '#2d53de',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            },
+                            x: {
+                                ticks: {
+                                    display: false
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Best Selling Products',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+
+                // AJAX call to fetch data using jQuery
+                $.ajax({
+                    url: '@Url.Action("BestSellingProducts", "Dashboard")',
+                    type: 'GET',
+                    success: function (data) {
+
+                        if (Array.isArray(data) && data.length > 0 && data[0].hasOwnProperty('productName') && data[0].hasOwnProperty('totalCount')) {
+                            var labels = data.map(product => product.productName);
+                            var counts = data.map(product => product.totalCount);
+
+                            bestSellingProductsChart.data.labels = labels;
+                            bestSellingProductsChart.data.datasets[0].data = counts;
+                            bestSellingProductsChart.update();
+                        } else {
+                            console.error('Unexpected data format:', data);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('Error fetching best selling products data:', textStatus, errorThrown);
+                        console.error('Response:', jqXHR.responseText);
+                    }
+                });
+            });
+        }
+
+        function createDeliveryStatusChart() {
+            var canvas = document.getElementById('DeliveryStatusChart');
+            var ctx = canvas.getContext('2d');
+
+            var deliveryStatusChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Order Status',
+                        data: [],
+                        backgroundColor: [
+                            '#2d53de', // Pending
+                            '#553772', // Approved
+                            '#8f3b76', // Processing
+                            '#c7417b', // Shipped
+                            '#f5477e', // Cancelled
+                            '#000000'  // Refunded
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                display: true
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                display: true
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Delivery Status',
+                            font: {
+                                size: 14
+                            }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            // AJAX call to fetch data using jQuery
+            $.ajax({
+                url: '@Url.Action("DeliveryStatus", "Dashboard")', // Use Razor syntax to generate the URL
+                type: 'GET',
+                success: function (data) {
+                    if (typeof data === 'object') {
+                        var labels = Object.keys(data);
+                        var counts = Object.values(data);
+
+                        deliveryStatusChart.data.labels = labels;
+                        deliveryStatusChart.data.datasets[0].data = counts;
+                        deliveryStatusChart.update();
+                    } else {
+                        console.error('Unexpected data format:', data);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error('Error fetching delivery status data:', textStatus, errorThrown);
+                    console.error('Response:', jqXHR.responseText);
+                }
+            });
+        }
+
+        function createSalesMultiPeriodCharts() {
+
+            var canvases = document.querySelectorAll(".salesMultiPeriodChart");
+
+            canvases.forEach(function (canvas) {
+                var ctx = canvas.getContext("2d");
+                var salesChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [
+                            {
+                                label: 'Daily Sales',
+                                data: [],
+                                backgroundColor: '#2d53de',
+                                borderColor: '#2d53de',
+                                borderWidth: 1,
+                                pointBackgroundColor: '#2d53de',
+                                pointBorderWidth: 1,
+                                tension: 0.4,
+                                pointRadius: 2,
+                                pointHoverRadius: 4,
+                                spanGaps: true
+                            },
+                            {
+                                label: 'Weekly Sales',
+                                data: [],
+                                backgroundColor: '#553772',
+                                borderColor: '#553772',
+                                borderWidth: 1,
+                                pointBackgroundColor: '#553772',
+                                pointBorderWidth: 1,
+                                tension: 0.4,
+                                pointRadius: 2,
+                                pointHoverRadius: 4,
+                                spanGaps: true
+                            },
+                            {
+                                label: 'Monthly Sales',
+                                data: [],
+                                backgroundColor: '#8f3b76',
+                                borderColor: '#8f3b76',
+                                borderWidth: 1,
+                                pointBackgroundColor: '#8f3b76',
+                                pointBorderWidth: 1,
+                                tension: 0.4,
+                                pointRadius: 2,
+                                pointHoverRadius: 4,
+                                spanGaps: true
+                            },
+                            {
+                                label: 'Yearly Sales',
+                                data: [],
+                                backgroundColor: '#c7417b',
+                                borderColor: '#c7417b',
+                                borderWidth: 1,
+                                pointBackgroundColor: '#c7417b',
+                                pointBorderWidth: 1,
+                                tension: 0.4,
+                                pointRadius: 2,
+                                pointHoverRadius: 4,
+                                spanGaps: true
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                ticks: {
+                                    display: true,
+                                    color: 'black',
+                                    display: false
+                                },
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)',
+                                    borderWidth: 0.5,
+                                    borderColor: 'rgba(0, 0, 0, 0.1)'
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    color: 'black'
+                                },
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)',
+                                    borderWidth: 0.5,
+                                    borderColor: 'rgba(0, 0, 0, 0.1)'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    usePointStyle: true,
+                                    pointStyle: 'circle',
+                                    boxWidth: 5,
+                                    boxHeight: 5,
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Sales By Periods',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            tooltip: {
+                                enabled: true,
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        return tooltipItem.dataset.label + ': £' + Number(tooltipItem.raw).toLocaleString('en-GB', {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                var salesData = {
+                    daily: { labels: [], data: [] },
+                    weekly: { labels: [], data: [] },
+                    monthly: { labels: [], data: [] },
+                    yearly: { labels: [], data: [] }
+                };
+
+                // Fetch data for all periods using AJAX
+                $.when(
+                    $.ajax({
+                        url: '@Url.Action("SalesDay", "Dashboard")',
+                        type: 'GET'
+                    }),
+                    $.ajax({
+                        url: '@Url.Action("SalesWeekly", "Dashboard")',
+                        type: 'GET'
+                    }),
+                    $.ajax({
+                        url: '@Url.Action("SalesMonth", "Dashboard")',
+                        type: 'GET'
+                    }),
+                    $.ajax({
+                        url: '@Url.Action("SalesYear", "Dashboard")',
+                        type: 'GET'
+                    })
+                ).done(function (dailyData, weeklyData, monthlyData, yearlyData) {
+                    salesData.daily.labels = dailyData[0].days || [];
+                    salesData.daily.data = dailyData[0].orderTotals || [];
+                    salesData.weekly.labels = weeklyData[0].weeks || [];
+                    salesData.weekly.data = weeklyData[0].orderTotals || [];
+                    salesData.monthly.labels = monthlyData[0].months || [];
+                    salesData.monthly.data = monthlyData[0].orderTotals || [];
+                    salesData.yearly.labels = yearlyData[0].years || [];
+                    salesData.yearly.data = yearlyData[0].orderTotals || [];
+
+                    // Ensure data arrays are defined before processing
+                    console.log('Daily Data:', salesData.daily);
+                    console.log('Weekly Data:', salesData.weekly);
+                    console.log('Monthly Data:', salesData.monthly);
+                    console.log('Yearly Data:', salesData.yearly);
+
+                    // Merge all unique labels (dates)
+                    var allLabels = [...new Set([
+                        ...salesData.daily.labels,
+                        ...salesData.weekly.labels,
+                        ...salesData.monthly.labels,
+                        ...salesData.yearly.labels
+                    ])].sort();
+
+                    salesChart.data.labels = allLabels;
+
+                    // Populate datasets with respective data
+                    salesChart.data.datasets[0].data = alignData(salesData.daily.labels, salesData.daily.data, allLabels);
+                    salesChart.data.datasets[1].data = alignData(salesData.weekly.labels, salesData.weekly.data, allLabels);
+                    salesChart.data.datasets[2].data = alignData(salesData.monthly.labels, salesData.monthly.data, allLabels);
+                    salesChart.data.datasets[3].data = alignData(salesData.yearly.labels, salesData.yearly.data, allLabels);
+
+                    // Update the chart
+                    salesChart.update();
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    console.error('Error fetching sales data:', textStatus, errorThrown);
+                });
+
+                function alignData(labels, data, allLabels) {
+                    var alignedData = new Array(allLabels.length).fill(null);
+                    labels.forEach((label, index) => {
+                        var pos = allLabels.indexOf(label);
+                        if (pos !== -1) {
+                            alignedData[pos] = data[index];
+                        }
+                    });
+                    return alignedData;
+                }
+            });
+        }
+
+        function createAllTotalOrdersByUser() {
+
+            var canvases = document.querySelectorAll(".AllOrderTotalByUsers");
+
+            canvases.forEach(function (canvas) {
+                var ctx = canvas.getContext("2d");
+                var orderDataByUsersChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: [],
+                        datasets: [
+                            {
+                                label: 'Total Orders By User',
+                                data: [],
+                                backgroundColor: '#2d53de',
+                                borderColor: '#2d53de',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Average Orders By User',
+                                data: [],
+                                backgroundColor: '#553772',
+                                borderColor: '#553772',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            },
+                            x: {
+                                ticks: {
+                                    autoSkip: false,
+                                    display: false
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Total and Average Orders By Users',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            legend: {
+                                display: true,
+                                labels: {
+                                    usePointStyle: true,
+                                    pointStyle: 'circle',
+                                    boxWidth: 5,
+                                    boxHeight: 5,
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        // Format the value as currency
+                                        let value = context.raw;
+                                        return '£' + value.toLocaleString();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("AllOrderDataByUsers", "Dashboard")',
+                    type: 'GET',
+                    success: function (data) {
+                        console.log('Data from server:', data);
+
+                        if (data && Array.isArray(data.labels) && Array.isArray(data.totalData) && Array.isArray(data.averageData) &&
+                            data.labels.length === data.totalData.length && data.labels.length === data.averageData.length) {
+                            var labels = data.labels;
+                            var totalAmounts = data.totalData;
+                            var averageAmounts = data.averageData;
+
+                            orderDataByUsersChart.data.labels = labels;
+                            orderDataByUsersChart.data.datasets[0].data = totalAmounts;
+                            orderDataByUsersChart.data.datasets[1].data = averageAmounts;
+                            orderDataByUsersChart.update();
+                        } else {
+                            console.error('Unexpected data format:', data);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('Error fetching order data by users:', textStatus, errorThrown);
+                        console.error('Response:', jqXHR.responseText);
+                    }
+                });
+            });
+        }
+
+        function createProductsByCategoryCharts() {
+
+            var canvases = document.querySelectorAll(".ProductsByCategoryChart");
+
+            canvases.forEach(function (canvas) {
+                var ctx = canvas.getContext("2d");
+                var productCategoryChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Products Count',
+                            data: [],
+                            backgroundColor: [],
+                            borderColor: [],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    usePointStyle: true,
+                                    pointStyle: 'circle',
+                                    boxWidth: 5,
+                                    boxHeight: 5,
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Product Count By Category',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("ProductsByCategory", "Dashboard")',
+                    type: 'GET',
+                    success: function (data) {
+                        console.log("Data fetched successfully:", data);
+                        productCategoryChart.data.labels = data.labels;
+                        productCategoryChart.data.datasets[0].data = data.datasets[0].data;
+                        productCategoryChart.data.datasets[0].backgroundColor = data.datasets[0].backgroundColor;
+                        productCategoryChart.data.datasets[0].borderColor = data.datasets[0].borderColor;
+                        productCategoryChart.update();
+                    },
+                    error: function (error) {
+                        console.error('Error fetching product category data:', error);
+                    }
+                });
+            });
+        }
+
+        function createProductsByGenderCharts() {
+
+            var canvases = document.querySelectorAll(".ProductsByGenderChart");
+
+            canvases.forEach(function (canvas) {
+                var ctx = canvas.getContext("2d");
+                var productCategoryChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Gender Count',
+                            data: [],
+                            backgroundColor: [],
+                            borderColor: [],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    usePointStyle: true,
+                                    pointStyle: 'circle',
+                                    boxWidth: 5,
+                                    boxHeight: 5,
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Product Count By Gender',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // AJAX call to fetch data
+                $.ajax({
+                    url: '@Url.Action("ProductsByGender", "Dashboard")',
+                    type: 'GET',
+                    success: function (data) {
+                        console.log("Data fetched successfully:", data);
+                        productCategoryChart.data.labels = data.labels;
+                        productCategoryChart.data.datasets[0].data = data.datasets[0].data;
+                        productCategoryChart.data.datasets[0].backgroundColor = data.datasets[0].backgroundColor;
+                        productCategoryChart.data.datasets[0].borderColor = data.datasets[0].borderColor;
+                        productCategoryChart.update();
+                    },
+                    error: function (error) {
+                        console.error('Error fetching product category data:', error);
+                    }
+                });
+            });
+        }
+
+        function createProductInventoryCharts() {
+            var canvases = document.querySelectorAll(".ProductInventoryChart");
+
+            canvases.forEach(function (canvas) {
+                var ctx = canvas.getContext("2d");
+                var orderChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [
+                            {
+                                label: 'Quantity',
+                                data: [],
+                                backgroundColor: '#2d53de',
+                                borderColor: '#2d53de',
+                                borderWidth: 1,
+                                pointBackgroundColor: '#2d53de',
+                                pointBorderWidth: 1,
+                                tension: 0.4,
+                                pointRadius: 2,
+                                pointHoverRadius: 4
+                            },
+                            {
+                                label: 'Remaining Quantity',
+                                data: [],
+                                backgroundColor: '#553772',
+                                borderColor: '#553772',
+                                borderWidth: 1,
+                                pointBackgroundColor: '#553772',
+                                pointBorderWidth: 1,
+                                tension: 0.4,
+                                pointRadius: 2,
+                                pointHoverRadius: 4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                ticks: {
+                                    display: false,
+                                    color: 'black'
+                                },
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)',
+                                    borderWidth: 0.5,
+                                    borderColor: 'rgba(0, 0, 0, 0.1)'
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    color: 'black'
+                                },
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)',
+                                    borderWidth: 0.5,
+                                    borderColor: 'rgba(0, 0, 0, 0.1)'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    usePointStyle: true,
+                                    pointStyle: 'circle',
+                                    boxWidth: 5,
+                                    boxHeight: 5,
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Product Quantities and Remaining Quantities',
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            tooltip: {
+                                enabled: true,
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        return tooltipItem.dataset.label + ': ' + Number(tooltipItem.raw).toLocaleString('en-GB', {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                $.when(
+                    $.ajax({
+                        url: '@Url.Action("ProductQuantity")',
+                        type: 'GET'
+                    }),
+                    $.ajax({
+                        url: '@Url.Action("ProductRemainingQuantity")',
+                        type: 'GET'
+                    })
+                ).done(function (quantityData, remainingQuantityData) {
+                    console.log("Quantity Data: ", quantityData);
+                    console.log("Remaining Quantity Data: ", remainingQuantityData);
+
+                    var quantityResponse = quantityData[0];
+                    var remainingQuantityResponse = remainingQuantityData[0];
+
+                    var labels = quantityResponse.productNames;
+                    var quantities = quantityResponse.productQuantities;
+                    var remainingQuantities = remainingQuantityResponse.remainingQuantities;
+
+                    console.log("Labels: ", labels);
+                    console.log("Quantities: ", quantities);
+                    console.log("Remaining Quantities: ", remainingQuantities);
+
+                    orderChart.data.labels = labels;
+                    orderChart.data.datasets[0].data = quantities;
+                    orderChart.data.datasets[1].data = remainingQuantities;
+
+                    orderChart.update();
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    console.error("Error fetching data: ", textStatus, errorThrown);
+                });
+            });
+        }
+
+        function createProductPriceCharts() {
+
+            var canvases = document.querySelectorAll(".ProductPriceChart");
+
+            canvases.forEach(function (canvas) {
+                var ctx = canvas.getContext("2d");
+                var productPriceChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [
+                            {
+                                label: 'Price',
+                                data: [],
+                                backgroundColor: '#2d53de',
+                                borderColor: '#2d53de',
+                                borderWidth: 1,
+                                pointBackgroundColor: '#2d53de',
+                                pointBorderWidth: 1,
+                                tension: 0.4,
+                                pointRadius: 2,
+                                pointHoverRadius: 4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                ticks: {
+                                    display: false,
+                                    color: 'black'
+                                },
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)',
+                                    borderWidth: 0.5,
+                                    borderColor: 'rgba(0, 0, 0, 0.1)'
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    color: 'black'
+                                },
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)',
+                                    borderWidth: 0.5,
+                                    borderColor: 'rgba(0, 0, 0, 0.1)'
+                                },
+                                beginAtZero: true
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    usePointStyle: true,
+                                    pointStyle: 'circle',
+                                    boxWidth: 5,
+                                    boxHeight: 5
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Products By Price',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            tooltip: {
+                                enabled: true,
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        return tooltipItem.dataset.label + ': £' + Number(tooltipItem.raw).toFixed(2);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // AJAX call to fetch data using jQuery
+                $.ajax({
+                    url: '@Url.Action("ProductPrice", "Dashboard")',
+                    type: 'GET',
+                    success: function (data) {
+
+                        if (Array.isArray(data) && data.length > 0 && data[0].hasOwnProperty('productName') && data[0].hasOwnProperty('price')) {
+                            var labels = data.map(product => product.productName);
+                            var prices = data.map(product => product.price);
+
+                            productPriceChart.data.labels = labels;
+                            productPriceChart.data.datasets[0].data = prices;
+                            productPriceChart.update();
+                        } else {
+                            console.error('Unexpected data format:', data);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('Error fetching product prices:', textStatus, errorThrown);
+                        console.error('Response:', jqXHR.responseText);
+                    }
+                });
+            });
+        }
+
+    </script>
+}

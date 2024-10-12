@@ -1,0 +1,206 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Identity;
+@using Yare.Utility;
+@using Yare_WebApplication.Data.Utility;
+@inject IHttpContextAccessor HttpContextAccesor
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Yare</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/AdminView.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/AdminLayout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/AdminContent.css" asp-append-version="true" />
+            <link rel="stylesheet" href="~/css/animation.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/identity.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/responsiveLayout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
+</head>
+<body>
+
+    <div id="admin-mainView">
+
+        <aside>
+
+            <ul id="side-navContainer" class="">
+                
+                @if (User.IsInRole(SD.Role_MasterAdmin) || User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                {
+
+                    <li class="sidebar-itemTitle">
+                        <a class="sidebar-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                            CMS Platform
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                            <i class="sidebar-Icon bi bi-activity"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="productManagment-Container">
+
+                        <a class="productManagment-Btn">
+                            <i class="sidebar-Icon bi bi-collection"></i>Product Managment<i class="sidebar-arrowIcon bi bi-caret-down-fill"></i>
+                        </a>
+                        <ul class="productManagment-List">
+                            <li class="productManagment-item">
+                                <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="sidebar-link">
+                                    Products
+                                </a>
+                            </li>
+                            <li class="productManagment-item">
+                                <a asp-area="Admin" asp-controller="Watch" asp-action="Index" class="sidebar-link">
+                                   Watch Products
+                                </a>
+                            </li>
+                            <li class="productManagment-item">
+                                <a asp-area="Admin" asp-controller="Jewellery" asp-action="Index" class="sidebar-link">
+                                    Jewellery Products
+                                </a>
+                            </li>
+                            <li class="productManagment-item">
+                                <a asp-area="Admin" asp-controller="Accessory" asp-action="Index" class="sidebar-link">
+                                   Accessory Products
+                                </a>
+                            </li>
+                            <li class="productManagment-item">
+                                <a asp-area="Admin" asp-controller="Collection" asp-action="Index" class="sidebar-link">
+                                    Collections
+                                </a>
+                            </li>
+                        </ul>
+
+                    </li>
+                    @if (User.IsInRole(SD.Role_MasterAdmin) || User.IsInRole(SD.Role_Admin))
+                    {
+                    <li class="sidebar-item">
+                        <a asp-area="Identity" asp-page="/Account/Register" class="sidebar-link">
+                            <i class="sidebar-Icon bi bi-person-plus-fill"></i>Create User
+                        </a>
+                    </li>
+                     }
+                    <li class="sidebar-item">
+                        <a asp-area="Admin" asp-controller="OrderManagment" asp-action="Index" class="sidebar-link">
+                          <i class="sidebar-Icon bi bi-list-columns-reverse"></i>Order Management
+                        </a>
+                    </li>
+
+                }else{
+                    <li class="sidebar-itemTitle">
+                        <a class="sidebar-link " asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                            Account
+                        </a>
+
+                    </li>
+                }
+                <li class="sidebar-item">
+                    <a asp-area="Admin" asp-controller="OrderManagment" asp-action="OrderHistory" class="sidebar-link ">
+                        <i class="sidebar-Icon bi bi-clock-history"></i>My Order History
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        
+                        <a class="sidebar-link">
+
+                            <button id="" type="submit" class="logoutForm-btn"><i class="sidebar-Icon bi bi-power"></i>Logout</button>
+
+                        </a>
+
+                    </form>
+                </li>
+              
+            </ul>
+
+        </aside>
+
+        <div id="admin-contentView">
+
+            <nav>
+                <ul class="navbar-nav float-start me-auto">
+                    @if (User.IsInRole(SD.Role_MasterAdmin) || User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="Customer" asp-controller="Home" asp-action="Index">Digital storefront</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-white " asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                    }
+                </ul>
+                <ul class="navbar-nav float-end">
+                    <li class="nav-item">
+                        <a id="manage" class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@UserManager.GetUserName(User)</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="main-content">
+                <main role="main" class="pb-3">
+                    <partial name="_Notification" />
+                    @RenderBody()
+                </main>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="admin-deviceNotSupported-Container">
+
+        <svg class="deviceNotSupported-Icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.72048 3.67142L16.3402 15.2911C19.0455 12.0499 18.8767 7.22102 15.8336 4.17797C12.7906 1.13491 7.96171 0.96606 4.72048 3.67142ZM15.2795 16.3518L3.65982 4.73208C0.954463 7.97331 1.12331 12.8022 4.16637 15.8452C7.20943 18.8883 12.0383 19.0571 15.2795 16.3518ZM3.10571 3.11731C6.91332 -0.690306 13.0867 -0.690306 16.8943 3.11731C20.7019 6.92492 20.7019 13.0983 16.8943 16.9059C13.0867 20.7135 6.91332 20.7135 3.10571 16.9059C-0.701903 13.0983 -0.701903 6.92492 3.10571 3.11731Z" />
+        </svg>
+
+        <p class="text-white deviceNotSupported-text">We apologize, but our website is currently not supported on mobile or tablet browsers.</p>
+        <p class="text-white deviceNotSupported-text">For the best experience, please download our app to access our services on your mobile or tablet device.</p>
+
+        <div class="appDownload-Container">
+            <img class="appBadge-Img" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png">
+            <img class="appBadge-Img" src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg">
+        </div>
+
+    </div>
+
+        <partial name="_LoadingPg" />
+
+    @section Scripts{
+        <script>
+
+    /////////////////////////////////////
+    //// Dropdown Component
+    document.addEventListener('DOMContentLoaded', function () {
+        var btn = document.querySelector('.productManagment-Btn');
+        var container = document.querySelector('.productManagment-Container');
+
+        btn.addEventListener('click', function () {
+            container.classList.toggle('open');
+        });
+    });
+
+        </script>
+    }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/loadingPg.js" asp-append-version="true"></script>
+    <script src="~/js/admin.js" asp-append-version="true"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

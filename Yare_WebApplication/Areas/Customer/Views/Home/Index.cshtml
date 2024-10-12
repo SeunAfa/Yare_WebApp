@@ -1,0 +1,996 @@
+﻿@using Yare.Models.Enums;
+@using Yare.Models;
+@model Yare.Models.ViewModels.HomePgVM
+
+@{
+    ViewData["Title"] = "Home";
+
+    // Filter the products by the product category
+    var watchProducts = Model.ProductVM.objProductList
+                        .Where(p => p.ProductCategory == ProductCategory.Watch)
+                        .ToList();
+
+    var jewelleryProducts = Model.ProductVM.objProductList
+                            .Where(p => p.ProductCategory == ProductCategory.Jewellery)
+                            .ToList();
+
+    // Calculate the total number of rows needed for watches
+    int totalWatchProducts = watchProducts.Count();
+    int watchRows = (int)Math.Ceiling(totalWatchProducts / 4.0);
+    watchRows = watchRows > 2 ? 2 : watchRows; // Ensure a maximum of 2 rows
+
+    // Calculate the total number of rows needed for jewellery
+    int totalJewelleryProducts = jewelleryProducts.Count();
+    int jewelleryRows = (int)Math.Ceiling(totalJewelleryProducts / 4.0);
+    jewelleryRows = jewelleryRows > 2 ? 2 : jewelleryRows; // Ensure a maximum of 2 rows
+}
+<section id="slider-hmPg-Container" class="">
+
+    <div class="slider-hmPg">
+
+        <div class="slide-hmPg">
+
+            <div class="slide-1-Img"></div>
+
+            <div class="slide-1-infoContent">
+
+                <p class="text-white">
+                    Discover Audemars Piguet's iconic design and craftsmanship, a true embodiment of uncompromising luxury.
+                </p>
+
+                <a class="nav-link text-white slide-1-Btn navLink-Animation" asp-area="Customer" asp-controller="Collections" asp-action="AudemarsPiguetCollection">
+                    Explore The Collection
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="slide-hmPg">
+
+            <div class="slide-2-Img"></div>
+
+            <div class="slide-2-infoContent">
+
+                <p class="text-white">
+                    Experience timeless elegance with our diamond jewellery collection, where exquisite craftsmanship meets unparalleled luxury in every piece.
+                </p>
+
+                <a class="nav-link text-white slide-2-Btn navLink-Animation" asp-area="Customer" asp-controller="Jewellery" asp-action="DiamondJewellery">
+                    Explore The Collection
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="slide-hmPg">
+
+            <div class="slide-3-Img"></div>
+
+            <div class="slide-3-infoContent">
+
+                <p class="text-white">
+                    Discover our engagement ring collection, where masterful design, harmonious settings, and perfectly cut stones symbolize elegance and evoke deep emotions.
+                </p>
+
+                <a class="nav-link text-white slide-3-Btn navLink-Animation" asp-area="Customer" asp-controller="Jewellery" asp-action="EngagementRingsJewellery">
+                    Explore The Collection
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="sliderControls-Container-hmPg">
+            <button class="slider__btn-hmPg slider__btn--left-hmPg">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.7803 5.22431C12.0732 5.5172 12.0732 5.99208 11.7803 6.28497L8.06066 10.0046L11.7803 13.7243C12.0732 14.0172 12.0732 14.4921 11.7803 14.785C11.4874 15.0779 11.0126 15.0779 10.7197 14.785L6.46967 10.535C6.17678 10.2421 6.17678 9.7672 6.46967 9.47431L10.7197 5.22431C11.0126 4.93142 11.4874 4.93142 11.7803 5.22431Z" fill="red" />
+                </svg>
+            </button>
+            <div class="dots-hmPg"></div>
+            <button class="slider__btn-hmPg slider__btn--right-hmPg">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M8.21967 5.22431C8.51256 4.93142 8.98744 4.93142 9.28033 5.22431L13.5303 9.47431C13.8232 9.7672 13.8232 10.2421 13.5303 10.535L9.28033 14.785C8.98744 15.0779 8.51256 15.0779 8.21967 14.785C7.92678 14.4921 7.92678 14.0172 8.21967 13.7243L11.9393 10.0046L8.21967 6.28497C7.92678 5.99208 7.92678 5.5172 8.21967 5.22431Z" fill="red" />
+                </svg>
+            </button>
+        </div>
+
+    </div>
+
+</section>
+
+<section id="service-banner-Container">
+
+    <div class="serviceFeature-itemContainer">
+
+        <svg class="serviceFeatureSvg-Icons" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.375 0.504639C1.33947 0.504639 0.5 1.3441 0.5 2.37964V9.50464H12.5V2.37964C12.5 1.3441 11.6605 0.504639 10.625 0.504639H2.375Z" fill="black" />
+            <path d="M12.5 11.0046H0.5V13.6296C0.5 14.6652 1.33947 15.5046 2.375 15.5046H2.75C2.75 13.8478 4.09315 12.5046 5.75 12.5046C7.40685 12.5046 8.75 13.8478 8.75 15.5046H11.75C12.1642 15.5046 12.5 15.1689 12.5 14.7546V11.0046Z" fill="black" />
+            <path d="M7.25 15.5046C7.25 14.6762 6.57843 14.0046 5.75 14.0046C4.92157 14.0046 4.25 14.6762 4.25 15.5046C4.25 16.3331 4.92157 17.0046 5.75 17.0046C6.57843 17.0046 7.25 16.3331 7.25 15.5046Z" fill="black" />
+            <path d="M14.75 2.75464C14.3358 2.75464 14 3.09043 14 3.50464V14.7546C14 14.8414 14.0147 14.9248 14.0419 15.0023C14.2809 13.5846 15.5143 12.5046 17 12.5046C18.6442 12.5046 19.9794 13.8273 19.9998 15.4666C20.8531 15.2916 21.5224 14.5312 21.464 13.5841C21.231 9.80369 19.8775 6.32566 17.7324 3.47954C17.378 3.00927 16.8265 2.75464 16.2621 2.75464H14.75Z" fill="black" />
+            <path d="M18.5 15.5046C18.5 14.6762 17.8284 14.0046 17 14.0046C16.1716 14.0046 15.5 14.6762 15.5 15.5046C15.5 16.3331 16.1716 17.0046 17 17.0046C17.8284 17.0046 18.5 16.3331 18.5 15.5046Z" fill="black" />
+        </svg>
+
+
+        <p class="text-black serviceFeature-Text">Free home delivery on all orders</p>
+        <p class="text-black serviceFeature-Text">Next day until 9pm, 7 days a week</p>
+
+    </div>
+
+    <div class="serviceFeature-itemContainer">
+
+        <svg class="serviceFeatureSvg-Icons" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5.22335 2.25232C4.72607 2.25232 4.24916 2.44986 3.89752 2.80149L2.59835 4.10067C1.13388 5.56514 1.13388 7.9395 2.59835 9.40397C3.93551 10.7411 6.03124 10.8574 7.50029 9.7527C8.12669 10.223 8.90598 10.5023 9.75 10.5023C10.5941 10.5023 11.3736 10.2229 12 9.75248C12.6264 10.2229 13.4059 10.5023 14.25 10.5023C15.094 10.5023 15.8733 10.223 16.4997 9.7527C17.9688 10.8574 20.0645 10.7411 21.4016 9.40397C22.8661 7.9395 22.8661 5.56514 21.4016 4.10067L20.1025 2.8015C19.7508 2.44987 19.2739 2.25232 18.7767 2.25232L5.22335 2.25232Z" fill="black" />
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M3 20.2523V11.4974C4.42021 12.1709 6.0799 12.1704 7.50044 11.4967C8.18265 11.8206 8.94611 12.0023 9.75 12.0023C10.5541 12.0023 11.3177 11.8205 12 11.4965C12.6823 11.8205 13.4459 12.0023 14.25 12.0023C15.0539 12.0023 15.8173 11.8206 16.4996 11.4967C17.9201 12.1704 19.5798 12.1709 21 11.4974V20.2523H21.75C22.1642 20.2523 22.5 20.5881 22.5 21.0023C22.5 21.4165 22.1642 21.7523 21.75 21.7523H2.25C1.83579 21.7523 1.5 21.4165 1.5 21.0023C1.5 20.5881 1.83579 20.2523 2.25 20.2523H3ZM6 14.2523C6 13.8381 6.33579 13.5023 6.75 13.5023H9.75C10.1642 13.5023 10.5 13.8381 10.5 14.2523V17.2523C10.5 17.6665 10.1642 18.0023 9.75 18.0023H6.75C6.33579 18.0023 6 17.6665 6 17.2523V14.2523ZM14.25 13.5023C13.8358 13.5023 13.5 13.8381 13.5 14.2523V19.5023C13.5 19.9165 13.8358 20.2523 14.25 20.2523H17.25C17.6642 20.2523 18 19.9165 18 19.5023V14.2523C18 13.8381 17.6642 13.5023 17.25 13.5023H14.25Z" fill="black" />
+        </svg>
+        
+        <p class="text-black serviceFeature-Text">Free click & collect service</p>
+        <p class="text-black serviceFeature-Text">From over 25 showrooms nationwide</p>
+
+    </div>
+
+    <div class="serviceFeature-itemContainer">
+
+        <svg class="serviceFeatureSvg-Icons" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5157 1.1698C10.2265 0.895873 9.77353 0.895873 9.48428 1.1698C7.46752 3.07977 4.74624 4.25011 1.75 4.25011C1.70233 4.25011 1.65473 4.24981 1.60721 4.24922C1.27984 4.24515 0.987669 4.4539 0.885415 4.76491C0.472873 6.01968 0.25 7.35963 0.25 8.75015C0.25 14.6922 4.31406 19.6831 9.81306 21.0984C9.93569 21.13 10.0643 21.13 10.1869 21.0984C15.6859 19.6831 19.75 14.6922 19.75 8.75015C19.75 7.35963 19.5271 6.01968 19.1146 4.76491C19.0123 4.4539 18.7202 4.24515 18.3928 4.24922C18.3453 4.24981 18.2977 4.25011 18.25 4.25011C15.2538 4.25011 12.5325 3.07977 10.5157 1.1698ZM13.6103 9.18593C13.8511 8.84887 13.773 8.38046 13.4359 8.1397C13.0989 7.89894 12.6305 7.97701 12.3897 8.31407L9.1543 12.8436L7.53033 11.2197C7.23744 10.9268 6.76256 10.9268 6.46967 11.2197C6.17678 11.5126 6.17678 11.9874 6.46967 12.2803L8.71967 14.5303C8.87556 14.6862 9.09215 14.7656 9.31186 14.7474C9.53157 14.7293 9.73216 14.6153 9.8603 14.4359L13.6103 9.18593Z" fill="black" />
+        </svg>
+
+        <p class="text-black serviceFeature-Text">Extend your warranty by 3 years</p>
+        <p class="text-black serviceFeature-Text">On top of the manufacturer's warranty</p>
+    </div>
+
+</section>
+
+<section id="shopBy-category-Container">
+
+    <div class="title-Container">
+        <h5 class="text-black">Shop By Category</h5>
+    </div>
+
+    <div id="shopBy-Category-Wrapper">
+
+        <div id="shopBy-Category-leftContainer">
+
+            <div class="shopBy-categoryItem-Left categoryItem">
+                <div class="categoryItem-Media-Container">
+                    <video class="categoryItem-Media-Watches" loop autoplay muted>
+                        <source src="~/video/categoryitem-media-hublot.mp4" type="video/mp4" />
+                        <source src="~/video/categoryitem-media-hublot.ogg" type="video/ogg">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="overlay"></div>
+                </div>
+
+                <div class="categoryItem-infoContent-Container">
+                    <h5 class="categoryItem-Title">Watches</h5>
+                    <a class=" navLink-categoryItemAnimation" asp-area="Customer" asp-controller="Watches" asp-action="Index">
+                        Shop Now
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="shopBy-Category-rightContainer">
+
+            <div class="shopBy-categoryItem-Right categoryItem">
+
+                <div class="categoryItem-Media-Container categoryItem-Media-Jewellery"></div>
+
+                <div class="categoryItem-infoContent-Container">
+
+                    <h5 class="categoryItem-Title">Jewellery</h5>
+
+                    <a class="  navLink-categoryItemAnimation" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">
+                        Shop Now
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="shopBy-categoryItem-Right categoryItem">
+
+                <div class="categoryItem-Media-Container categoryItem-Media-Accessories"></div>
+
+                <div class="categoryItem-infoContent-Container">
+
+                    <h5 class="categoryItem-Title">Accessories</h5>
+
+                    <a class="  navLink-categoryItemAnimation" asp-area="Customer" asp-controller="Accessories" asp-action="Index">
+                        Shop Now
+                    </a>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<sectionn id="productCard-sliderControls-Container" class="productCard-sliderControls-Container-WatchProducts">
+
+    <div class="title-Container">
+        <h5 class="text-black">Watch Products</h5>
+        <a class="nav-link text-black shopBy-Btn navLink-Animation " asp-area="Customer" asp-controller="Watches" asp-action="Index">
+            Explore All
+
+            <svg class="shopBy-btnIcon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M17 4.25C17 3.00736 15.9926 2 14.75 2H9.25C8.00736 2 7 3.00736 7 4.25V6.25C7 6.66421 7.33579 7 7.75 7C8.16421 7 8.5 6.66421 8.5 6.25V4.25C8.5 3.83579 8.83579 3.5 9.25 3.5H14.75C15.1642 3.5 15.5 3.83579 15.5 4.25V15.75C15.5 16.1642 15.1642 16.5 14.75 16.5H9.25C8.83579 16.5 8.5 16.1642 8.5 15.75V13.75C8.5 13.3358 8.16421 13 7.75 13C7.33579 13 7 13.3358 7 13.75V15.75C7 16.9926 8.00736 18 9.25 18H14.75C15.9926 18 17 16.9926 17 15.75V4.25Z" fill="#0F172A" />
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M1 10C1 9.58579 1.33579 9.25 1.75 9.25H11.2955L10.2483 8.30747C9.94039 8.03038 9.91543 7.55616 10.1925 7.24828C10.4696 6.94039 10.9438 6.91543 11.2517 7.19253L13.7517 9.44253C13.9098 9.58476 14 9.78738 14 10C14 10.2126 13.9098 10.4152 13.7517 10.5575L11.2517 12.8075C10.9438 13.0846 10.4696 13.0596 10.1925 12.7517C9.91543 12.4438 9.94039 11.9696 10.2483 11.6925L11.2955 10.75H1.75C1.33579 10.75 1 10.4142 1 10Z" fill="#0F172A" />
+            </svg>
+
+        </a>
+    </div>
+
+    <div class="productCard-Row-Wrapper">
+
+        <div class="productCard-sliderContainer">
+
+            <div class="productCard-slides watchProducts-productCard-slides">
+
+                @for (int i = 0; i < watchRows; i++)
+                {
+                    <div class="productCard-slide watchProducts-productCard-slide">
+                        <div class="productCard-eachSlide-Content">
+                            @foreach (var product in watchProducts.Skip(i * 4).Take(4))
+                            {
+                                if (product is Watch watchProduct)
+                                {
+                                    string shortenedProductName = watchProduct.ProductName.Length > 21 ? $"{watchProduct.ProductName.Substring(0, 21)}..." : watchProduct.ProductName;
+
+                                    <div class="productCard-Container">
+                                        <a asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-productId="@watchProduct.Id">
+                                            <div class="productCard-imgs-Container">
+                                                <img class="productCard-imgs watchProduct-imgs" src="@watchProduct.PrimaryDisplayImageUrl" data-hover-image-url="@watchProduct.SecondaryDisplayImageUrl" />
+                                            </div>
+                                            <div class="productCard-info-Container">
+                                                <div class="productCard-info-Top">
+                                                    <p class="text-black text-uppercase text-center productCard-info-productName">@shortenedProductName</p>
+                                                </div>
+                                                <div class="productCard-info-Bottom">
+                                                    <p class="text-black text-center productCard-info-Price">@watchProduct.Price.ToString("c")</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+
+
+            <button class="productCard-slide-prev watchProducts-productCard-slide-prev">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.7803 5.22431C12.0732 5.5172 12.0732 5.99208 11.7803 6.28497L8.06066 10.0046L11.7803 13.7243C12.0732 14.0172 12.0732 14.4921 11.7803 14.785C11.4874 15.0779 11.0126 15.0779 10.7197 14.785L6.46967 10.535C6.17678 10.2421 6.17678 9.7672 6.46967 9.47431L10.7197 5.22431C11.0126 4.93142 11.4874 4.93142 11.7803 5.22431Z" fill="red" />
+                </svg>
+            </button>
+            <button class="productCard-slide-next watchProducts-productCard-slide-next">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M8.21967 5.22431C8.51256 4.93142 8.98744 4.93142 9.28033 5.22431L13.5303 9.47431C13.8232 9.7672 13.8232 10.2421 13.5303 10.535L9.28033 14.785C8.98744 15.0779 8.51256 15.0779 8.21967 14.785C7.92678 14.4921 7.92678 14.0172 8.21967 13.7243L11.9393 10.0046L8.21967 6.28497C7.92678 5.99208 7.92678 5.5172 8.21967 5.22431Z" fill="red" />
+                </svg>
+            </button>
+
+        </div>
+
+    </div>
+
+</sectionn>
+
+<section id="watch-brands-Container">
+
+    <div id="watch-brands-Wrapper">
+
+        <div id="watchBrands-topItem-Container">
+
+            <div class="watchBrands-topItem">
+
+                <div class="watchBrands-topItem-imgContainer">
+                    <div class="watchBrands-topItem-Img"></div>
+                </div>
+
+                <div class="watchBrands-topItem-Info">
+
+                    <h6 class="text-black watchBrands-topItem-Title">Breitling Watches</h6>
+
+                    <p class="text-black watchBrands-topItem-Description">Precision, luxury, craftsmanship, innovation, style, & heritage.</p>
+
+                    <a class="nav-link text-black navLink-Animation watchBrands-topItem-Links" asp-area="Customer" asp-controller="Collections" asp-action="BreitlingCollection">Explore All</a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="watchBrands-bottomItem-Container">
+
+            <div class="watchBrands-bottomItem">
+
+                <div class="watchBrands-bottomItem-imgContainer">
+                    <div class="watchBrands-bottomItem-Img watchBrands-bottomItem-Img-Omega"></div>
+                </div>
+
+                <div class="watchBrands-bottomItem-Info">
+
+                    <h6 class="text-black watchBrands-bottomItem-Title">Omega Watches</h6>
+
+                    <p class="text-black watchBrands-bottomItem-Description">Captivating, luxury & timepieces.</p>
+
+                    <a class="nav-link text-black navLink-Animation watchBrands-bottomItem-Links" asp-area="Customer" asp-controller="Collections" asp-action="OmegaCollection">Explore All</a>
+
+                </div>
+
+            </div>
+
+            <div class="watchBrands-bottomItem">
+
+                <div class="watchBrands-bottomItem-imgContainer">
+                    <div class="watchBrands-bottomItem-Img watchBrands-bottomItem-Img-TagHeuer"></div>
+                </div>
+
+                <div class="watchBrands-bottomItem-Info">
+
+                    <h6 class="text-black watchBrands-bottomItem-Title">TAG Heuer Watches</h6>
+
+                    <p class="text-black watchBrands-bottomItem-Description">Sophistication, elegance, & timeless dependability.</p>
+
+                    <a class="nav-link text-black navLink-Animation watchBrands-bottomItem-Links" asp-area="Customer" asp-controller="Collections" asp-action="TAGHeuerCollection">Explore All</a>
+
+                </div>
+
+            </div>
+
+            <div class="watchBrands-bottomItem">
+
+                <div class="watchBrands-bottomItem-imgContainer">
+                    <div class="watchBrands-bottomItem-Img watchBrands-bottomItem-Img-Tudor"></div>
+                </div>
+
+                <div class="watchBrands-bottomItem-Info">
+
+                    <h6 class="text-black watchBrands-bottomItem-Title">Tudor Watches</h6>
+
+                    <p class="text-black watchBrands-bottomItem-Description">Seamlessly blending style, durability, & functionality.</p>
+
+                    <a class="nav-link text-black navLink-Animation watchBrands-bottomItem-Links" asp-area="Customer" asp-controller="Collections" asp-action="TudorCollection">Explore All</a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<sectionn id="productCard-sliderControls-Container" class="productCard-sliderControls-Container-JewelleryProducts">
+
+    <div class="title-Container">
+        <h5 class="text-black">Jewellery Products</h5>
+        <a class="nav-link text-black shopBy-Btn navLink-Animation" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">
+            Explore All
+            <svg class="shopBy-btnIcon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M17 4.25C17 3.00736 15.9926 2 14.75 2H9.25C8.00736 2 7 3.00736 7 4.25V6.25C7 6.66421 7.33579 7 7.75 7C8.16421 7 8.5 6.66421 8.5 6.25V4.25C8.5 3.83579 8.83579 3.5 9.25 3.5H14.75C15.1642 3.5 15.5 3.83579 15.5 4.25V15.75C15.5 16.1642 15.1642 16.5 14.75 16.5H9.25C8.83579 16.5 8.5 16.1642 8.5 15.75V13.75C8.5 13.3358 8.16421 13 7.75 13C7.33579 13 7 13.3358 7 13.75V15.75C7 16.9926 8.00736 18 9.25 18H14.75C15.9926 18 17 16.9926 17 15.75V4.25Z" fill="#0F172A" />
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M1 10C1 9.58579 1.33579 9.25 1.75 9.25H11.2955L10.2483 8.30747C9.94039 8.03038 9.91543 7.55616 10.1925 7.24828C10.4696 6.94039 10.9438 6.91543 11.2517 7.19253L13.7517 9.44253C13.9098 9.58476 14 9.78738 14 10C14 10.2126 13.9098 10.4152 13.7517 10.5575L11.2517 12.8075C10.9438 13.0846 10.4696 13.0596 10.1925 12.7517C9.91543 12.4438 9.94039 11.9696 10.2483 11.6925L11.2955 10.75H1.75C1.33579 10.75 1 10.4142 1 10Z" fill="#0F172A" />
+            </svg>
+        </a>
+    </div>
+
+    <div class="productCard-Row-Wrapper">
+
+        <div class="productCard-sliderContainer">
+
+            <div class="productCard-slides jewelleryProduct-productCard-slides">
+
+
+                @for (int i = 0; i < jewelleryRows; i++)
+                {
+
+                    <div class="productCard-slide jewelleryProduct-productCard-slide">
+
+                        <div class="productCard-eachSlide-Content">
+
+                            @foreach (var product in jewelleryProducts.Skip(i * 4).Take(4))
+                            {
+
+                                if (product is Jewellery jewelleryProduct)
+                                {
+
+                                    string shortenedProductName = jewelleryProduct.ProductName.Length > 21 ? $"{jewelleryProduct.ProductName.Substring(0, 21)}..." : jewelleryProduct.ProductName;
+
+                                    <div class="productCard-Container">
+                                        <a asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-productId="@jewelleryProduct.Id">
+
+                                            <div class="productCard-imgs-Container">
+                                                <img class="productCard-imgs watchProduct-imgs" src="@jewelleryProduct.PrimaryDisplayImageUrl" data-hover-image-url="@jewelleryProduct.SecondaryDisplayImageUrl" />
+                                            </div>
+                                            <div class="productCard-info-Container">
+                                                <div class="productCard-info-Top">
+                                                    <p class="text-black text-uppercase text-center productCard-info-productName">@shortenedProductName</p>
+                                                </div>
+                                                <div class="productCard-info-Bottom">
+                                                    <p class="text-black text-center productCard-info-Price">@jewelleryProduct.Price.ToString("c")</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                }
+                            }
+
+                        </div>
+
+                    </div>
+
+                }
+
+            </div>
+
+            <button class="productCard-slide-prev jewelleryProduct-productCard-slide-productCard-slide-prev">
+                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.7803 5.22431C12.0732 5.5172 12.0732 5.99208 11.7803 6.28497L8.06066 10.0046L11.7803 13.7243C12.0732 14.0172 12.0732 14.4921 11.7803 14.785C11.4874 15.0779 11.0126 15.0779 10.7197 14.785L6.46967 10.535C6.17678 10.2421 6.17678 9.7672 6.46967 9.47431L10.7197 5.22431C11.0126 4.93142 11.4874 4.93142 11.7803 5.22431Z" fill="red" />
+                </svg>
+            </button>
+            <button class="productCard-slide-next jewelleryProduct-productCard-slide-productCard-slide-next">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M8.21967 5.22431C8.51256 4.93142 8.98744 4.93142 9.28033 5.22431L13.5303 9.47431C13.8232 9.7672 13.8232 10.2421 13.5303 10.535L9.28033 14.785C8.98744 15.0779 8.51256 15.0779 8.21967 14.785C7.92678 14.4921 7.92678 14.0172 8.21967 13.7243L11.9393 10.0046L8.21967 6.28497C7.92678 5.99208 7.92678 5.5172 8.21967 5.22431Z" fill="red" />
+                </svg>
+            </button>
+
+        </div>
+
+    </div>
+
+</sectionn>
+
+<section id="jewellery-category-Container">
+
+    <div class="title-Container">
+
+        <h5 class="text-black">Jewellery Categories</h5>
+
+        <a class="nav-link text-black shopBy-Btn navLink-Animation" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">
+            Explore All
+            <svg class="shopBy-btnIcon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M17 4.25C17 3.00736 15.9926 2 14.75 2H9.25C8.00736 2 7 3.00736 7 4.25V6.25C7 6.66421 7.33579 7 7.75 7C8.16421 7 8.5 6.66421 8.5 6.25V4.25C8.5 3.83579 8.83579 3.5 9.25 3.5H14.75C15.1642 3.5 15.5 3.83579 15.5 4.25V15.75C15.5 16.1642 15.1642 16.5 14.75 16.5H9.25C8.83579 16.5 8.5 16.1642 8.5 15.75V13.75C8.5 13.3358 8.16421 13 7.75 13C7.33579 13 7 13.3358 7 13.75V15.75C7 16.9926 8.00736 18 9.25 18H14.75C15.9926 18 17 16.9926 17 15.75V4.25Z" fill="#0F172A" />
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M1 10C1 9.58579 1.33579 9.25 1.75 9.25H11.2955L10.2483 8.30747C9.94039 8.03038 9.91543 7.55616 10.1925 7.24828C10.4696 6.94039 10.9438 6.91543 11.2517 7.19253L13.7517 9.44253C13.9098 9.58476 14 9.78738 14 10C14 10.2126 13.9098 10.4152 13.7517 10.5575L11.2517 12.8075C10.9438 13.0846 10.4696 13.0596 10.1925 12.7517C9.91543 12.4438 9.94039 11.9696 10.2483 11.6925L11.2955 10.75H1.75C1.33579 10.75 1 10.4142 1 10Z" fill="#0F172A" />
+            </svg>
+        </a>
+
+    </div>
+
+    <div id="jewellery-category-Wrapper">
+
+        <div class="jewelleryCategory-sliderContainer">
+
+            <div class="jewelleryCategory-slides">
+
+                <div class="jewelleryCategory-slide">
+
+                    <div class="jewelleryCategory-eachSlide-Content">
+
+                        <div class="jewelleryCategory-eachItem-Container">
+
+                            <div class="jewelleryCategory-eachItem-ImgContainer jewelleryCategory-eachItem-ImgMenJewellery">
+                            </div>
+
+                            <div class="jewelleryCategory-eachItem-InfoContainer">
+
+                                <h5 class="jewelleryCategory-Title">Mens Jewellery</h5>
+
+                                <a class="nav-link jewelleryCategory-eachItem-Links navLink-jewelleryCategoryAnimation " asp-area="Customer" asp-controller="Jewellery" asp-action="MensJewellery">
+                                    Explore All
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                        <div class="jewelleryCategory-eachItem-Container">
+
+                            <div class="jewelleryCategory-eachItem-ImgContainer jewelleryCategory-eachItem-ImgWomenJewellery">
+                            </div>
+
+                            <div class="jewelleryCategory-eachItem-InfoContainer">
+
+                                <h5 class="jewelleryCategory-Title">Ladies Jewellery</h5>
+
+                                <a class="nav-link jewelleryCategory-eachItem-Links navLink-jewelleryCategoryAnimation " asp-area="Customer" asp-controller="Jewellery" asp-action="LadiesJewellery">
+                                    Explore All
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                        <div class="jewelleryCategory-eachItem-Container">
+
+                            <div class="jewelleryCategory-eachItem-ImgContainer jewelleryCategory-eachItem-ImgCollections">
+                            </div>
+
+                            <div class="jewelleryCategory-eachItem-InfoContainer">
+
+                                <h5 class="jewelleryCategory-Title">Exclusive Jewellery</h5>
+
+                                <a class="nav-link jewelleryCategory-eachItem-Links navLink-jewelleryCategoryAnimation " asp-area="Customer" asp-controller="Collections" asp-action="ExclusiveJewelleryCollection">
+                                    Explore All
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                        <div class="jewelleryCategory-eachItem-Container">
+
+                            <div class="jewelleryCategory-eachItem-ImgContainer jewelleryCategory-eachItem-ImgAnklets">
+                            </div>
+
+                            <div class="jewelleryCategory-eachItem-InfoContainer">
+
+                                <h5 class="jewelleryCategory-Title">Anklets</h5>
+
+                                <a class="nav-link jewelleryCategory-eachItem-Links navLink-jewelleryCategoryAnimation " asp-area="Customer" asp-controller="Jewellery" asp-action="AnkletsJewellery">
+                                    Explore All
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="jewelleryCategory-slide">
+
+                    <div class="jewelleryCategory-eachSlide-Content">
+
+                        <div class="jewelleryCategory-eachItem-Container">
+
+                            <div class="jewelleryCategory-eachItem-ImgContainer jewelleryCategory-eachItem-ImgBangles">
+                            </div>
+
+                            <div class="jewelleryCategory-eachItem-InfoContainer">
+
+                                <h5 class="jewelleryCategory-Title">Bangles</h5>
+
+                                <a class="nav-link jewelleryCategory-eachItem-Links navLink-jewelleryCategoryAnimation " asp-area="Customer" asp-controller="Jewellery" asp-action="BanglesJewellery">
+                                    Explore All
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                        <div class="jewelleryCategory-eachItem-Container">
+
+                            <div class="jewelleryCategory-eachItem-ImgContainer jewelleryCategory-eachItem-ImgBracelets">
+                            </div>
+
+                            <div class="jewelleryCategory-eachItem-InfoContainer">
+
+                                <h5 class="jewelleryCategory-Title">Bracelets</h5>
+
+                                <a class="nav-link jewelleryCategory-eachItem-Links navLink-jewelleryCategoryAnimation " asp-area="Customer" asp-controller="Jewellery" asp-action="BraceletsJewellery">
+                                    Explore All
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                        <div class="jewelleryCategory-eachItem-Container">
+
+                            <div class="jewelleryCategory-eachItem-ImgContainer jewelleryCategory-eachItem-ImgCufflinks">
+                            </div>
+
+                            <div class="jewelleryCategory-eachItem-InfoContainer">
+
+                                <h5 class="jewelleryCategory-Title">Cufflinks</h5>
+
+                                <a class="nav-link jewelleryCategory-eachItem-Links navLink-jewelleryCategoryAnimation " asp-area="Customer" asp-controller="Jewellery" asp-action="CufflinksJewellery">
+                                    Explore All
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                        <div class="jewelleryCategory-eachItem-Container">
+
+                            <div class="jewelleryCategory-eachItem-ImgContainer  jewelleryCategory-eachItem-ImgChains">
+                            </div>
+
+                            <div class="jewelleryCategory-eachItem-InfoContainer">
+
+                                <h5 class="jewelleryCategory-Title">Chains</h5>
+
+                                <a class="nav-link jewelleryCategory-eachItem-Links navLink-jewelleryCategoryAnimation " asp-area="Customer" asp-controller="Jewellery" asp-action="ChainsJewellery">
+                                    Explore All
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="jewelleryCategory-slide">
+
+                    <div class="jewelleryCategory-eachSlide-Content">
+
+                        <div class="jewelleryCategory-eachItem-Container">
+
+                            <div class="jewelleryCategory-eachItem-ImgContainer jewelleryCategory-eachItem-ImgCharms">
+                            </div>
+
+                            <div class="jewelleryCategory-eachItem-InfoContainer">
+
+                                <h5 class="jewelleryCategory-Title">Charms</h5>
+
+                                <a class="nav-link jewelleryCategory-eachItem-Links navLink-jewelleryCategoryAnimation " asp-area="Customer" asp-controller="Jewellery" asp-action="CharmsJewellery">
+                                    Explore All
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                        <div class="jewelleryCategory-eachItem-Container">
+
+                            <div class="jewelleryCategory-eachItem-ImgContainer jewelleryCategory-eachItem-ImgEarings">
+                            </div>
+
+                            <div class="jewelleryCategory-eachItem-InfoContainer">
+
+                                <h5 class="jewelleryCategory-Title">Earrings</h5>
+
+                                <a class="nav-link jewelleryCategory-eachItem-Links navLink-jewelleryCategoryAnimation " asp-area="Customer" asp-controller="Jewellery" asp-action="EarringsJewellery">
+                                    Explore All
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                        <div class="jewelleryCategory-eachItem-Container">
+
+                            <div class="jewelleryCategory-eachItem-ImgContainer jewelleryCategory-eachItem-ImgEngagementRings">
+                            </div>
+
+                            <div class="jewelleryCategory-eachItem-InfoContainer">
+
+                                <h5 class="jewelleryCategory-Title">Engagement Rings</h5>
+
+                                <a class="nav-link jewelleryCategory-eachItem-Links navLink-jewelleryCategoryAnimation " asp-area="Customer" asp-controller="Jewellery" asp-action="EngagementRingsJewellery">
+                                    Explore All
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                        <div class="jewelleryCategory-eachItem-Container">
+
+                            <div class="jewelleryCategory-eachItem-ImgContainer jewelleryCategory-eachItem-ImgNecklaces">
+                            </div>
+
+                            <div class="jewelleryCategory-eachItem-InfoContainer">
+
+                                <h5 class="jewelleryCategory-Title">Necklaces</h5>
+
+                                <a class="nav-link jewelleryCategory-eachItem-Links navLink-jewelleryCategoryAnimation " asp-area="Customer" asp-controller="Jewellery" asp-action="NecklacesJewellery">
+                                    Explore All
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button class="jewelleryCategory-slide-prev">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.7803 5.22431C12.0732 5.5172 12.0732 5.99208 11.7803 6.28497L8.06066 10.0046L11.7803 13.7243C12.0732 14.0172 12.0732 14.4921 11.7803 14.785C11.4874 15.0779 11.0126 15.0779 10.7197 14.785L6.46967 10.535C6.17678 10.2421 6.17678 9.7672 6.46967 9.47431L10.7197 5.22431C11.0126 4.93142 11.4874 4.93142 11.7803 5.22431Z" fill="red" />
+                </svg>
+            </button>
+            <button class="jewelleryCategory-slide-next">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M8.21967 5.22431C8.51256 4.93142 8.98744 4.93142 9.28033 5.22431L13.5303 9.47431C13.8232 9.7672 13.8232 10.2421 13.5303 10.535L9.28033 14.785C8.98744 15.0779 8.51256 15.0779 8.21967 14.785C7.92678 14.4921 7.92678 14.0172 8.21967 13.7243L11.9393 10.0046L8.21967 6.28497C7.92678 5.99208 7.92678 5.5172 8.21967 5.22431Z" fill="red" />
+                </svg>
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section id="collection-product-Container">
+
+    <div class="collection-product-Item">
+        <div class="collection-product-Wrapper">
+            <div class="collection-product-Img collection-product-watchesImg"></div>
+            <div class="collection-product-Info">
+                <h1 class="collection-product-Title">Exclusive Watches Collection</h1>
+                <a class="nav-link text-black navLink-Animation collection-product-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="ExclusiveWatchesCollection">
+                    Explore All
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="collection-product-Item">
+        <div class="collection-product-Wrapper">
+            <div class="collection-product-Img collection-product-jewelleryImg"></div>
+            <div class="collection-product-Info">
+                <h1 class="collection-product-Title">Exclusive Jewellery Collection</h1>
+                <a class="nav-link text-black navLink-Animation collection-product-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="ExclusiveJewelleryCollection">
+                    Explore All
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="collection-product-Item">
+        <div class="collection-product-Wrapper">
+            <div class="collection-product-Img collection-product-accessoriesImg"></div>
+            <div class="collection-product-Info">
+                <h1 class="collection-product-Title">Accessories</h1>
+                <a class="nav-link text-black navLink-Animation collection-product-exploreAll" asp-area="Customer" asp-controller="Accessories" asp-action="Index">
+                    Explore All
+                </a>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<section id="news-Container">
+
+    <div class="title-Container newsTitle-Container">
+
+        <h5 class="text-black">Latest News</h5>
+
+        <a class="nav-link text-black shopBy-Btn navLink-Animation" asp-area="" asp-controller="" asp-action="">
+            Explore All
+            <svg class="shopBy-btnIcon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M17 4.25C17 3.00736 15.9926 2 14.75 2H9.25C8.00736 2 7 3.00736 7 4.25V6.25C7 6.66421 7.33579 7 7.75 7C8.16421 7 8.5 6.66421 8.5 6.25V4.25C8.5 3.83579 8.83579 3.5 9.25 3.5H14.75C15.1642 3.5 15.5 3.83579 15.5 4.25V15.75C15.5 16.1642 15.1642 16.5 14.75 16.5H9.25C8.83579 16.5 8.5 16.1642 8.5 15.75V13.75C8.5 13.3358 8.16421 13 7.75 13C7.33579 13 7 13.3358 7 13.75V15.75C7 16.9926 8.00736 18 9.25 18H14.75C15.9926 18 17 16.9926 17 15.75V4.25Z" fill="#0F172A" />
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M1 10C1 9.58579 1.33579 9.25 1.75 9.25H11.2955L10.2483 8.30747C9.94039 8.03038 9.91543 7.55616 10.1925 7.24828C10.4696 6.94039 10.9438 6.91543 11.2517 7.19253L13.7517 9.44253C13.9098 9.58476 14 9.78738 14 10C14 10.2126 13.9098 10.4152 13.7517 10.5575L11.2517 12.8075C10.9438 13.0846 10.4696 13.0596 10.1925 12.7517C9.91543 12.4438 9.94039 11.9696 10.2483 11.6925L11.2955 10.75H1.75C1.33579 10.75 1 10.4142 1 10Z" fill="#0F172A" />
+            </svg>
+        </a>
+
+    </div>
+
+    <div class="news-Wrapper">
+
+        <div class="news-item-Container">
+
+            <div class="news-itemTop-Left">
+                <div class="news-itemTop-Img news-itemTop-Img-1"></div>
+            </div>
+
+            <div class="news-itemTop-Right">
+                <h2 class="news-item-Title">Tissot pr516 chronograph mechanical & quartz: crafted for long distance races</h2>
+                <p class="news-item-Info">
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+                    standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+                    standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. <span class="readMore-Btn">Read More</span>
+                </p>
+            </div>
+
+        </div>
+
+        <div class="news-item-Container news-itemBottom-Container">
+
+            <div class="news-itemBottom-Left">
+                <h2 class="news-item-Title text-black">Rolex leading the way as an independent swiss watch manufacturer, setting standards of excellence in craftsmanship and quality</h2>
+                <p class="news-item-Info  text-black">
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+                    standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+                    standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. <span class="readMore-Btn">Read More</span>
+                </p>
+            </div>
+
+            <div class="news-itemBottom-Right">
+                <div class="news-itemTop-Img news-itemTop-Img-2"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+@section Scripts {
+
+    <script>
+
+        ///////////////////////////////////
+        // _Layout Searchbar Component
+        const filterUrl = '@Url.Action("Filter", "Home")';
+
+        ///////////////////////////////////
+        // HomePg Scroll Effect Component
+        function homePgScrollEffect() {
+
+            gsap.registerPlugin(ScrollTrigger);
+
+            const homePgElements = ['.productCard-sliderControls-Container-WatchProducts', '#watchBrands-topItem-Container', '#watchBrands-bottomItem-Container', '.productCard-sliderControls-Container-JewelleryProducts', '.collection-product-Item'];
+
+            homePgElements.forEach(homePgElement => {
+                gsap.utils.toArray(homePgElement).forEach(element => {
+                    let tl = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: element,
+                            start: window.innerHeight.bottom,
+                            end: 'bottom ' + (window.innerHeight - 70) + 'px',
+                            scrub: true,
+                            //markers:true,
+                        }
+                    });
+                    tl.from(element, { ease: 'power3.out', y: 200, opacity: 0, });
+                });
+            });
+
+        }
+ 
+        ///////////////////////////////////
+        // HomePg Slider Component
+        const slider = function () {
+            const createSlider = (slidesClass, btnLeftClass, btnRightClass, dotContainerClass) => {
+                const slides = document.querySelectorAll(slidesClass);
+                const btnLeft = document.querySelector(btnLeftClass);
+                const btnRight = document.querySelector(btnRightClass);
+                const dotContainer = document.querySelector(dotContainerClass);
+
+                let curSlide = 0;
+                const maxSlide = slides.length;
+
+                //Create indicators
+                const createDots = function () {
+                    slides.forEach(function (_, i) {
+                        dotContainer.insertAdjacentHTML(
+                            'beforeend',
+                            `<button class="dots__dot-hmPg" data-slide="${i}"></button>`
+                        );
+                    });
+                };
+
+                const activateDot = function (dotContainer, slide) {
+                    dotContainer
+                        .querySelectorAll('.dots__dot-hmPg')
+                        .forEach(dot => dot.classList.remove('dots__dot-hmPg--active'));
+
+                    dotContainer
+                        .querySelector(`.dots__dot-hmPg[data-slide="${slide}"]`)
+                        .classList.add('dots__dot-hmPg--active');
+                };
+
+                const goToSlide = function (slide) {
+                    slides.forEach(
+                        (s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`)
+                    );
+                };
+
+                //Next slide
+                const nextSlide = function () {
+                    if (curSlide === maxSlide - 1) {
+                        curSlide = 0;
+                    } else {
+                        curSlide++;
+                    }
+
+                    goToSlide(curSlide);
+                    activateDot(dotContainer, curSlide);
+                };
+
+                const prevSlide = function () {
+                    if (curSlide === 0) {
+                        curSlide = maxSlide - 1;
+                    } else {
+                        curSlide--;
+                    }
+                    goToSlide(curSlide);
+                    activateDot(dotContainer, curSlide);
+                };
+
+                const init = function () {
+                    goToSlide(0);
+                    createDots();
+
+                    activateDot(dotContainer, 0);
+                };
+                init();
+
+                //Event handlers
+                btnRight.addEventListener('click', nextSlide);
+                btnLeft.addEventListener('click', prevSlide);
+
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'ArrowLeft') prevSlide();
+                    e.key === 'ArrowRight' && nextSlide();
+                });
+
+                dotContainer.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('dots__dot-hmPg')) {
+                        const { slide } = e.target.dataset;
+                        goToSlide(slide);
+                        activateDot(dotContainer, slide);
+                    }
+                });
+            };
+
+            createSlider('.slide-hmPg', '.slider__btn--left-hmPg', '.slider__btn--right-hmPg', '.dots-hmPg');
+        };
+
+        slider();
+
+        ///////////////////////////////////
+        // HomePg Category Component
+        const categoryItems = document.querySelectorAll(".categoryItem");
+        const categoryItem_MediaContainer = document.querySelectorAll(".categoryItem-Media-Container");
+
+        categoryItems.forEach((item, index) => {
+
+            item.addEventListener("mouseleave", () => {
+
+                categoryItem_MediaContainer[index].classList.remove("categoryItem-Media-ContainerActive");
+
+            });
+
+            item.addEventListener("mouseover", () => {
+
+                categoryItem_MediaContainer[index].classList.add("categoryItem-Media-ContainerActive");
+
+            });
+
+        });
+
+        ///////////////////////////////////////////////////
+        //HomePg jewelleryCategory eachItem Component
+        const jewelleryCategory_eachItemContainer = document.querySelectorAll(".jewelleryCategory-eachItem-Container");
+
+        const jewelleryCategory_eachItem_ImgContainer = document.querySelectorAll(".jewelleryCategory-eachItem-ImgContainer");
+        const jewelleryCategory_Title = document.querySelectorAll(".jewelleryCategory-Title");
+        const jewelleryCategory_eachItem_Links = document.querySelectorAll(".jewelleryCategory-eachItem-Links");
+
+        jewelleryCategory_eachItemContainer.forEach((item, index) => {
+
+            item.addEventListener("mouseleave", () => {
+
+                jewelleryCategory_eachItem_ImgContainer[index].classList.remove("jewelleryCategory-eachItem-ImgContainerActive");
+                jewelleryCategory_Title[index].classList.remove("jewelleryCategory-titleActive");
+                jewelleryCategory_eachItem_Links[index].classList.remove("jewelleryCategory-linksActive");
+
+            });
+
+            item.addEventListener("mouseover", () => {
+
+                jewelleryCategory_eachItem_ImgContainer[index].classList.add("jewelleryCategory-eachItem-ImgContainerActive");
+                jewelleryCategory_Title[index].classList.add("jewelleryCategory-titleActive");
+                jewelleryCategory_eachItem_Links[index].classList.add("jewelleryCategory-linksActive");
+
+            });
+        })
+
+    </script>
+
+}

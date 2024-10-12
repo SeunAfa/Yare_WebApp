@@ -1,0 +1,478 @@
+﻿/* Reset default margin and padding */
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: red;
+    }
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+/*Start of Notifications*/
+.toast {
+    background-color: #030303;
+}
+
+.toast-info {
+    background-color: #3276b1;
+}
+
+.toast-info2 {
+    background-color: #2f96b4;
+}
+
+.toast-error {
+    background-color: #bd362f;
+}
+
+.toast-success {
+    background-color: #51a351;
+}
+
+.toast-warning {
+    background-color: #f89406;
+}
+/*End of Notifications*/
+
+#admin-mainView {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    display:none;
+}
+
+/*Start of Side Nav*/
+aside {
+    overflow: hidden;
+    width: 20%;
+    min-height: 100vh;
+    align-items: center;
+    background-color: black;
+}
+
+#side-navContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.sidebar-itemTitle {
+    overflow: hidden;
+    height: 38px;
+    width: 100%;
+    background-color: black;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    list-style-type: none;
+}
+
+.sidebar-item {
+    overflow: hidden;
+    height: 38px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 10px;
+    list-style-type: none;
+    padding: 5px;
+}
+
+    .sidebar-item:hover {
+        border-radius: 5px;
+        background-color: rgb(60, 60, 60, 0.4);
+    }
+
+    .sidebar-item:active {
+        border-radius: 5px;
+        background-color: rgb(60, 60, 60, 0.4);
+    }
+
+.sidebar-Icon {
+    font-size: 18px;
+    padding-right: 5px;
+}
+
+.sidebar-link {
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+}
+
+/*Dropdown*/
+.productManagment-Container {
+    height: fit-content;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.productManagment-Btn {
+    overflow: hidden;
+    height: 38px;
+    width: 100%;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    list-style-type: none;
+    text-decoration: none;
+    color: white;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.sidebar-arrowIcon {
+    font-size: 10px;
+    margin-left: auto;
+}
+
+.productManagment-Btn:hover {
+    border-radius: 5px;
+    background-color: rgb(60, 60, 60, 0.4);
+    color:red;
+}
+
+.productManagment-Btn:active {
+    border-radius: 5px;
+    background-color: rgb(60, 60, 60, 0.4);
+}
+
+.productManagment-List {
+    display: none;
+    padding-left: 30px;
+    list-style-type: none;
+    text-decoration: none;
+}
+
+.productManagment-Container.open .productManagment-List {
+    display: block; /* Show the list when the container has the 'open' class */
+}
+
+.productManagment-item {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 38px;
+    width: 100%;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+    .productManagment-item:hover {
+        border-radius: 5px;
+        background-color: rgb(60, 60, 60, 0.4);
+    }
+
+.logoutForm-btn {
+    all: unset;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+}
+/*End of Side Nav*/
+
+/*Start Admin Content View*/
+#admin-contentView {
+    overflow: hidden;
+    width: 80%;
+}
+
+nav {
+    height: 45px;
+    width: 100%;
+    background-color: black;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.main-content {
+    padding: 15px;
+}
+
+/*Index View*/
+.breadcrumbs {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+    .breadcrumbs a {
+        text-decoration: none;
+        color: #333;
+        margin-right: 5px;
+    }
+
+        .breadcrumbs a:hover {
+            text-decoration: underline;
+        }
+
+    .breadcrumbs span {
+        margin-right: 5px;
+    }
+
+.listTitle-Container {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#searchContainer {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: auto;
+    width: 300px;
+    height: 30px;
+    padding: 1px;
+}
+
+#searchWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.searchContainer {
+    border: solid 1px black;
+    border-radius: 20px;
+    transition: ease-in-out 150ms all;
+}
+
+.searchContainer-active {
+    border-bottom: solid 1px black;
+    transition: ease-in-out 150ms all;
+}
+
+.search-icon {
+    padding: 1px;
+    margin-left: 4px;
+}
+
+#searchInput {
+    border: none;
+    width: 350px;
+    margin: auto;
+    background-color: white;
+    font-size:12px;
+}
+
+    #searchInput:focus {
+        outline: none;
+    }
+
+.search-close-icon {
+    cursor: pointer;
+    padding: 1px;
+    margin-right: 4px;
+    color: black;
+}
+/*Create Edit Details Views*/
+
+/*Adnim Card Area*/
+#adminCardContainer {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 5px;
+    z-index: -1;
+}
+
+#adminCardWrapper {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+/*Inputs*/
+.form-group {
+    margin-top: 10px;
+}
+
+.form-control.text-black.border-dark:focus {
+    outline-color: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.3);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    box-shadow: 0 0 0px 1000px white inset !important;
+    -webkit-text-fill-color: black !important;
+}
+
+.dropdown-btn {
+    width: 100%;
+}
+
+.btn.dropdown-toggle::after {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+}
+
+#collection-btn {
+    overflow: hidden;
+    width: 96%;
+}
+
+.dropdown-menu-Collections {
+    overflow-y: scroll;
+    height: 150px;
+    width: 100%;
+}
+
+/*Top-Left*/
+#adminCardContainer-Left {
+    overflow: hidden;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.adminCardContainer-productDetails-leftRow {
+
+}
+
+.adminCardContainer-Left-productDetails {
+    width: 50%;
+}
+
+.adminCardContainer-Right-productDetails {
+    width: 50%;
+}
+
+/*Top-Right*/
+#adminCardContainer-Right {
+    overflow: hidden;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.imgDisplay-viewerContainer {
+    overflow: hidden;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.mainImgDisplay-viewerWrapper {
+    overflow: hidden;
+    width: 100%;
+    height: 360px;
+    object-fit: cover;
+}
+
+.imgDisplay-uploadViewer-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 16%;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    justify-content: center;
+    padding: 4px;
+    margin-top: 10px;
+}
+
+.imgDisplay-uploadViewer-Btn {
+    overflow: hidden;
+    width: calc(100% / 6);
+    height: 100%;
+    border: solid 1px black;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.imgDisplay-uploadViewer-activeBtn {
+    border: solid 2px red;
+}
+
+.imgDisplay-uploadViewer-Btn img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/*Pagination*/
+.pagination {
+    display: flex;
+    list-style: none;
+}
+
+.page-item {
+    margin-right: 5px;
+}
+
+    .page-item a {
+        color: black;
+        background-color: white;
+        border-color: white;
+        outline: none;
+    }
+
+        .page-item a:focus {
+            box-shadow: none;
+        }
+
+        .page-item a:hover {
+            color: red;
+        }
+
+    .page-item.Active a {
+        color: white;
+        background-color: black;
+        border-color: black;
+    }
+    /*No Search Results*/
+.adminNo-searchResults{
+    height:50vh;
+}
+/*End Admin Content View*/

@@ -1,0 +1,69 @@
+﻿@model Yare.Models.ViewModels.HomePgVM
+
+<p class="text-black text-center" style="margin-top:5x;">Best Selling Products</p>
+
+<div class="productCard-sliderContainer searchProduct-sliderContainer">
+
+    <div class="productCard-slides searchProduct-productCard-slides">
+
+        @if (Model.SearchBestSellingProducts != null && Model.SearchBestSellingProducts.Any())
+        {
+
+            @for (int i = 0; i < 2 && i < Math.Ceiling((double)Model.SearchBestSellingProducts.Count() / 2); i++)
+            {
+                <div class="productCard-slide searchProduct-productCard-slide">
+                    <div class="productCard-eachSlide-Content">
+                        @foreach (var product in Model.SearchBestSellingProducts.Skip(i * 4).Take(4))
+                        {
+                            string shortenedProductName = product.ProductName.Length > 21 ? $"{product.ProductName.Substring(0, 21)}..." : product.ProductName;
+
+                            <div class="productCard-Container">
+                                <a asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-productId="@product.Id">
+                                    <div class="productCard-imgs-Container">
+                                        <img class="productCard-imgs watchProduct-imgs" src="@product.PrimaryDisplayImageUrl" data-hover-image-url="@product.SecondaryDisplayImageUrl" />
+                                    </div>
+                                    <div class="productCard-info-Container">
+                                        <div class="productCard-info-Top">
+                                            <p class="text-black text-uppercase text-center productCard-info-productName">@shortenedProductName</p>
+                                        </div>
+                                        <div class="productCard-info-Bottom">
+                                            <p class="text-black text-center productCard-info-Price">@product.Price.ToString("c")</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-black text-center">No products found</p>
+        }
+
+
+
+
+    </div>
+
+    <button class="productCard-slide-prev searchProduct-productCard-slide-productCard-slide-prev ">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M11.7803 5.22431C12.0732 5.5172 12.0732 5.99208 11.7803 6.28497L8.06066 10.0046L11.7803 13.7243C12.0732 14.0172 12.0732 14.4921 11.7803 14.785C11.4874 15.0779 11.0126 15.0779 10.7197 14.785L6.46967 10.535C6.17678 10.2421 6.17678 9.7672 6.46967 9.47431L10.7197 5.22431C11.0126 4.93142 11.4874 4.93142 11.7803 5.22431Z" fill="red" />
+        </svg>
+    </button>
+    <button class="productCard-slide-next searchProduct-productCard-slide-productCard-slide-next ">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M8.21967 5.22431C8.51256 4.93142 8.98744 4.93142 9.28033 5.22431L13.5303 9.47431C13.8232 9.7672 13.8232 10.2421 13.5303 10.535L9.28033 14.785C8.98744 15.0779 8.51256 15.0779 8.21967 14.785C7.92678 14.4921 7.92678 14.0172 8.21967 13.7243L11.9393 10.0046L8.21967 6.28497C7.92678 5.99208 7.92678 5.5172 8.21967 5.22431Z" fill="red" />
+        </svg>
+    </button>
+
+</div>
+
+@section Scripts {
+
+    <script>
+
+
+    </script>
+}

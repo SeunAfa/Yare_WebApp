@@ -1,0 +1,527 @@
+﻿@using Yare.Models.Enums
+@using Yare_WebApplication.Data.Utility
+@model Yare.Models.ViewModels.OrderManagmentVM
+@{
+    ViewData["Title"] = "Order Details";
+
+    DateTime orderDate = Model.OrderHeader.OrderDate;
+    DateTime estimatedStartDate = orderDate.AddDays(7);
+    DateTime estimatedEndDate = orderDate.AddDays(14);
+}
+<style>
+    .swal2-confirm.btn-black {
+        background-color: black !important;
+        color: white !important;
+    }
+</style>
+@if (User.IsInRole(SD.Role_MasterAdmin) || User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+{
+    <div class="breadcrumbs" style="padding-bottom:10px;">
+        <a asp-area="Admin" asp-controller="OrderManagment" asp-action="Index">Order Managment</a>
+        <span>/</span>
+        <a>Order Summary Details<b> @Model.OrderHeader.OrderDate.ToString("dddd dd MMM yyyy")</b></a>
+    </div>
+    <h4 class="text-black">Estimate Arrival Date: @estimatedStartDate.ToString("dddd dd MMM yyyy") - @estimatedEndDate.ToString("dddd dd MMM yyyy")</h4>
+    <hr />
+
+    <form method="post">
+        <input asp-for="OrderHeader.Id" hidden />
+        <div id="orderDetails-Container">
+
+            <div class="orderDetails-Left p-2">
+                <h3 class="text-black">Delivery Details</h3>
+                <div class="form-group">
+                   
+                        <label asp-for="OrderHeader.FirstName" class="control-label text-black"></label>
+                        <input asp-for="OrderHeader.FirstName" type="text" class="form-control text-black border-dark" />
+                        <span asp-validation-for="OrderHeader.FirstName" class="text-danger"></span>
+                 
+                </div>
+
+                <div class="form-group ">
+                   
+                        <label asp-for="OrderHeader.LastName" class="control-label text-black"></label>
+                        <input asp-for="OrderHeader.LastName" type="text" class="form-control text-black border-dark" />
+                        <span asp-validation-for="OrderHeader.LastName" class="text-danger"></span>
+                  
+                </div>
+
+                <div class="form-group ">
+                  
+                        <label asp-for="OrderHeader.ApplicationUser.Email" class="control-label text-black"></label>
+                        <input asp-for="OrderHeader.ApplicationUser.Email" type="text" class="form-control text-black border-dark" />
+                        <span asp-validation-for="OrderHeader.ApplicationUser.Email" class="text-danger"></span>
+                    
+                </div>
+
+                <div class="form-group ">
+               
+                        <label asp-for="OrderHeader.PhoneNumber" class="control-label text-black"></label>
+                        <input asp-for="OrderHeader.PhoneNumber" type="text" class="form-control text-black border-dark" />
+                        <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
+                  
+                </div>
+
+                <div class="form-group ">
+                  
+                        <label asp-for="OrderHeader.StreetAdress" class="control-label text-black"></label>
+                        <input asp-for="OrderHeader.StreetAdress" type="text" class="form-control text-black border-dark" />
+                        <span asp-validation-for="OrderHeader.StreetAdress" class="text-danger"></span>
+                   
+                </div>
+
+                <div class="form-group ">
+                 
+                        <label asp-for="OrderHeader.Borough" class="control-label text-black"></label>
+                        <input asp-for="OrderHeader.Borough" type="text" class="form-control text-black border-dark" />
+                        <span asp-validation-for="OrderHeader.Borough" class="text-danger"></span>
+                  
+                </div>
+
+                <div class="form-group ">
+                 
+                        <label asp-for="OrderHeader.City" class="control-label text-black"></label>
+                        <input asp-for="OrderHeader.City" type="text" class="form-control text-black border-dark" />
+                        <span asp-validation-for="OrderHeader.City" class="text-danger"></span>
+             
+                </div>
+
+                <div class="form-group ">
+                   
+                        <label asp-for="OrderHeader.PostCode" class="control-label text-black"></label>
+                        <input asp-for="OrderHeader.PostCode" type="text" class="form-control text-black border-dark" />
+                        <span asp-validation-for="OrderHeader.PostCode" class="text-danger"></span>
+                
+                </div>
+
+                <div class="form-group ">
+                    <label class="control-label text-black">Order Date</label>
+                    <input value="@Model.OrderHeader.OrderDate.ToShortDateString()" readonly type="text" class="form-control text-black border-dark" />
+                </div>
+
+                <div class="form-group ">
+                    <label class="control-label text-black">Payment Date</label>
+                    <input value="@Model.OrderHeader.PaymentDate.ToShortDateString()" readonly class="form-control text-black border-dark" />
+                </div>
+
+                <div class="form-group ">
+                    <label class="control-label text-black">Shipping Date</label>
+                    <input value="@Model.OrderHeader.ShippingDate.ToShortDateString()" readonly type="text" class="form-control text-black border-dark" />
+                </div>
+
+                <div class="form-group ">
+                    <label class="control-label text-black">Payment Status</label>
+                    <input asp-for="OrderHeader.PaymentStatus" type="text" readonly class="form-control text-black border-dark" />
+                </div>
+
+                <div class="form-group ">
+                  
+                        <label class="control-label text-black">PaymentIntent Id</label>
+                        <input asp-for="OrderHeader.PaymentIntentId" readonly class="form-control text-black border-dark" />
+                    
+                </div>
+
+                <div class="form-group ">
+                
+                        <label class="control-label text-black">Session Id</label>
+                        <input asp-for="OrderHeader.SessionId" readonly class="form-control text-black border-dark" />
+                    
+                </div>
+
+                    <input asp-controller="OrderManagment" asp-action="UpdateOrderDetails" type="submit" id="orderDetailsBtn" class="UpdateOrderDetails-Btn  mt-4" value="Update Order Details" />
+
+            </div>
+
+            <div class="orderDetails-Right  p-2">
+
+                <div id="orderDetails-productItems-Container">
+
+                    <h3 class="text-black">Order Summary</h3>
+
+                    <div id="orderDetails-productItems-Top">
+
+                        @foreach (var item in Model.OrderDetail)
+                        {
+                            string shortenedProductName = item.Product.ProductName.Length > 28 ? $"{item.Product.ProductName.Substring(0, 28)}..." : item.Product.ProductName;
+
+                            int countPrice = (int)(item.Product.Price * item.Count);
+
+                            <div class="orderDetails-Item">
+                                <div class="orderDetails-imgItem-Container">
+                                    <img class="orderDetails-imgItem-Wrapper" src="@item.Product.PrimaryDisplayImageUrl" />
+                                </div>
+                                <div class="orderDetails-infoItem-Container">
+                                    <div class="orderDetails-infoItem-Left">
+                                        <a asp-area="Customer" asp-action="Details" asp-controller="Home" asp-route-productId="@item.Product.Id" class="text-black orderDetails-info-Text">@shortenedProductName</a>
+                                        <p class="text-black orderDetails-info-Text">@item.Product.ProductNumber</p>
+                                        <p class="text-black orderDetails-info-Text">@item.Product.Gender @item.Product.ProductCategory</p>
+                                        <p class="text-black orderDetails-info-Text">@countPrice.ToString("c")</p>
+                                    </div>
+                                    <div class="orderDetails-infoItem-Right">
+
+                                        <div class="orderDetails-infoItem-Right-Wrapper">
+
+                                            <p class="orderDetails-Count">Count:</p>
+                                            <p id="" style="font-size:16px;"><strong>@item.Count</strong></p>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+
+                    <div id="orderDetails-productItems-bottom">
+
+                        <div class="form-group ">
+                    
+                                @if (Model.OrderHeader.OrderStatus == SD.StatusApproved)
+                                {
+
+                                }
+                                else if (Model.OrderHeader.OrderStatus == SD.StatusInProcess)
+                                {
+
+
+                                    <label asp-for="OrderHeader.Carrier" class="control-label text-black"></label>
+                                    <select asp-for="OrderHeader.Carrier" id="Carrier" class="form-control text-black border-dark" asp-items="Html.GetEnumSelectList<Carrier>()">
+                                        <option value="" selected>Select Carrier</option>
+                                    </select>
+                                    <span asp-validation-for="OrderHeader.Carrier" class="text-danger"></span>
+
+                                }
+                                else if (Model.OrderHeader.OrderStatus != SD.StatusRefunded || Model.OrderHeader.OrderStatus != SD.StatusCancelled)
+                                {
+
+                                    <label asp-for="OrderHeader.Carrier" class="control-label text-black"></label>
+                                    <select asp-for="OrderHeader.Carrier" id="Carrier" class="form-control text-black border-dark border-dark" asp-items="Html.GetEnumSelectList<Carrier>()" readonly disabled>
+                                        <option selected readonly disabled>--Select Carrier--</option>
+                                    </select>
+                                    <span asp-validation-for="OrderHeader.Carrier" class="text-danger"></span>
+
+                                }
+              
+                        </div>
+
+                        <div class="form-group ">
+                           
+                                @if (Model.OrderHeader.OrderStatus == SD.StatusApproved)
+                                {
+
+                                }
+                                else if (Model.OrderHeader.OrderStatus == SD.StatusInProcess)
+                                {
+
+
+                                    <label asp-for="OrderHeader.TrackingNumber" class="control-label text-black"></label>
+                                    <input asp-for="OrderHeader.TrackingNumber" type="text" id="TrackingNumber" class="form-control text-black border-dark" readonly />
+                                    <span asp-validation-for="OrderHeader.TrackingNumber" class="text-danger"></span>
+
+                                }
+                                else if (Model.OrderHeader.OrderStatus != SD.StatusRefunded || Model.OrderHeader.OrderStatus != SD.StatusCancelled)
+                                {
+
+                                    <label asp-for="OrderHeader.TrackingNumber" class="control-label text-black"></label>
+                                    <input asp-for="OrderHeader.TrackingNumber" type="text" id="TrackingNumber" class="form-control text-black border-dark" readonly disabled />
+                                    <span asp-validation-for="OrderHeader.TrackingNumber" class="text-danger"></span>
+
+                                }
+                           
+                        </div>
+
+                        <table style="width:100%;">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:50%;">Order Status</td>
+                                    <td class="text-black" style="font-size:25px;width:50%;text-align:right;"><strong>@Model.OrderHeader.OrderStatus</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-black" style="width:50%;">Delivery</td>
+                                    <td class="text-black" style="font-size:25px;width:50%;text-align:right;"><strong>Free</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-black" style="width:50%;">Total</td>
+                                    <td class="text-black" style="font-size:25px;width:50%;text-align:right;"><strong>@(Model.OrderHeader != null ? Model.OrderHeader.OrderTotal.ToString("c") : "0")</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                      
+                            @if (Model.OrderHeader.OrderStatus == SD.StatusApproved)
+                            {
+                                <input asp-action="StartProccessing" id="orderDetailsBtn" class="StartProccessing-Btn  mt-4" value="Start Processing" type="submit" />
+                            }
+                            @if (Model.OrderHeader.OrderStatus == SD.StatusInProcess)
+                            {
+                                <input asp-action="ShipOrder" id="orderDetailsBtn" class="ShipOrder-Btn  mt-4" value="Ship Order" type="submit" onclick="return ValidateInput()" />
+                            }
+                            @if (Model.OrderHeader.OrderStatus != SD.StatusRefunded || Model.OrderHeader.OrderStatus != SD.StatusCancelled)
+                            {
+                                <input asp-action="CancelOrder" id="orderDetailsBtn" class="CancelOrder-Btn mt-2" value="Cancel Order" type="submit" />
+                            }
+                        
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </form>
+
+
+
+
+}
+else
+{
+    <div class="breadcrumbs" style="padding-bottom:10px;">
+        <a asp-area="Admin" asp-controller="OrderManagment" asp-action="OrderHistory">My Order History</a>
+        <span>/</span>
+        <a>Order Summary Details<b> @Model.OrderHeader.OrderDate.ToString("dddd dd MMM yyyy")</b></a>
+    </div>
+    <h4 class="text-black">Estimate Arrival Date: @estimatedStartDate.ToString("dddd dd MMM yyyy") - @estimatedEndDate.ToString("dddd dd MMM yyyy")</h4>
+    <hr />
+
+    <form method="post">
+        <input asp-for="OrderHeader.Id" hidden />
+        <div id="orderDetails-Container">
+
+            <div class="orderDetails-Left p-2">
+                <h3 class="text-black">Delivery Details</h3>
+                <div class="form-group">
+                    <label asp-for="OrderHeader.FirstName" class="control-label text-black"></label>
+                    <input asp-for="OrderHeader.FirstName" readonly type="text" class="form-control text-black border-dark" readonly disabled />
+
+                </div>
+
+                <div class="form-group ">
+
+                    <label asp-for="OrderHeader.LastName" class="control-label text-black"></label>
+                    <input asp-for="OrderHeader.LastName" readonly type="text" class="form-control text-black border-dark" readonly disabled />
+
+                </div>
+
+                <div class="form-group ">
+
+                    <label asp-for="OrderHeader.ApplicationUser.Email" class="control-label text-black"></label>
+                    <input asp-for="OrderHeader.ApplicationUser.Email" readonly type="text" class="form-control text-black border-dark" readonly disabled />
+
+                </div>
+
+                <div class="form-group ">
+
+                    <label asp-for="OrderHeader.PhoneNumber" class="control-label text-black"></label>
+                    <input asp-for="OrderHeader.PhoneNumber" readonly type="text" class="form-control text-black border-dark" readonly disabled />
+
+                </div>
+
+                <div class="form-group ">
+
+                    <label asp-for="OrderHeader.StreetAdress" class="control-label text-black"></label>
+                    <input asp-for="OrderHeader.StreetAdress" readonly type="text" class="form-control text-black border-dark" readonly disabled />
+
+                </div>
+
+                <div class="form-group ">
+
+                    <label asp-for="OrderHeader.Borough" class="control-label text-black"></label>
+                    <input asp-for="OrderHeader.Borough" readonly type="text" class="form-control text-black border-dark" readonly disabled />
+
+                </div>
+
+                <div class="form-group ">
+
+                    <label asp-for="OrderHeader.City" class="control-label text-black"></label>
+                    <input asp-for="OrderHeader.City" readonly type="text" class="form-control text-black border-dark" readonly disabled />
+
+                </div>
+
+                <div class="form-group ">
+
+                    <label asp-for="OrderHeader.PostCode" class="control-label text-black"></label>
+                    <input asp-for="OrderHeader.PostCode" readonly type="text" class="form-control text-black border-dark" readonly disabled />
+
+                </div>
+
+                <div class="form-group ">
+                    <label class="control-label text-black">Order Date</label>
+                    <input value="@Model.OrderHeader.OrderDate.ToShortDateString()" readonly type="text" class="form-control text-black border-dark" readonly disabled />
+                </div>
+
+                <div class="form-group ">
+                    <label class="control-label text-black">Payment Date</label>
+                    <input value="@Model.OrderHeader.PaymentDate.ToShortDateString()" readonly class="form-control text-black border-dark" readonly disabled />
+                </div>
+
+                <div class="form-group ">
+                    <label class="control-label text-black">Shipping Date</label>
+                    <input value="@Model.OrderHeader.ShippingDate.ToShortDateString()" readonly type="text" class="form-control text-black border-dark" readonly disabled />
+                </div>
+
+                <div class="form-group ">
+                    <label class="control-label text-black">Payment Status</label>
+                    <input asp-for="OrderHeader.PaymentStatus" type="text" readonly class="form-control text-black border-dark" readonly disabled />
+                </div>
+
+
+
+            </div>
+
+            <div class="orderDetails-Right  p-2">
+
+                <div id="orderDetails-productItems-Container">
+
+                    <h3 class="text-black">Order Summary</h3>
+
+                    <div id="orderDetails-productItems-Top">
+
+                        @foreach (var item in Model.OrderDetail)
+                        {
+                            string shortenedProductName = item.Product.ProductName.Length > 28 ? $"{item.Product.ProductName.Substring(0, 28)}..." : item.Product.ProductName;
+
+                            int countPrice = (int)(item.Product.Price * item.Count);
+
+                            <div class="orderDetails-Item">
+                                <div class="orderDetails-imgItem-Container">
+                                    <img class="orderDetails-imgItem-Wrapper" src="@item.Product.PrimaryDisplayImageUrl" />
+                                </div>
+                                <div class="orderDetails-infoItem-Container">
+                                    <div class="orderDetails-infoItem-Left">
+                                        <a asp-area="Customer" asp-action="Details" asp-controller="Home" asp-route-productId="@item.Product.Id" class="text-black orderDetails-info-Text">@shortenedProductName</a>
+                                        <p class="text-black orderDetails-info-Text">@item.Product.ProductNumber</p>
+                                        <p class="text-black orderDetails-info-Text">@item.Product.Gender @item.Product.ProductCategory</p>
+                                        <p class="text-black orderDetails-info-Text">@countPrice.ToString("c")</p>
+                                    </div>
+                                    <div class="orderDetails-infoItem-Right">
+
+                                        <div class="orderDetails-infoItem-Right-Wrapper">
+
+                                            <p class="orderDetails-Count">Count</p>
+                                            <p id="" style="font-size:16px;"><strong>@item.Count</strong></p>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+
+                    <div id="orderDetails-productItems-bottom">
+
+                        <div class="form-group ">
+
+                            @if (Model.OrderHeader.Carrier != null)
+                            {
+                                <label asp-for="OrderHeader.Carrier" class="control-label text-black"></label>
+                                <select asp-for="OrderHeader.Carrier" id="Carrier" class="form-control text-black border-dark border-dark" asp-items="Html.GetEnumSelectList<Carrier>()" readonly disabled>
+                                    <option selected readonly disabled>--Select Carrier--</option>
+                                </select>
+                                <span asp-validation-for="OrderHeader.Carrier" class="text-danger"></span>
+                            }
+
+                        </div>
+
+                        <div class="form-group ">
+
+                            @if (Model.OrderHeader.TrackingNumber != null)
+                            {
+                                <label asp-for="OrderHeader.TrackingNumber" class="control-label text-black"></label>
+                                <input asp-for="OrderHeader.TrackingNumber" type="text" id="TrackingNumber" class="form-control text-black border-dark" readonly disabled />
+                                <span asp-validation-for="OrderHeader.TrackingNumber" class="text-danger"></span>
+                            }
+
+                        </div>
+
+                        <table style="width:100%;margin-top:15px;">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:50%;">Order Status</td>
+                                    <td class="text-black" style="font-size:25px;width:50%;text-align:right;"><strong>@Model.OrderHeader.OrderStatus</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-black" style="width:50%;">Delivery</td>
+                                    <td class="text-black" style="font-size:25px;width:50%;text-align:right;"><strong>Free</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-black" style="width:50%;">Total</td>
+                                    <td class="text-black" style="font-size:25px;width:50%;text-align:right;"><strong>@(Model.OrderHeader != null ? Model.OrderHeader.OrderTotal.ToString("c") : "0")</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </form>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+
+        function ValidateInput() {
+            if (document.getElementById("TrackingNumber").value == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please enter tracking number!',
+                    customClass: {
+                        confirmButton: 'btn-black'
+                    }
+                });
+                return false;
+            }
+            if (document.getElementById("Carrier").value == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please enter carrier!',
+                    customClass: {
+                        confirmButton: 'btn-black'
+                    }
+                });
+                return false;
+            }
+            return true;
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const carrierSelect = document.getElementById('Carrier');
+            const trackingNumberInput = document.getElementById('TrackingNumber');
+
+            function generateRandomString(length) {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let result = '';
+                for (let i = 0; i < length; i++) {
+                    result += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return result;
+            }
+
+            function generateTrackingNumber(carrier) {
+                return carrier + '-' + generateRandomString(5);
+            }
+
+            carrierSelect.addEventListener('change', function () {
+                const selectedCarrierIndex = carrierSelect.selectedIndex;
+                const selectedCarrierText = carrierSelect.options[selectedCarrierIndex].text;
+                if (selectedCarrierText) {
+                    trackingNumberInput.value = generateTrackingNumber(selectedCarrierText);
+                } else {
+                    trackingNumberInput.value = '';
+                }
+            });
+        });
+    </script>
+}

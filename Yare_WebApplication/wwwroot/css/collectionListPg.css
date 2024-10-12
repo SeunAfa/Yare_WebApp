@@ -1,0 +1,176 @@
+﻿#collectionsList-Container {
+    overflow: hidden;
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+     padding-top: 20px; 
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.collectionsList-Item {
+    position: relative;
+    width: 100%;
+    height: 380px;
+}
+
+.collectionsList-Item-Wrapper {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.collectionsList-Item-Img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+    .collectionsList-Item-Img::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+.collectionsList-itemImg-OurTopTenCollection {
+    background-image: url('https://media.bulgari.com/image/upload/f_auto,q_auto/cm/4916/data/1d05b7a1f5226c6345245891ad125189/landscape_ratio16x9/1000/2020-16-11-bvlgari72254-cc.jpg');
+}
+
+.collectionsList-itemImg-ExclusiveBrandsCollection {
+    background-image: url('https://www.watches-of-switzerland.co.uk/medias/baume-and-mercier-hero-desktop-jun22.jpg?context=bWFzdGVyfHJvb3R8MzU4NDk2fGltYWdlL2pwZWd8aDFmL2g2Yi85MTcwMjcyOTQ0MTU4LmpwZ3w0ZDY4Mjc0NThlZTQzYWE2YTdhYjBmZmQ2NGIyNDRlNjVhODQ0OGQwYTE3ZmU3NWE5MDQ4MGFjZDdiZjM0NDY1&imwidth=1200');
+}
+
+.collectionsList-itemImg-ExclusiveWatchesCollection {
+    background-image: url('https://wallpapercave.com/wp/wp6273931.jpg');
+}
+
+.collectionsList-itemImg-ExclusiveJewelleryCollection {
+    background-image: url('https://theglossarymagazine.com/wp-content/uploads/RHW-for-Tiffany-and-Co.webp');
+}
+
+.collectionsList-itemImg-LimitedEditionCollection {
+    background-image: url('https://www.cartier.com/content/images/cms/ycm/resource/blob/265540/f0bc0495b9f970fa9263ccd2564e6adf/01-top-banner-image-data.jpg/w1920.jpg');
+}
+
+.collectionsList-itemImg-ByOccasionCollection {
+    background-image: url('https://www.austenblake.com/catalog/view/theme/anb/image/landing-page/category-banner-1.jpg');
+}
+
+.collectionsList-itemImg-ALangeAndSohneCollection {
+    background-image: url('https://img.alange-soehne.com/product-light-box-2/o-dpr-2/13d54b402a8722e068ff63283dd0bf88e2d16057.jpg');
+}
+
+.collectionsList-itemImg-AudemarsPiguetCollection {
+    background-image: url('https://wallpapercave.com/wp/wp4112643.jpg');
+}
+
+.collectionsList-itemImg-BreguetCollection {
+    background-image: url('https://wallpapercave.com/wp/wp10333123.jpg');
+}
+
+.collectionsList-itemImg-BlancpainCollection {
+    background-image: url('https://swisswatches-magazine.com/wp-content/uploads/2023/02/Titelbild-7.jpg');
+}
+
+.collectionsList-itemImg-BvlgariCollection {
+    background-image: url('https://hodinkee.imgix.net/uploads/images/1598303453926-3zxpmkkz33y-d47a9e0b6fec2a093ffd88fd485c1b85/bulgari_new071016by9.jpg?ixlib=rails-1.1.0&fm=jpg&q=55&auto=format&usm=12');
+}
+
+.collectionsList-itemImg-BreitlingCollection {
+    background-image: url('https://www.chisholmhunter.co.uk/media/.renditions/wysiwyg/watches/luxury-watches/breitling/ChronomatB01_42_Titanium-Banner-Desktop.jpg');
+}
+
+.collectionsList-itemImg-CartierCollection {
+    background-image: url('https://www.cartier.com/content/images/cms/ycm/resource/blob/48284/68984ea393d381cb905365bc21b08a73/tank-banner-picture-data.jpg/w750.jpg');
+}
+
+.collectionsList-itemImg-OmegaCollection {
+    background-image: url('https://content.beaverbrooks.co.uk/static/images/category/brands/brands/omega/omega-hero-desktop-0923.jpg');
+}
+
+.collectionsList-itemImg-TAGHeuerCollection {
+    background-image: url('https://www.goldsmiths.co.uk/medias/tagheuer-hero-desktop-ww-apr24.jpg?context=bWFzdGVyfGltYWdlc3wyMjQyNjh8aW1hZ2UvanBlZ3xoYzAvaGU4LzkyNzA1ODc0OTAzMzQvdGFnaGV1ZXItaGVyby1kZXNrdG9wLXd3LWFwcjI0LmpwZ3xkY2MyM2ZhMzI3MmMxMWMwYmRkNjQ0YmU3YWQwZDdiMjU0ODg2ZTliYjQwNGZjMWFmMzcyZTllZDgyZWY4MjIz&imwidth=1200');
+}
+
+.collectionsList-itemImg-HublotCollection {
+    background-image: url('https://www.goldsmiths.co.uk/medias/hublot-hero-desktop-sep23-2.jpg?context=bWFzdGVyfHJvb3R8MzYwOTMzfGltYWdlL2pwZWd8aGJiL2gxYS85MjQxNTEwMjQ4NDc4LmpwZ3xlZTdlY2EyYTVjMzM2Y2IyMTQ1MTY0M2UxZjcyNmI1YzgwMDQwMmQ0MTEzOGNmMThlOGMwNWYxMzY3ODYyZDA1&imwidth=1200');
+}
+
+.collectionsList-itemImg-TudorCollection {
+    background-image: url('https://www.goldsmiths.co.uk/medias/uk-tudor-hero-desktop-may24.jpg?context=bWFzdGVyfGltYWdlc3wxNzMwMTIyfGltYWdlL2pwZWd8aDZkL2g5MC85MjczOTgyODc3NzI2L3VrLXR1ZG9yLWhlcm8tZGVza3RvcC1tYXkyNC5qcGd8ODNhYTE1Njc0OWZiZWUxODJmNmNkMGExNmRhYWI3NGNhYmQ0NGJmMzY3NzFiZDc3ZGI3MmE0MjA0Nzc1M2RhNQ&imwidth=1200');
+}
+
+.collectionsList-itemImg-BellAndRossCollection {
+    background-image: url('https://media.bellross.com/v7/https://vpsnewdev.bellross.com/image/catalog/category/BR-x1-collection/hero-BR%20X-1-collection.jpg');
+}
+
+.collectionsList-itemImg-BaumeAndMercierCollection {
+    background-image: url('https://www.baume-et-mercier.com/content/dam/ric-import/bem/a9d3/9d9f/2040757.jpeg.transform.bemfw.jpeg');
+}
+
+.collectionsList-itemImg-ChopardCollection {
+    background-position: top center;
+    background-image: url('https://objects-prod.cdn.chopard.com/image/upload/q_auto,f_auto,dpr_auto/e-merchandising_push/emerch_push_fathers_day_test4.png');
+}
+
+.collectionsList-itemImg-GirardPerregauxCollection {
+    background-image: url('https://hodinkee.imgix.net/uploads/images/969e6a97-c6ea-4901-8312-a070a4858f11/girard-perregaux-laureato-Absolute-8Tech-hero.jpg?ixlib=rails-1.1.0&fm=jpg&q=55&auto=format&usm=12&fit=crop&ch=Width%2CDPR%2CSave-Data&alt=');
+}
+
+.collectionsList-itemImg-JaegerLeCoultreCollection {
+    background-image: url('https://img.jaeger-lecoultre.com/gallery-image-large-md-2/o-dpr-2/140b3adbf8dc757aa2c6e6b233322b0fcb3db409.jpg');
+}
+
+.collectionsList-itemImg-CartierRingsCollection {
+    background-image: url('https://www.cartier.com/content/images/cms/ycm/resource/blob/341402/97b65ed96ce67de369ddee4954bdfc16/banner-image-data.jpg/w1920.jpg');
+}
+
+.collectionsList-itemImg-EngagementRingsCollection {
+    background-image: url('https://www.goldsmiths.co.uk/medias/goldmiths-brightest-diamond-1w-desktop-jul21-4.jpg?context=bWFzdGVyfHJvb3R8Mzc2NDc1fGltYWdlL2pwZWd8aDQ0L2g1Zi85MTAxNzgwMjg3NTE4LmpwZ3wyNTJiZWFmNTIxMjdmNmJjNzkzZmY2MjA2YjFlNmU1MzY1YzA4ZmU5ODYxZjZjNDdmZTAzNDg0NDI3Mjc5ZDRh&imwidth=1200');
+}
+
+.collectionsList-itemImg-BestSellersCollection {
+    background-image: url('https://www.goldsmiths.co.uk/medias/gs-fope-hero-desktop-jun21-1.jpg?context=bWFzdGVyfHJvb3R8MjA2OTk5fGltYWdlL2pwZWd8aGVjL2g0OC85MDk2NjUwMjkzMjc4LmpwZ3xiNzE0YzA5NzA0NmM1ODY3ODJlMDU2OGU1ZTRjOWJkZGFmYjQ2YmQwOTQzYjJiMDExZmZmYzdmMGQ4NGVlYjc2&imwidth=1200');
+}
+
+.collectionsList-itemImg-BraceletsCollection {
+    background-image: url('https://media.tiffany.com/is/image/tiffanydm/PLP_BG-Hero-StackingBracelets-Desktop?$tile$&wid=2992&fmt=webp');
+}
+
+.collectionsList-itemImg-BroochesCollection {
+    background-image: url('https://cdna.lystit.com/1200/630/tr/photos/giglio/c363f56f/gucci-Silver-Brooches-Women.jpeg');
+}
+
+.collectionsList-Item-Info {
+    position: absolute;
+    width: 85%;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    background-color: white;
+}
+
+.collectionsList-Item-Title {
+    text-align: center;
+    letter-spacing: 5px;
+    font-weight: 900;
+    color: black;
+}
+
+.collectionsList-Item-exploreAll {
+    margin-left: auto;
+    margin-right: auto;
+}

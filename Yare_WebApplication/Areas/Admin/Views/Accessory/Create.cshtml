@@ -1,0 +1,627 @@
+﻿@using Yare.Models.Enums;
+@using Yare.Models.ViewModels;
+@model ProductVM
+
+@{
+    ViewData["Title"] = "Create accessory product";
+}
+<div class="breadcrumbs" style="padding-bottom:10px;">
+    <a asp-area="Admin" asp-controller="Accessory" asp-action="Index">Accessory Products</a>
+    <span>/</span>
+    <a><b>Create</b> accessory product</a>
+</div>
+<h4 class="text-black">Create accessory product</h4>
+<hr />
+<form asp-action="Create" method="post" class="">
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div id="adminCardContainer">
+
+        <div id="adminCardWrapper">
+
+            <!--TopLeft-->
+            <div id="adminCardContainer-Left" class="p-2">
+
+                <h5 class="text-black">Product Details</h5>
+
+                <div class="adminCardContainer-productDetails-leftRow row">
+
+                    <div class="adminCardContainer-Left-productDetails col">
+
+                        <div class="form-group form-groupProduct">
+                            <label asp-for="ProductName" class="control-label text-black"></label>
+                            <input asp-for="ProductName" class="form-control text-black border-dark" />
+                            <span asp-validation-for="ProductName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group form-groupProduct">
+                            <label asp-for="ModelNumber" class="control-label text-black"></label>
+                            <input asp-for="ModelNumber" class="form-control text-black border-dark" />
+                            <span asp-validation-for="ModelNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group form-groupProduct">
+                            <label asp-for="AccessoryCategory" class="control-label text-black"></label>
+                            <select asp-for="AccessoryCategory" class="form-control text-black border-dark" asp-items="Html.GetEnumSelectList<AccessoryCategory>()">
+                                <option selected disabled>Select Category</option>
+                            </select>
+                            <span asp-validation-for="AccessoryCategory" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SelectedCollectionIds, "Collections")
+                            <div class="dropdown">
+                                <button class="dropdown-btn btn border-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;">
+                                    <div id="collection-btn" style="">Select Collection</div>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-Collections">
+                                    @foreach (var item in Model.CollectionList)
+                                    {
+                                        <li>
+                                            <div class="dropdown-item" style="display: flex; align-items: center;height:fit-content;">
+
+                                                <label class="dropdown-checkbox" style="display: flex; align-items: center; margin-bottom: 0;">
+                                                    @{
+                                                        int itemId = Convert.ToInt32(item.Value);
+                                                    }
+                                                    <input type="checkbox" name="SelectedCollectionIds" value="@itemId"
+                                                    @(Model.SelectedCollectionIds != null && Model.SelectedCollectionIds.Contains(itemId) ? "checked" : "")
+                                                           style="margin-right: 5px;" />
+                                                    @item.Text
+                                                </label>
+
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-groupProduct">
+                            <label asp-for="Quantity" class="control-label text-black"></label>
+                            <input asp-for="Quantity" min="0" id="Quantity" class="form-control text-black border-dark" />
+                            <span asp-validation-for="Quantity" class="text-danger"></span>
+                        </div>
+
+                    </div>
+
+                    <div class="adminCardContainer-Right-productDetails col">
+
+                        <div class="form-group form-groupProduct">
+                            <label asp-for="ProductNumber" class="control-label text-black"></label>
+                            <input asp-for="ProductNumber" class="ProductNumber form-control text-black border-dark" readonly  />
+                            <span asp-validation-for="ProductNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group form-groupProduct">
+                            <label asp-for="Supplier" class="control-label text-black"></label>
+                            <input asp-for="Supplier" class="form-control text-black border-dark" />
+                            <span asp-validation-for="Supplier" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group form-groupProduct">
+                            <label asp-for="Gender" class="control-label text-black"></label>
+                            <select asp-for="Gender" class="form-control text-black border-dark" asp-items="Html.GetEnumSelectList<Gender>()">
+                                <option selected disabled>Select Gender</option>
+                            </select>
+                            <span asp-validation-for="Gender" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group form-groupProduct">
+                            <label class="control-label text-black">Product Category</label>
+                            <select asp-for="ProductCategory" asp-items="@Model.ProductCategoryList" class="form-control text-black border-dark" asp-items="Html.GetEnumSelectList<ProductCategory>()" selected disabled>
+                                <option selected disabled>Select Product Category</option>
+                            </select>
+                            <span asp-validation-for="ProductCategory" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group form-groupProduct">
+                            <label asp-for="RemainigQuantity" class="control-label text-black"></label>
+                            <input asp-for="RemainigQuantity" min="0" id="RemainigQuantity" class="form-control text-black border-dark" readonly />
+                            <span asp-validation-for="RemainigQuantity" class="text-danger"></span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                  <div class="form-group form-groupProduct">
+                        <label asp-for="ProductDescription" class="control-label text-black"></label>
+                        <textarea asp-for="ProductDescription" class="form-control text-black border-dark" rows="6"></textarea>
+                        <span asp-validation-for="ProductDescription" class="text-danger"></span>
+                    </div>
+
+            </div>
+
+            <!--TopRight-->
+            <div id="adminCardContainer-Right" class="p-2">
+
+                <h5 class="text-black">Product Images</h5>
+
+                <div class="imgDisplay-viewerContainer">
+                    <img class="mainImgDisplay-viewerWrapper" src="" />
+                    <div class="imgDisplay-uploadViewer-Container">
+                        <img id="imgDisplay-uploadViewer-1" class="imgDisplay-uploadViewer-Btn imgDisplay-uploadViewer-activeBtn" src="@Model.PrimaryDisplayImageUrl" alt="No Image" />
+                        <img id="imgDisplay-uploadViewer-2" class="imgDisplay-uploadViewer-Btn" src="@Model.SecondaryDisplayImageUrl" alt="No Image" />
+                        <img id="imgDisplay-uploadViewer-3" class="imgDisplay-uploadViewer-Btn" src="@Model.SliderImageUrlOne" alt="No Image" />
+                        <img id="imgDisplay-uploadViewer-4" class="imgDisplay-uploadViewer-Btn" src="@Model.SliderImageUrlTwo" alt="No Image" />
+                        <img id="imgDisplay-uploadViewer-5" class="imgDisplay-uploadViewer-Btn" src="@Model.SliderImageUrlThree" alt="No Image" />
+                        <img id="imgDisplay-uploadViewer-6" class="imgDisplay-uploadViewer-Btn" src="@Model.SliderImageUrlFour" alt="No Image" />
+                    </div>
+                </div>
+
+                <div id="imageProductInputContainer" class="">
+                    <div class="row">
+
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="PrimaryDisplayImageUrl" class="control-label text-black"></label>
+                                <input asp-for="PrimaryDisplayImageUrl" class="imgDisplay-uploadViewer-Input-1 form-control text-black border-dark border-dark" />
+                                <span asp-validation-for="PrimaryDisplayImageUrl" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="SliderImageUrlOne" class="control-label text-black"></label>
+                                <input asp-for="SliderImageUrlOne" class="imgDisplay-uploadViewer-Input-3 form-control text-black border-dark border-dark" />
+                                <span asp-validation-for="SliderImageUrlOne" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="SliderImageUrlThree" class="control-label text-black"></label>
+                                <input asp-for="SliderImageUrlThree" class="imgDisplay-uploadViewer-Input-5 form-control text-black border-dark border-dark" />
+                                <span asp-validation-for="SliderImageUrlThree" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="SecondaryDisplayImageUrl" class="control-label text-black"></label>
+                                <input asp-for="SecondaryDisplayImageUrl" class="imgDisplay-uploadViewer-Input-2 form-control text-black border-dark border-dark" />
+                                <span asp-validation-for="SecondaryDisplayImageUrl" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="SliderImageUrlTwo" class="control-label text-black"></label>
+                                <input asp-for="SliderImageUrlTwo" class="imgDisplay-uploadViewer-Input-4 form-control text-black border-dark border-dark" />
+                                <span asp-validation-for="SliderImageUrlTwo" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="SliderImageUrlFour" class="control-label text-black"></label>
+                                <input asp-for="SliderImageUrlFour" class="imgDisplay-uploadViewer-Input-6 form-control text-black border-dark border-dark" />
+                                <span asp-validation-for="SliderImageUrlFour" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <h5 class="text-black" style="margin-top:20px;">Product Specification</h5>
+
+        <div id="adminCardContainer-Middle" class="row">
+
+            <div class="col">
+
+                <div class="form-group form-groupProduct">
+                    <label asp-for="WarrantyYears" class="control-label text-black"></label>
+                    <select asp-for="WarrantyYears" class="form-control text-black border-dark" asp-items="Html.GetEnumSelectList<WarrantyYears>()">
+                        <option selected disabled>Select Year</option>
+                    </select>
+                    <span asp-validation-for="WarrantyYears" class="text-danger"></span>
+                </div>
+
+            </div>
+
+            <div class="col">
+
+            </div>
+
+        </div>
+
+        <h5 class="text-black" style="margin-top:20px;">Product Pricing</h5>
+
+        <div id="adminCardContainer-Bottom" class="row">
+
+            <div class="col">
+
+                <div style="display: flex; justify-content: center; align-items: center; overflow: hidden; width: 100%; height: 350px; padding: 5px; ">
+                    <canvas id="costBreakdownChart" style="width:90%;height:90%;"></canvas>
+                </div>
+
+                <div class="form-group form-groupProduct">
+                    <label asp-for="CostOfProduct" class="control-label text-black"></label>
+                    <input asp-for="CostOfProduct" id="costOfProduct" class="form-control text-black border-dark" />
+                    <span asp-validation-for="CostOfProduct" class="text-danger"></span>
+                </div>
+
+                <div class="form-group form-groupProduct">
+                    <label asp-for="TargetPrice01" class="control-label text-black"></label>
+                    <input asp-for="TargetPrice01" id="targetPrice01" class="form-control text-black border-dark" readonly />
+                    <span asp-validation-for="TargetPrice01" class="text-danger"></span>
+                </div>
+
+                <div class="form-group form-groupProduct">
+                    <label asp-for="TargetPrice03" class="control-label text-black"></label>
+                    <input asp-for="TargetPrice03" id="targetPrice03" class="form-control text-black border-dark" readonly />
+                    <span asp-validation-for="TargetPrice03" class="text-danger"></span>
+                </div>
+
+
+            </div>
+
+            <div class="col">
+
+                <div style="display: flex; justify-content: center; align-items: center; overflow: hidden; width: 100%; height: 350px; padding: 5px; ">
+                    <canvas id="profitMarginChart" style="width:90%;height:90%;"></canvas>
+                </div>
+
+                <div class="form-group form-groupProduct">
+                    <label asp-for="Price" class="control-label text-black"></label>
+                    <input asp-for="Price" id="price" class="form-control text-black border-dark" readonly />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+
+                <div class="form-group form-groupProduct">
+                    <label asp-for="TargetPrice02" class="control-label text-black"></label>
+                    <input asp-for="TargetPrice02" id="targetPrice02" class="form-control text-black border-dark" readonly />
+                    <span asp-validation-for="TargetPrice02" class="text-danger"></span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <input type="submit" value="Create" class="admin-btn btn btn-dark text-white" style="position:fixed;right:25px;bottom:20px;" />
+
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+
+              document.addEventListener("DOMContentLoaded", function () {
+            const collectionBtn = document.getElementById('collection-btn');
+            const checkboxes = document.querySelectorAll('input[name="SelectedCollectionIds"]');
+
+            // Create a mapping object to store numeric IDs and their corresponding text values
+            const idToTextMap = {
+                // Render the mapping data from the server side here
+        @foreach (var item in Model.CollectionList)
+        {
+            @: '@item.Value': '@item.Text',
+        }
+            };
+
+        function updateButtonText() {
+            const checkedValues = [];
+            checkboxes.forEach(function (checkbox) {
+                if (checkbox.checked) {
+                    // Use the mapping object to retrieve the text value corresponding to the numeric ID
+                    checkedValues.push(idToTextMap[parseInt(checkbox.value)]);
+                }
+            });
+            if (checkedValues.length > 0) {
+                collectionBtn.textContent = checkedValues.join(', ');
+            } else {
+                collectionBtn.textContent = 'Select Collection';
+            }
+        }
+
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', updateButtonText);
+        });
+        });
+
+
+
+
+        const imgDisplay_uploadViewer_Btn = document.querySelectorAll(".imgDisplay-uploadViewer-Btn");
+        const mainImgDisplay_viewerWrapper = document.querySelector(".mainImgDisplay-viewerWrapper");
+
+        function uploadActive_mainImg() {
+            imgDisplay_uploadViewer_Btn.forEach((item) => {
+                item.addEventListener("click", () => {
+
+                    imgDisplay_uploadViewer_Btn.forEach(btn => {
+                        btn.classList.remove('imgDisplay-uploadViewer-activeBtn');
+                    });
+
+                    item.classList.add('imgDisplay-uploadViewer-activeBtn');
+
+                    const imageUrl = item.src;
+
+                    mainImgDisplay_viewerWrapper.src = imageUrl;
+                });
+            });
+        }
+
+        uploadActive_mainImg();
+
+        let isFirstInput = true;
+
+        function upload_imgBtn(imgInput, btnImg) {
+            const inputField = document.querySelector(imgInput);
+            const imgBtn = document.querySelector(btnImg);
+
+            inputField.addEventListener("input", () => {
+                imgBtn.src = inputField.value;
+
+
+                if (isFirstInput) {
+
+                    imgDisplay_uploadViewer_Btn.forEach(btn => {
+                        btn.classList.remove('imgDisplay-uploadViewer-activeBtn');
+                    });
+
+                    imgBtn.classList.add('imgDisplay-uploadViewer-activeBtn');
+
+                    mainImgDisplay_viewerWrapper.src = inputField.value;
+                    isFirstInput = false;
+                }
+
+            });
+        }
+
+        upload_imgBtn(".imgDisplay-uploadViewer-Input-1", "#imgDisplay-uploadViewer-1");
+        upload_imgBtn(".imgDisplay-uploadViewer-Input-2", "#imgDisplay-uploadViewer-2");
+        upload_imgBtn(".imgDisplay-uploadViewer-Input-3", "#imgDisplay-uploadViewer-3");
+        upload_imgBtn(".imgDisplay-uploadViewer-Input-4", "#imgDisplay-uploadViewer-4");
+        upload_imgBtn(".imgDisplay-uploadViewer-Input-5", "#imgDisplay-uploadViewer-5")
+        upload_imgBtn(".imgDisplay-uploadViewer-Input-6", "#imgDisplay-uploadViewer-6");
+
+        const Quantity = document.getElementById("Quantity");
+        const RemainigQuantity = document.getElementById("RemainigQuantity");
+
+        Quantity.addEventListener("input", function () {
+            getRemainigQuantity();
+        });
+
+        function getRemainigQuantity() {
+
+            let getQuantity = Quantity.value;
+
+            document.getElementById("RemainigQuantity").value = getQuantity;
+        }
+
+         const CostOfProduct = document.getElementById("costOfProduct");
+        const PriceInput = document.getElementById("price");
+
+        CostOfProduct.addEventListener("input", function () {
+            calculatePrices_FromManufactureCost();
+            updateProfitMarginChart();
+            updateDoughnutChart();
+        });
+
+        function calculatePrices_FromManufactureCost() {
+            let costOfProduct_fromManufacturer = CostOfProduct.value;
+            let PrimaryPrice = CostOfProduct.value;
+
+            if (!isNaN(PrimaryPrice) && PrimaryPrice !== "") {
+                // Multiply by 1.75 (modified from your original code)
+                PrimaryPrice = parseFloat(PrimaryPrice) * 1.75;
+                PrimaryPrice = PrimaryPrice.toFixed(2);
+
+                document.getElementById("price").value = PrimaryPrice;
+
+                const TargetPrice01 = parseFloat(PrimaryPrice) - (parseFloat(PrimaryPrice) * 0.05);
+                document.getElementById("targetPrice01").value = TargetPrice01.toFixed(2);
+
+                const TargetPrice02 = parseFloat(PrimaryPrice) - (parseFloat(PrimaryPrice) * 0.10);
+                document.getElementById("targetPrice02").value = TargetPrice02.toFixed(2);
+
+                const TargetPrice03 = parseFloat(PrimaryPrice) - (parseFloat(PrimaryPrice) * 0.25);
+                document.getElementById("targetPrice03").value = TargetPrice03.toFixed(2);
+            } else {
+                document.getElementById("price").value = 0;
+                document.getElementById("targetPrice01").value = 0;
+                document.getElementById("targetPrice02").value = 0;
+                document.getElementById("targetPrice03").value = 0;
+            }
+        }
+
+        PriceInput.addEventListener("blur", function () {
+            calculateUpdatedPrice_FromPrice();
+        });
+
+        PriceInput.addEventListener("blur", function () {
+            priceInput_updateCharts();
+        });
+
+        const priceInput_updateCharts = () => {
+            updateDoughnutChart();
+            updateProfitMarginChart();
+        };
+
+        function calculateUpdatedPrice_FromPrice() {
+            let price = PriceInput.value;
+            let costOfProduct = parseFloat(document.getElementById("costOfProduct").value);
+
+            if (!isNaN(price) && price !== "") {
+                price = parseFloat(price);
+
+                // Apply the 10% rule if the entered value is below or equal to costOfProduct
+                if (price <= costOfProduct || price == costOfProduct) {
+                    price = costOfProduct * 1.40;
+                } else {
+                    price = PriceInput.value;
+                }
+
+                const targetPrice01 = price - (price * 0.05);
+                const targetPrice02 = price - (price * 0.10);
+                const targetPrice03 = price - (price * 0.25);
+
+                // Update the target prices
+                document.getElementById("targetPrice01").value = targetPrice01.toFixed(2);
+                document.getElementById("targetPrice02").value = targetPrice02.toFixed(2);
+                document.getElementById("targetPrice03").value = targetPrice03.toFixed(2);
+
+                // Update the displayed price with the adjusted value
+                PriceInput.value = price.toFixed(2);
+
+            } else {
+                // Handle the case when the entered value is not a valid number
+                document.getElementById("targetPrice01").value = 0;
+                document.getElementById("targetPrice02").value = 0;
+                document.getElementById("targetPrice03").value = 0;
+            }
+
+
+        }
+
+
+        function updateDoughnutChart() {
+            const ctx = document.getElementById("costBreakdownChart").getContext("2d");
+
+            const costOfProductValue = parseFloat(document.getElementById("costOfProduct").value);
+            const targetPrice03Value = parseFloat(document.getElementById("targetPrice03").value);
+            const targetPrice02Value = parseFloat(document.getElementById("targetPrice02").value);
+            const targetPrice01Value = parseFloat(document.getElementById("targetPrice01").value);
+            const priceValue = parseFloat(document.getElementById("price").value);
+
+            const chartData = {
+                labels: [
+                    "Cost of each product",
+                    "Target Price 3",
+                    "Target Price 2",
+                    "Target Price 1",
+                    "Price"
+                ],
+                datasets: [
+                    {
+                        label: "Product cost break down",
+                        backgroundColor: [
+                            '#2d53de',
+                            '#553772',
+                            '#8f3b76',
+                            '#c7417b',
+                            '#f5477e',
+                        ],
+                        data: [
+                            costOfProductValue,
+                            targetPrice03Value,
+                            targetPrice02Value,
+                            targetPrice01Value,
+                            priceValue
+                        ]
+                    }
+                ]
+            };
+
+            const options = {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '55%',
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            let label = data.labels[tooltipItem.index] + ': ';
+                            label += tooltipItem.raw; // Display the individual dataset value
+                            return label;
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'left',
+                        align: 'center',
+                        labels: {
+                            boxWidth: 15,
+                        },
+                    },
+                },
+            };
+
+            const existingChart = Chart.getChart(ctx);
+
+            if (existingChart) {
+                existingChart.data = chartData;
+                existingChart.options = options;
+                existingChart.update();
+            } else {
+                new Chart(ctx, {
+                    type: "doughnut",
+                    data: chartData,
+                    options: options
+                });
+            }
+        }
+
+        updateDoughnutChart();
+
+        function updateProfitMarginChart() {
+            const ctx = document.getElementById('profitMarginChart').getContext('2d');
+
+            const cost = parseFloat(document.getElementById("costOfProduct").value);
+            const price = parseFloat(document.getElementById("price").value);
+            const targetPrices = [
+                parseFloat(document.getElementById("targetPrice01").value),
+                parseFloat(document.getElementById("targetPrice02").value),
+                parseFloat(document.getElementById("targetPrice03").value)
+            ];
+
+            const profitMargins = targetPrices.map(targetPrice => targetPrice - cost);
+
+            profitMargins.unshift(price - cost);
+
+            const labels = ['Price', 'Target Price 1', 'Target Price 2', 'Target Price 3'];
+
+            const existingChart = Chart.getChart(ctx);
+
+            if (existingChart) {
+                existingChart.data.labels = labels;
+                existingChart.data.datasets[0].data = profitMargins;
+                existingChart.update();
+            } else {
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Profit Margin',
+                            data: profitMargins,
+                            backgroundColor: [
+                                '#f5477e',
+                                '#c7417b',
+                                '#8f3b76',
+                                '#553772',
+                            ],
+                            borderColor: [
+                                '#f5477e',
+                                '#c7417b',
+                                '#8f3b76',
+                                '#553772',
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Profit Margin Chart'
+                        }
+                    }
+                });
+            }
+        }
+
+        updateProfitMarginChart();
+
+ 
+
+    </script>
+
+}

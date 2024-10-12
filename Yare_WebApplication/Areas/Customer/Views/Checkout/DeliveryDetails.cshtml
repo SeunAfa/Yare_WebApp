@@ -1,0 +1,162 @@
+﻿@model Yare.Models.ViewModels.HomePgVM
+@using Microsoft.Extensions.Options
+@inject IOptions<Yare.Utility.StripeApiSettings> Stripe
+@{
+    ViewData["Title"] = "Delivery Details";
+}
+<form method="post" style="">
+
+    <div class="container">
+
+        <div class="">
+
+            <div class="checkout-header" style="">
+
+                <div class="productList-breadcrumbLeft-Wrapper">
+                    <a asp-area="Customer" asp-controller="Home" asp-action="Index" class="text-black">Home</a>
+                    <span>/</span>
+                    <a asp-area="Customer" asp-controller="Checkout" asp-action="Summary" class="text-black">Checkout</a>
+                </div>
+
+            </div>
+
+            <div class="checkout-card-body">
+
+                <div class="checkout-card-bodyLeft">
+
+                    <h6 class="text-black">Delivery Details</h6>
+
+                    <p class="estimateDate text-black" style="font-size:12px;">
+                        Estimate Arrival Date: @DateTime.Now.AddDays(7).ToString("dddd dd MMM yyyy") - @DateTime.Now.AddDays(14).ToString("dddd dd MMM yyyy")
+                    </p>
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+
+                    <div class="form-group form-groupProduct">
+                        <label asp-for="ShoppingCartVM.OrderHeader.FirstName" class="control-label text-black"></label>
+                        <input asp-for="ShoppingCartVM.OrderHeader.FirstName" class="form-control text-black border-dark" />
+                        <span asp-validation-for="ShoppingCartVM.OrderHeader.FirstName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group form-groupProduct">
+                        <label asp-for="ShoppingCartVM.OrderHeader.LastName" class="control-label text-black"></label>
+                        <input asp-for="ShoppingCartVM.OrderHeader.LastName" class="form-control text-black border-dark" />
+                        <span asp-validation-for="ShoppingCartVM.OrderHeader.LastName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group form-groupProduct">
+                        <label asp-for="ShoppingCartVM.OrderHeader.PhoneNumber" class="control-label text-black"></label>
+                        <input asp-for="ShoppingCartVM.OrderHeader.PhoneNumber" class="form-control text-black border-dark" />
+                        <span asp-validation-for="ShoppingCartVM.OrderHeader.PhoneNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group form-groupProduct">
+                        <label asp-for="ShoppingCartVM.OrderHeader.StreetAdress" class="control-label text-black"></label>
+                        <input asp-for="ShoppingCartVM.OrderHeader.StreetAdress" class="form-control text-black border-dark" />
+                        <span asp-validation-for="ShoppingCartVM.OrderHeader.StreetAdress" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group form-groupProduct">
+                        <label asp-for="ShoppingCartVM.OrderHeader.City" class="control-label text-black"></label>
+                        <input asp-for="ShoppingCartVM.OrderHeader.City" class="form-control text-black border-dark" />
+                        <span asp-validation-for="ShoppingCartVM.OrderHeader.City" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group form-groupProduct">
+                        <label asp-for="ShoppingCartVM.OrderHeader.Borough" class="control-label text-black"></label>
+                        <input asp-for="ShoppingCartVM.OrderHeader.Borough" class="form-control text-black border-dark" />
+                        <span asp-validation-for="ShoppingCartVM.OrderHeader.Borough" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group form-groupProduct">
+                        <label asp-for="ShoppingCartVM.OrderHeader.PostCode" class="control-label text-black"></label>
+                        <input asp-for="ShoppingCartVM.OrderHeader.PostCode" class="form-control text-black border-dark" />
+                        <span asp-validation-for="ShoppingCartVM.OrderHeader.PostCode" class="text-danger"></span>
+                    </div>
+
+
+
+
+                </div>
+
+                <div class="checkout-card-bodyRight">
+
+                    <div class="checkout-card-bodyRight-Top">
+
+                        <h6 class="text-black">Order Summary</h6>
+
+                        <div class="checkout-card-bodyRight-topWrapper">
+
+                            @foreach (var checkoutItem in Model.ShoppingCartList)
+                            {
+                                string shortenedProductName = checkoutItem.Product.ProductName.Length > 35 ? $"{checkoutItem.Product.ProductName.Substring(0, 35)}..." : checkoutItem.Product.ProductName;
+
+                                int countPrice = (int)(checkoutItem.Product.Price * checkoutItem.Count);
+
+                                <div class="checkout-product-Item" data-id="@checkoutItem.Id">
+                                    <div class="checkout-productLeft-Item">
+                                        <div class="checkout-productLeft-Img">
+                                            <img class="checkout-imgItem-Wrapper" src="@checkoutItem.Product.PrimaryDisplayImageUrl" />
+                                        </div>
+                                    </div>
+                                    <div class="checkout-productRight-Item">
+                                        <a asp-area="Customer" asp-action="Details" asp-controller="Home" asp-route-productId="@checkoutItem.Product.Id" class="text-black shoppingBag-info-Text">@shortenedProductName</a>
+                                        <p class="text-black shoppingBag-info-Text">@checkoutItem.Product.ProductNumber</p>
+                                        <p class="text-black shoppingBag-info-Text">@checkoutItem.Product.Gender @checkoutItem.Product.ProductCategory</p>
+                                        <p class="text-black shoppingBag-info-Text">
+                                            <span class="item-count">@checkoutItem.Count</span> X <span class="Countprice">@countPrice.ToString("c")</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            }
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="checkout-card-bodyRight-Bottom">
+
+                        <table style="width:100%;">
+                            <tbody>
+                                <tr>
+                                    <td class="text-black" style="width:50%;">Delivery</td>
+                                    <td class="text-black" style="width:50%;text-align:right;"><strong>Free</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-black" style="width:50%;">Total</td>
+                                    <td class="text-black OrderTotal" style="width:50%;text-align:right;"><strong>@(Model.ShoppingCartVM.OrderHeader != null ? Model.ShoppingCartVM.OrderHeader.OrderTotal.ToString("c") : "0")</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <button id="placeOrderBtn" class="" type="submit" value="">
+                            Place Order
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</form>
+<br />
+@section Scripts {
+    <script>
+        ///////////////////////////////////
+        // _Layout Searchbar Component
+        const filterUrl = '@Url.Action("Filter", "Checkout")';
+
+
+
+    </script>
+}
