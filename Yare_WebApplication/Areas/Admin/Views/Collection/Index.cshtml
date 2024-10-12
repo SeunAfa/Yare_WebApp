@@ -1,0 +1,201 @@
+﻿@model IEnumerable<Collection>
+
+@{
+    ViewData["Title"] = "Collections";
+}
+<div class="breadcrumbs">
+    <a asp-area="Admin" asp-controller="Collection" asp-action="Index">Collections</a>
+</div>
+<div class="listTitle-Container">
+
+    <h1 class="text-black">Collections</h1>
+
+    <form id="searchContainer" class="searchContainer">
+        <div id="searchWrapper">
+
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M9.96544 11.0377C9.13578 11.6498 8.11014 12.0116 7 12.0116C4.23858 12.0116 2 9.77302 2 7.0116C2 4.25017 4.23858 2.0116 7 2.0116C9.76142 2.0116 12 4.25017 12 7.0116C12 8.12174 11.6382 9.14737 11.0261 9.97703L13.7803 12.7313C14.0732 13.0242 14.0732 13.499 13.7803 13.7919C13.4874 14.0848 13.0126 14.0848 12.7197 13.7919L9.96544 11.0377ZM10.5 7.0116C10.5 8.94459 8.933 10.5116 7 10.5116C5.067 10.5116 3.5 8.94459 3.5 7.0116C3.5 5.0786 5.067 3.5116 7 3.5116C8.933 3.5116 10.5 5.0786 10.5 7.0116Z" fill="black" />
+            </svg>
+            <input type="text" id="searchInput" name="searchString" placeholder="Search..." value="@ViewBag.SearchString" autocomplete="off" />
+            <svg class="search-close-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5.28033 4.22651C4.98744 3.93361 4.51256 3.93361 4.21967 4.22651C3.92678 4.5194 3.92678 4.99427 4.21967 5.28717L6.93934 8.00684L4.21967 10.7265C3.92678 11.0194 3.92678 11.4943 4.21967 11.7872C4.51256 12.0801 4.98744 12.0801 5.28033 11.7872L8 9.0675L10.7197 11.7872C11.0126 12.0801 11.4874 12.0801 11.7803 11.7872C12.0732 11.4943 12.0732 11.0194 11.7803 10.7265L9.06066 8.00684L11.7803 5.28717C12.0732 4.99427 12.0732 4.5194 11.7803 4.22651C11.4874 3.93361 11.0126 3.93361 10.7197 4.22651L8 6.94618L5.28033 4.22651Z" fill="black" />
+            </svg>
+
+        </div>
+    </form>
+
+</div>
+<hr />
+@if (ViewBag.NoResults != null)
+{
+
+    <p class="text-black text-center">@ViewBag.NoResults</p>
+    <div class="text-center">
+        <a class="mx-auto" style="text-decoration: underline;" asp-controller="Collection" asp-action="Index">
+            Return to collection list
+        </a>
+    </div>
+
+}
+else
+{
+
+    <table id="productListContainer" class="table row-bordered table-hover compact" style="width:100%">
+        <thead>
+            <tr>
+
+                <th class="text-black">
+                    Collection Name
+                </th>
+
+                <th class="text-black">
+                    Created
+                </th>
+
+                <th class="text-black">
+                    Last Update
+                </th>
+
+                <th class="text-black text-center">
+                    Actions
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td class="align-middle text-black" style="">
+                        @item.CollectionName
+                    </td>
+
+                    <td class="align-middle text-black">
+                        @item.CreatedDateTime
+                    </td>
+
+                    <td class="align-middle text-black">
+                        @item.LastUpdate
+                    </td>
+
+                    <td class="align-middle text-center">
+                        <form asp-controller="Collection" asp-action="DeletePost" asp-route-id="@item.Id" method="post">
+                            <div class="dropdown">
+                                <button id="ListActionBtn" class="btn btn-secondary bi bi-three-dots" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-dark dropdown-item"><i class="bi bi-pencil-square"></i><span style="padding-right:5px;"></span>Edit</a>
+                                    </li>
+                                    <li>
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-dark dropdown-item"><i class="bi bi-box-arrow-up-right"></i><span style="padding-right:5px;"></span>Details</a>
+                                    </li>
+                                    <li>
+                                        <button type="submit" class="btn btn-danger dropdown-item text-black" style="width:100%;"
+                                                onclick="return confirm('Are you sure you want to delete @item.CollectionName!')">
+                                            <i class="bi bi-trash3"></i><span style="padding-right:5px;"></span>Delete
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </form>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+
+
+    </table>
+
+    <div id="searchLiveResultsContainer" style="display:none">
+
+        @await Html.PartialAsync("_CollectionSearch_Results")
+
+    </div>
+
+}
+<div>
+    <ul class="pagination">
+        @for (int i = 1; i <= (int)ViewData["TotalPages"]; i++)
+        {
+            <li class="page-item @(i == (int)ViewData["CurrentPage"] ? "Active" : "")">
+                <a class="page-link" href="?page=@i"> @i </a>
+            </li>
+        }
+    </ul>
+</div>
+@await Html.PartialAsync("_CreateItem", "Collection")
+@section Scripts{
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+
+        // const searchInput = document.getElementById("searchInput");
+        // const searchContainer = document.getElementById("searchContainer");
+        // const searchWrapper = document.getElementById("searchWrapper")
+        // const searchCloseIcon = document.querySelector(".search-close-icon");
+
+        // $(document).ready(function () {
+        //     const searchInput = $("#searchInput");
+        //     const productListContainer = $("#productListContainer");
+        //     const searchLiveResultsContainer = $("#searchLiveResultsContainer");
+
+        //     function performSearch() {
+        //         const searchString = searchInput.val();
+
+        //         if (searchString.trim() !== "") {
+        //             // If there is a search string, hide watchListContainer and show watchLiveResultsContainer
+        //             productListContainer.hide();
+        //             searchLiveResultsContainer.show();
+
+        //             $.ajax({
+        //                 url: "@Url.Action("Filter", "Collection")",
+        //                 data: { searchString: searchString },
+        //                 method: "GET",
+        //                 success: function (data) {
+        //                     searchLiveResultsContainer.html(data);
+        //                 }
+        //             });
+
+        //         } else {
+        //             // If the search string is empty, show watchListContainer and hide watchLiveResultsContainer
+        //             productListContainer.show();
+        //             searchLiveResultsContainer.hide();
+        //         }
+        //     }
+
+        //     searchInput.on("input", performSearch);
+
+        //     // Listen for the Enter key press on the search input
+        //     searchInput.on("keydown", function (e) {
+        //         if (e.key === "Enter") {
+        //             e.preventDefault(); // Prevent the default form submission
+        //             performSearch(); // Trigger the search function
+        //         }
+        //     });
+        // });
+
+        // searchCloseIcon.addEventListener("click", () => {
+        //     const productListContainer = $("#productListContainer");
+        //     const searchLiveResultsContainer = $("#searchLiveResultsContainer");
+
+        //     searchInput.value = "";
+        //     productListContainer.show();
+        //     searchLiveResultsContainer.hide();
+        // });
+
+        // searchInput.addEventListener("input", () => {
+        //     searchContainer.classList.remove("searchContainer");
+        //     searchContainer.classList.add("searchContainer-active");
+        // });
+
+        // searchInput.addEventListener("blur", () => {
+        //     searchContainer.classList.add("searchContainer");
+        //     searchContainer.classList.remove("searchContainer-active");
+        // });
+
+    </script>
+
+}

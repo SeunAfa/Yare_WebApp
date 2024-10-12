@@ -1,0 +1,55 @@
+﻿@* @using Yare.Models;
+@model Collection *@
+@using Yare.Models.Enums;
+@using Yare.Models.ViewModels;
+@model CollectionVM
+
+@{
+    ViewData["Title"] = "Collection Details";
+}
+
+<div class="breadcrumbs" style="padding-bottom:10px;">
+    <a asp-area="Admin" asp-controller="Collection" asp-action="Index">Collection</a>
+    <span>/</span>
+    <a><b>Details</b> @Model.CollectionName</a>
+</div>
+<h4 class="text-black">@Model.CollectionName</h4>
+<hr />
+<form asp-action="Details" method="post" class="">
+
+    <input asp-for="Id" hidden />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div id="adminCardContainer">
+
+        <div class="form-group form-groupProduct">
+            <label asp-for="CollectionName" class="control-label text-black"></label>
+            <input asp-for="CollectionName" class="form-control text-black border-dark" disabled readonly />
+            <span asp-validation-for="CollectionName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group form-groupProduct">
+            <label asp-for="LastUpdate" class="control-label text-black"></label>
+            <input class="form-control text-black border-dark" value="@Model.LastUpdate.ToString("dd/MM/yy HH:mm:ss")" disabled readonly>
+            <span asp-validation-for="LastUpdate" class="text-danger"></span>
+        </div>
+
+        <div class="form-group form-groupProduct">
+            <label asp-for="CreatedDateTime" class="control-label text-black"></label>
+            <input class="form-control text-black border-dark" value="@Model.CreatedDateTime.ToString("dd/MM/yy HH:mm:ss")" disabled readonly>
+            <span asp-validation-for="CreatedDateTime" class="text-danger"></span>
+        </div>
+
+    </div>
+
+    <a asp-controller="Collection" asp-action="Edit" asp-route-id="@Model.Id" class="admin-btn btn btn-dark text-white" style="position:fixed;right:25px;bottom:20px;">Edit</a>
+
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+
+}

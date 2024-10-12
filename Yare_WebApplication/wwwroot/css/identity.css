@@ -1,0 +1,220 @@
+﻿html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/*deviceNotSupported----------
+----------------------------*/
+.identity-deviceNotSupported-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 100vh;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    display: none;
+}
+
+.deviceNotSupported-text {
+    width: 90%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+.deviceNotSupported-Icon {
+    width: 100px;
+    height: 100px;
+    fill: red;
+    transform: translateY(-20px);
+}
+
+.appDownload-Container {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    height: 100px;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.appBadge-Img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.form-control.text-black.border-dark:focus {
+    outline-color: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.3);
+}
+
+.control-label.text-black {
+    font-size: 12px; 
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    box-shadow: 0 0 0px 1000px white inset !important;
+    -webkit-text-fill-color: black !important;
+}
+
+.identity-mainView{
+    display:none;
+}
+/*Register*/
+#registerContainer {
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+#registerLeft-Container {
+    overflow: hidden;
+    width: 40%;
+    height: 100%;
+    padding: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.registerLeft-Top-Container {
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    padding: 5px;
+}
+
+.registerLeft-Middle-Container {
+    overflow: hidden;
+    height: 70%;
+}
+
+.registerLeft-Middle-Wrapper {
+    overflow: hidden;
+    overflow-y: scroll;
+    width: 100%;
+    height: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 50px;
+    
+}
+
+    .registerLeft-Middle-Wrapper::-webkit-scrollbar {
+        width: 2px;   
+    }
+
+    .registerLeft-Middle-Wrapper::-webkit-scrollbar-track {
+        background: red;
+    }
+
+    .registerLeft-Middle-Wrapper::-webkit-scrollbar-thumb {
+        background-color: black;
+    }
+
+.registerLeft-Bottom-Container {
+    padding: 10px;
+}
+
+#registerRight-Container {
+    overflow: hidden;
+    width: 60%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-image: url('https://wallpapercave.com/wp/wp2458400.jpg');
+}
+
+/*Login*/
+#loginContainer {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+}
+
+#loginWrapper {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+#loginLeftCol {
+    overflow: hidden;
+    width: 40%;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    padding: 20px;
+    margin: auto;
+}
+
+.logo-menu-textLink {
+
+}
+
+#logRightCol {
+    overflow: hidden;
+    width: 60%;
+    height: 100vh;
+}
+
+#logRightCol-BckImg {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-image: url('https://wallpapercave.com/wp/wp8824902.jpg');
+}
+/*Btn */
+#registerSubmit {
+    margin-top: 15px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    color: white;
+    background-color: black;
+    border-radius: 0px;
+    border: 2px black solid;
+    text-align: center;
+}
+
+    #registerSubmit:hover {
+        color: black;
+        background-color: white;
+        border: 2px black solid;
+    }

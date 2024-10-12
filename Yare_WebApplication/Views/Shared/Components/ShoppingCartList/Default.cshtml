@@ -1,0 +1,102 @@
+﻿@model Yare.Models.ViewModels.HomePgVM
+
+<div class="shoppingBag-Wrapper">
+
+    <div class="shoppingBag-topSection">
+        <p class="text-white continueShopping-Btn" style="">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M9.78033 4.22431C10.0732 4.5172 10.0732 4.99208 9.78033 5.28497L7.06066 8.00464L9.78033 10.7243C10.0732 11.0172 10.0732 11.4921 9.78033 11.785C9.48744 12.0779 9.01256 12.0779 8.71967 11.785L5.46967 8.53497C5.17678 8.24207 5.17678 7.7672 5.46967 7.47431L8.71967 4.22431C9.01256 3.93142 9.48744 3.93142 9.78033 4.22431Z" />
+            </svg>Continue Shopping
+        </p>
+        <p class="text-white deliveryIcon" style="">
+            <svg width="24" height="24" style="padding-right:5px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3.375 4.50464C2.33947 4.50464 1.5 5.3441 1.5 6.37964V13.5046H13.5V6.37964C13.5 5.3441 12.6605 4.50464 11.625 4.50464H3.375Z" fill="white" />
+                <path d="M13.5 15.0046H1.5V17.6296C1.5 18.6652 2.33947 19.5046 3.375 19.5046H3.75C3.75 17.8478 5.09315 16.5046 6.75 16.5046C8.40685 16.5046 9.75 17.8478 9.75 19.5046H12.75C13.1642 19.5046 13.5 19.1689 13.5 18.7546V15.0046Z" fill="white" />
+                <path d="M8.25 19.5046C8.25 18.6762 7.57843 18.0046 6.75 18.0046C5.92157 18.0046 5.25 18.6762 5.25 19.5046C5.25 20.3331 5.92157 21.0046 6.75 21.0046C7.57843 21.0046 8.25 20.3331 8.25 19.5046Z" fill="white" />
+                <path d="M15.75 6.75464C15.3358 6.75464 15 7.09043 15 7.50464V18.7546C15 18.8414 15.0147 18.9248 15.0419 19.0023C15.2809 17.5846 16.5143 16.5046 18 16.5046C19.6442 16.5046 20.9794 17.8273 20.9998 19.4666C21.8531 19.2916 22.5224 18.5312 22.464 17.5841C22.231 13.8037 20.8775 10.3257 18.7324 7.47954C18.378 7.00927 17.8265 6.75464 17.2621 6.75464H15.75Z" fill="white" />
+                <path d="M19.5 19.5046C19.5 18.6762 18.8284 18.0046 18 18.0046C17.1716 18.0046 16.5 18.6762 16.5 19.5046C16.5 20.3331 17.1716 21.0046 18 21.0046C18.8284 21.0046 19.5 20.3331 19.5 19.5046Z" fill="white" />
+            </svg>
+            Free Delivery Worldwide
+        </p>
+
+    </div>
+
+    <hr class="text-white" style="margin-top:-10px;" />
+
+    <div id="shoppingBag-productItems-Container">
+
+        <div id="shoppingBag-productItems-Top">
+            @if (Model.ShoppingCartList != null && Model.ShoppingCartList.Any())
+            {
+                @foreach (var item in Model.ShoppingCartList)
+                {
+                    string shortenedProductName = item.Product.ProductName.Length > 35 ? $"{item.Product.ProductName.Substring(0, 35)}..." : item.Product.ProductName;
+                    double countPrice = item.Product.Price * item.Count;
+
+                    <div class="shoppingBag-Item" data-id="@item.Id">
+                        <div class="shoppingBag-imgItem-Container">
+                            <img class="shoppingBag-imgItem-Wrapper" src="@item.Product.PrimaryDisplayImageUrl" />
+                        </div>
+                        <div class="shoppingBag-infoItem-Container">
+                            <div class="shoppingBag-infoItem-Left">
+                                <a asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-productId="@item.Product.Id" class="text-white shoppingBag-info-Text">@shortenedProductName</a>
+                                <p class="text-white shoppingBag-info-Text">@item.Product.ProductNumber</p>
+                                <p class="text-white shoppingBag-info-Text">@item.Product.Gender @item.Product.ProductCategory</p>
+                                <p class="text-white shoppingBag-info-Text Countprice">@countPrice.ToString("c")</p>
+                            </div>
+                            <div class="shoppingBag-infoItem-Right">
+                                <a class="btn text-danger bi bi-x removeItemBtn" data-id="@item.Id"></a>
+                                <div class="shoppingBag-infoItem-Right-Wrapper">
+                                    <a class="btn bi bi-dash-square minusBtn" data-id="@item.Id" style="color:white;"></a>
+                                    <p class="item-count text-center" style="font-size:16px;margin-top:16px;"><strong>@item.Count</strong></p>
+                                    <a class="btn bi bi-plus-square addBtn" data-id="@item.Id" style="color:white;"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-white">Your shopping bag is currently empty.</p>
+            }
+        </div>
+
+        <div id="shoppingBag-productItems-bottom">
+            <table style="width:100%;">
+                <tbody>
+                    <tr>
+                        <td class="text-white" style="width:50%;">Delivery</td>
+                        <td class="text-white" style="width:50%;text-align:right;"><strong>Free</strong></td>
+                    </tr>
+                    <tr>
+                        <td class="text-white" style="width:50%;">Total</td>
+                        <td class="text-white OrderTotal" style="width:50%;text-align:right;"><strong>@(Model.OrderHeader != null ? Model.OrderHeader.OrderTotal.ToString("c") : "0")</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <a id="checkoutBtn" class="mt-2" asp-controller="Checkout" asp-action="DeliveryDetails" asp-area="Customer">
+                  Checkout
+                </a>
+            
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    var urls = {
+        increment: '@Url.Action("IncrementItem", "ShoppingBagList", new { area = "Customer" })',
+        decrement: '@Url.Action("DecrementItem", "ShoppingBagList", new { area = "Customer" })',
+        remove: '@Url.Action("RemoveItem", "ShoppingBagList", new { area = "Customer" })'
+    };
+</script>
+@section Scripts {
+
+    <script>
+
+    </script>
+}
+

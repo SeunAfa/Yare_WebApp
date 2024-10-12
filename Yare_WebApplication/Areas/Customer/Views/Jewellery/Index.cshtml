@@ -1,0 +1,355 @@
+﻿@using System.ComponentModel.DataAnnotations;
+@using Yare.Models.Enums;
+@model Yare.Models.ViewModels.HomePgVM
+@{
+    ViewData["Title"] = "Jewellery";
+}
+
+
+@{
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+
+}
+@if (controllerName == "Collections" || controllerName == "Watches" || controllerName == "Jewellery" || controllerName == "Accessories" || (controllerName == "Collections" && actionName != "Index"))
+{
+
+    if (controllerName == "Collections" && actionName == "Index")
+    {
+    }
+    else
+    {
+        <section class="productList-breadcrumb-Container">
+
+            <div class="productList-breadcrumbLeft-Wrapper">
+
+                <partial name="_productList_breadcrumbLeftWrapper" />
+
+            </div>
+
+            <div class="productList-breadcrumbRight-Wrapper">
+
+                <div class="productCount-Container">
+                    <p class="productCount-text text-black"><span class="productCount-Initial">@ViewBag.TotalProductCount</span><span class="productCount-Results"></span> Models</p>
+                </div>
+
+                <svg class="filter-Btn" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6.5 2.25C6.5 1.83579 6.16421 1.5 5.75 1.5C5.33579 1.5 5 1.83579 5 2.25V5.25C5 5.66421 5.33579 6 5.75 6C6.16421 6 6.5 5.66421 6.5 5.25V4.5H13.25C13.6642 4.5 14 4.16421 14 3.75C14 3.33579 13.6642 3 13.25 3H6.5V2.25Z" />
+                    <path d="M11 6.5C11 6.08579 10.6642 5.75 10.25 5.75C9.83579 5.75 9.5 6.08579 9.5 6.5V9.5C9.5 9.91421 9.83579 10.25 10.25 10.25C10.6642 10.25 11 9.91421 11 9.5V8.75H13.25C13.6642 8.75 14 8.41421 14 8C14 7.58579 13.6642 7.25 13.25 7.25H11V6.5Z" />
+                    <path d="M5.75 10C6.16421 10 6.5 10.3358 6.5 10.75V11.5H13.25C13.6642 11.5 14 11.8358 14 12.25C14 12.6642 13.6642 13 13.25 13H6.5V13.75C6.5 14.1642 6.16421 14.5 5.75 14.5C5.33579 14.5 5 14.1642 5 13.75V10.75C5 10.3358 5.33579 10 5.75 10Z" />
+                    <path d="M2.75 7.25H8.5V8.75H2.75C2.33579 8.75 2 8.41421 2 8C2 7.58579 2.33579 7.25 2.75 7.25Z" />
+                    <path d="M4 3H2.75C2.33579 3 2 3.33579 2 3.75C2 4.16421 2.33579 4.5 2.75 4.5H4V3Z" />
+                    <path d="M2.75 11.5H4V13H2.75C2.33579 13 2 12.6642 2 12.25C2 11.8358 2.33579 11.5 2.75 11.5Z" />
+                </svg>
+
+                <div class="fileterHeader-controlsContainer">
+                    <div class="clearAll-Btn">Clear All</div>
+                    <div class="filter-Title">Applied Filters<span class="appliedFilters-Text"></span></div>
+                    <svg class="close-Btn" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5.28033 4.22651C4.98744 3.93361 4.51256 3.93361 4.21967 4.22651C3.92678 4.5194 3.92678 4.99427 4.21967 5.28717L6.93934 8.00684L4.21967 10.7265C3.92678 11.0194 3.92678 11.4943 4.21967 11.7872C4.51256 12.0801 4.98744 12.0801 5.28033 11.7872L8 9.0675L10.7197 11.7872C11.0126 12.0801 11.4874 12.0801 11.7803 11.7872C12.0732 11.4943 12.0732 11.0194 11.7803 10.7265L9.06066 8.00684L11.7803 5.28717C12.0732 4.99427 12.0732 4.5194 11.7803 4.22651C11.4874 3.93361 11.0126 3.93361 10.7197 4.22651L8 6.94618L5.28033 4.22651Z" />
+                    </svg>
+                </div>
+
+            </div>
+
+        </section>
+
+        <div id="productsList-filterContainer">
+            <partial name="_productsList_Filters" />
+        </div>
+    }
+}
+<section class="productList-Container">
+
+    <section class="productList-ImgBanner-Container">
+        @{
+            switch (ViewContext.RouteData.Values["action"])
+            {
+                case "MensJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-MensJewellery"></div>
+                    break;
+                case "LadiesJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-LadiesJewellery"></div>
+                    break;
+                case "ExclusiveJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-ExclusiveJewellery"></div>
+                    break;
+                case "AnkletsJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-AnkletsJewellery"></div>
+                    break;
+                case "BanglesJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-BanglesJewellery"></div>
+                    break;
+                case "BraceletsJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-BraceletsJewellery"></div>
+                    break;
+                case "BroochesJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-BroochesJewellery"></div>
+                    break;
+                case "CufflinksJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-CufflinksJewellery"></div>
+                    break;
+                case "ChainsJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-ChainsJewellery"></div>
+                    break;
+                case "CharmsJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-CharmsJewellery"></div>
+                    break;
+                case "EarringsJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-EaringsJewellery"></div>
+                    break;
+                case "EngagementRingsJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-EngagementRingsJewellery"></div>
+                    break;
+                case "LocketsJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-LocketsJewellery"></div>
+                    break;
+                case "NecklacesJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-NecklacesJewellery"></div>
+                    break;
+                case "PendantsJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-PendantsJewellery"></div>
+                    break;
+                case "RingsJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-RingsJewellery"></div>
+                    break;
+                case "WeddingRingsJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-WeddingRings"></div>
+                    break;
+                case "ByOccasionJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-ByOccasionJewellery"></div>
+                    break;
+                case "GoldJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-GoldJewellery"></div>
+                    break;
+                case "WhiteGoldJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-WhiteGoldJewellery"></div>
+                    break;
+                case "RoseGoldJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-RoseGoldJewellery"></div>
+                    break;
+                case "YellowGoldJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-YellowGoldJewellery"></div>
+                    break;
+                case "SilverJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-SilverJewellery"></div>
+                    break;
+                case "PlatinumJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-PlatinumJewellery"></div>
+                    break;
+                case "DiamondJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-DiamondJewellery"></div>
+                    break;
+                case "LabGrownDiamondJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-LabGrownDiamondJewellery"></div>
+                    break;
+                case "PearlJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-PearlJewellery"></div>
+                    break;
+                case "RubyJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-RubyJewellery"></div>
+                    break;
+                case "EmeraldJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-EmeraldJewellery"></div>
+                    break;
+                case "SapphireJewellery":
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-SapphireJewellery"></div>
+                    break;
+                default:
+                    <div class="productList-ImgBanner Jewellery-ImgBanner-All"></div>
+                    break;
+            }
+        }
+
+        <div class="productList-ImgBanner-Text">
+            @{
+                switch (ViewContext.RouteData.Values["action"])
+                {
+                    case "MensJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Mens Jewellery</h5>
+                        break;
+                    case "LadiesJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Ladies Jewellery</h5>
+                        break;
+                    case "ExclusiveJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Exclusive Jewellery</h5>
+                        break;
+                    case "AnkletsJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Anklets</h5>
+                        break;
+                    case "BanglesJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Bangles</h5>
+                        break;
+                    case "BraceletsJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Bracelets</h5>
+                        break;
+                    case "BroochesJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Brooches</h5>
+                        break;
+                    case "CufflinksJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Cufflinks</h5>
+                        break;
+                    case "ChainsJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Chains</h5>
+                        break;
+                    case "CharmsJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Charms</h5>
+                        break;
+                    case "EarringsJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Earrings</h5>
+                        break;
+                    case "EngagementRingsJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Engagement Rings</h5>
+                        break;
+                    case "LocketsJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Lockets</h5>
+                        break;
+                    case "NecklacesJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Necklaces</h5>
+                        break;
+                    case "PendantsJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Pendants</h5>
+                        break;
+                    case "RingsJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Rings</h5>
+                        break;
+                    case "WeddingRingsJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Wedding Rings</h5>
+                        break;
+                    case "ByOccasionJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Special Occasion</h5>
+                        break;
+                    case "GoldJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Gold Jewellery</h5>
+                        break;
+                    case "WhiteGoldJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">White Gold Jewellery</h5>
+                        break;
+                    case "RoseGoldJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Rose Gold Jewellery</h5>
+                        break;
+                    case "YellowGoldJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Yellow Gold Jewellery</h5>
+                        break;
+                    case "SilverJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Silver Jewellery</h5>
+                        break;
+                    case "PlatinumJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Platinum Jewellery</h5>
+                        break;
+                    case "DiamondJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Diamond Jewellery</h5>
+                        break;
+                    case "LabGrownDiamondJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Lab Grown Diamond Jewellery</h5>
+                        break;
+                    case "PearlJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Pearl Jewellery</h5>
+                        break;
+                    case "RubyJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Ruby Jewellery</h5>
+                        break;
+                    case "EmeraldJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Emerald Jewellery</h5>
+                        break;
+                    case "SapphireJewellery":
+                        <h5 class="productList-ImgBanner-Title text-black">Sapphire Jewellery</h5>
+                        break;
+                    default:
+                        <h5 class="productList-ImgBanner-Title text-black">All Jewellery</h5>
+                        break;
+                }
+            }
+
+            @{
+                switch (ViewContext.RouteData.Values["action"])
+                {
+                    default:
+                        <p class="productList-ImgBanner-Description text-black">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                        break;
+
+                }
+            }
+        </div>
+
+    </section>
+
+    @if (Model.ProductVM.objProductList.Any())
+    {
+        <div class="productSpecific-listRowContainer">
+
+            <div class="productSpecific-listRow">
+                @foreach (var product in Model.ProductVM.objProductList)
+                {
+                    string shortenedProductName = product.ProductName.Length > 21 ? $"{product.ProductName.Substring(0, 21)}..." : product.ProductName;
+
+                    if (product is Jewellery jewelleryProduct)
+                    {
+                        <div class="productCard-Container"
+                             data-price="@jewelleryProduct.Price.ToString()"
+                             data-gender="@jewelleryProduct.Gender"
+                             data-metal="@jewelleryProduct.ByMetal?.ToString()"
+                             data-jewelleryCategory="@jewelleryProduct.JewelleryCategory?.ToString()"
+                             data-byGemstone="@jewelleryProduct.ByGemstone?.ToString()"
+                             data-byOccassion="@jewelleryProduct.ByOccassion?.ToString()">
+                            <a asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-productId="@jewelleryProduct.Id">
+
+                                <div class="productCard-imgs-Container">
+                                    <img class="productCard-imgs watchProduct-imgs" src="@jewelleryProduct.PrimaryDisplayImageUrl" data-hover-image-url="@jewelleryProduct.SecondaryDisplayImageUrl" />
+                                </div>
+                                <div class="productCard-info-Container">
+                                    <div class="productCard-info-Top">
+                                        <p class="text-black text-uppercase text-center productCard-info-productName">@shortenedProductName</p>
+                                    </div>
+                                    <div class="productCard-info-Bottom">
+                                        <p class="text-black text-center productCard-info-Price">@jewelleryProduct.Price.ToString("c")</p>
+                                    </div>
+                                </div>
+
+                            </a>
+                        </div>
+                    }
+                }
+            </div>
+
+        </div>
+    }
+    else
+    {
+        <div class="noProducts-foundContainer">
+            <div style="text-align: center;">
+                 <svg class="sad-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.1823 14.3226C12.3075 13.4478 11.1623 13.0085 10.0158 13.0046C8.85898 13.0006 7.70095 13.4399 6.81834 14.3226M19 10.0046C19 14.9752 14.9706 19.0046 10 19.0046C5.02944 19.0046 1 14.9752 1 10.0046C1 5.03408 5.02944 1.00464 10 1.00464C14.9706 1.00464 19 5.03408 19 10.0046ZM7.75 7.75464C7.75 8.16885 7.58211 8.50464 7.375 8.50464C7.16789 8.50464 7 8.16885 7 7.75464C7 7.34043 7.16789 7.00464 7.375 7.00464C7.58211 7.00464 7.75 7.34043 7.75 7.75464ZM7.375 7.75464H7.3825V7.76964H7.375V7.75464ZM13 7.75464C13 8.16885 12.8321 8.50464 12.625 8.50464C12.4179 8.50464 12.25 8.16885 12.25 7.75464C12.25 7.34043 12.4179 7.00464 12.625 7.00464C12.8321 7.00464 13 7.34043 13 7.75464ZM12.625 7.75464H12.6325V7.76964H12.625V7.75464Z" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+            <p class="noProduct-text text-black">Oops! It looks like there are no products available at the moment.</p>
+            <p class="noProduct-text text-black">Feel free to explore other categories or return to the <a class="text-black noProduct-link" asp-area="" asp-controller="" asp-action="">home</a> page to discover more products.</p>
+        </div>
+    }
+
+    <div class="noFilterResulst-Container">
+
+        <div style="text-align: center;">
+            <svg class="sad-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.1823 14.3226C12.3075 13.4478 11.1623 13.0085 10.0158 13.0046C8.85898 13.0006 7.70095 13.4399 6.81834 14.3226M19 10.0046C19 14.9752 14.9706 19.0046 10 19.0046C5.02944 19.0046 1 14.9752 1 10.0046C1 5.03408 5.02944 1.00464 10 1.00464C14.9706 1.00464 19 5.03408 19 10.0046ZM7.75 7.75464C7.75 8.16885 7.58211 8.50464 7.375 8.50464C7.16789 8.50464 7 8.16885 7 7.75464C7 7.34043 7.16789 7.00464 7.375 7.00464C7.58211 7.00464 7.75 7.34043 7.75 7.75464ZM7.375 7.75464H7.3825V7.76964H7.375V7.75464ZM13 7.75464C13 8.16885 12.8321 8.50464 12.625 8.50464C12.4179 8.50464 12.25 8.16885 12.25 7.75464C12.25 7.34043 12.4179 7.00464 12.625 7.00464C12.8321 7.00464 13 7.34043 13 7.75464ZM12.625 7.75464H12.6325V7.76964H12.625V7.75464Z" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+        <p class="noFilterResults-text text-black">Sorry, we couldn't find any results.</p>
+        <p class="noFilterResults-text text-black">Try adjusting or clearing your filters to get better results.</p>
+
+    </div>
+
+</section>
+
+@section Scripts {
+    <script src="~/js/productFilterSystem.js" asp-append-version="true"></script>
+
+    <script>
+
+        ///////////////////////////////////
+        // _Layout Searchbar Component
+        const filterUrl = '@Url.Action("Filter", "Jewellery")';
+
+    </script>
+
+}

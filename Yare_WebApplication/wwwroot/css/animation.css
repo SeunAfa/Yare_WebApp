@@ -1,0 +1,136 @@
+﻿/*Start of Navigation Section---------
+------------------------------------*/
+/*animatedUnderline*/
+.animatedUnderline-Links {
+    display: inline-block;
+    position: relative;
+}
+
+    .animatedUnderline-Links:after {
+        background: none repeat scroll 0 0 transparent;
+        bottom: 2px;
+        content: "";
+        display: block;
+        height: 2px;
+        left: 0%;
+        position: absolute;
+        background:red;
+        transition: width 0.3s ease 0s, left 0.3s ease 0s;
+        width: 0;
+    }
+
+    .animatedUnderline-Links:hover:after {
+        width: 100%;
+        left: 0;
+    }
+
+
+/*End of Navigation Section-----------
+------------------------------------*/
+.animatedCollection-Links {
+    display: inline-block;
+    position: relative;
+}
+
+    .animatedCollection-Links:after {
+        background: none repeat scroll 0 0 transparent;
+        bottom: 2px;
+        content: "";
+        display: block;
+        height: 1px;
+        left: 0%;
+        position: absolute;
+        background: red;
+        transition: width 250ms ease 0s, left 250ms ease 0s;
+        width: 0;
+    }
+
+    .animatedCollection-Links:hover:after {
+        width: 100%;
+        left: 0;
+    }
+
+/*Start Of Loading Pg*/
+.loadPg-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 100vh;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.loadingPg-startSVG {
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    fill: black;
+    animation: loadingPg-startSVG 5s ease-in-out infinite;
+}
+
+@keyframes loadingPg-startSVG {
+    0% {
+        stroke-dasharray: 0, 200;
+        stroke-dashoffset: 200;
+        fill: black;
+    }
+
+    25% {
+        stroke: red;
+        fill: black;
+    }
+
+    50% {
+        stroke: white;
+    }
+
+    75% {
+        stroke: red;
+        fill: black;
+    }
+
+    100% {
+        stroke-dasharray: 200, 0;
+        stroke: white;
+        fill: white;
+    }
+}
+
+.loadingPg-finishSVG {
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    fill: black;
+    animation: loadingPg-finishSVG 2s ease-in-out forwards;
+}
+
+@keyframes loadingPg-finishSVG {
+    0% {
+        stroke-dasharray: 0, 200;
+        stroke-dashoffset: 200;
+        fill: black;
+    }
+
+    25% {
+        stroke: red;
+        fill: black;
+    }
+
+    50% {
+        stroke: white;
+    }
+
+    75% {
+        stroke: red;
+        fill: black;
+    }
+
+    100% {
+        stroke-dasharray: 200, 0;
+        stroke: white;
+        fill: white;
+    }
+}

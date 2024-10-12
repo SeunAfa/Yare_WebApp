@@ -1,0 +1,1343 @@
+﻿@using System.ComponentModel.DataAnnotations;
+@using Yare.Models.Enums;
+@model Yare.Models.ViewModels.HomePgVM
+@{
+    var maxPrice = Model.ProductVM.objProductList?.Any() == true ? Model.ProductVM.objProductList.Max(p => (decimal?)p.Price) : null;
+    var formattedMaxPrice = maxPrice.HasValue ? maxPrice.Value.ToString("C2", new System.Globalization.CultureInfo("en-GB")) : "£0.00";
+
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+
+}
+<style>
+
+    input[type='range'] {
+        overflow: hidden;
+        width: 100%;
+        -webkit-appearance: none;
+        background-color: white;
+    }
+
+        input[type='range']::-webkit-slider-runnable-track {
+            height: 10px;
+            -webkit-appearance: none;
+            color: white;
+            margin-top: -1px;
+        }
+
+        input[type='range']::-webkit-slider-thumb {
+            width: 10px;
+            -webkit-appearance: none;
+            height: 10px;
+            cursor: pointer;
+            background: red;
+        }
+
+</style>
+
+@functions {
+    public string GetDisplayValue(Enum value)
+    {
+        var field = value.GetType().GetField(value.ToString());
+        var displayAttribute = (DisplayAttribute)Attribute.GetCustomAttribute(field, typeof(DisplayAttribute));
+        return displayAttribute?.Name ?? value.ToString();
+    }
+}
+
+<div class="filetersProperties-Container">
+
+    <div class="priceFilter-Container">
+        <p>Price</p>
+        <input type="range" class="" id="priceRange" min="0" max="@((Model.ProductVM.objProductList?.Any() ?? false) ? maxPrice : 0)" step="0.01" value="@((Model.ProductVM.objProductList?.Any() ?? false) ? maxPrice : 0)" />
+        <div class="priceFilter-Wrapper">
+            <span class="min-priceRangeLabel text-white" for="priceRange">£0.00</span>
+            <span id="priceRangeLabel" class="max-priceRangeLabel text-white" for="priceRange">@formattedMaxPrice</span>
+        </div>
+    </div>
+
+    @{
+
+        var genders = Enum.GetValues(typeof(Gender)).Cast<Gender>();
+
+        switch (ViewContext.RouteData.Values["action"])
+        {
+            case "WeddingRingsJewellery":
+                <div class="genderFilter-Container">
+                    <p>Gender</p>
+                    <div class="genderFilter-Wrapper">
+                        <div class="text-uppercase genderFilter-disabledBtn">Mens</div>
+                        <div class="text-uppercase genderFilter-activeFilterBtn">Ladies</div>
+                        <div class="text-uppercase genderFilter-disabledBtn">Unisex</div>
+                    </div>
+                </div>
+                break;
+            case "EngagementRingsJewellery":
+                <div class="genderFilter-Container">
+                    <p>Gender</p>
+                    <div class="genderFilter-Wrapper">
+                        <div class="text-uppercase genderFilter-disabledBtn">Mens</div>
+                        <div class="text-uppercase genderFilter-activeFilterBtn">Ladies</div>
+                        <div class="text-uppercase genderFilter-disabledBtn">Unisex</div>
+                    </div>
+                </div>
+                break;
+            case "CharmsJewellery":
+                <div class="genderFilter-Container">
+                    <p>Gender</p>
+                    <div class="genderFilter-Wrapper">
+                        <div class="text-uppercase genderFilter-disabledBtn">Mens</div>
+                        <div class="text-uppercase genderFilter-activeFilterBtn">Ladies</div>
+                        <div class="text-uppercase genderFilter-disabledBtn">Unisex</div>
+                    </div>
+                </div>
+                break;
+            case "AnkletsJewellery":
+                <div class="genderFilter-Container">
+                    <p>Gender</p>
+                    <div class="genderFilter-Wrapper">
+                        <div class="text-uppercase genderFilter-disabledBtn">Mens</div>
+                        <div class="text-uppercase genderFilter-activeFilterBtn">Ladies</div>
+                        <div class="text-uppercase genderFilter-disabledBtn">Unisex</div>
+                    </div>
+                </div>
+                break;
+            case "LadiesJewellery":
+                <div class="genderFilter-Container">
+                    <p>Gender</p>
+                    <div class="genderFilter-Wrapper">
+                        <div class="text-uppercase genderFilter-disabledBtn">Mens</div>
+                        <div class="text-uppercase genderFilter-activeFilterBtn">Ladies</div>
+                        <div class="text-uppercase genderFilter-disabledBtn">Unisex</div>
+                    </div>
+                </div>
+                break;
+            case "MensJewellery":
+                <div class="genderFilter-Container">
+                    <p>Gender</p>
+                    <div class="genderFilter-Wrapper">
+                        <div class="text-uppercase genderFilter-activeFilterBtn">Mens</div>
+                        <div class="text-uppercase genderFilter-disabledBtn">Ladies</div>
+                        <div class="text-uppercase genderFilter-disabledBtn">Unisex</div>
+                    </div>
+                </div>
+                break;
+            case "EngagementRingsCollection":
+                <div class="genderFilter-Container">
+                    <p>Gender</p>
+                    <div class="genderFilter-Wrapper">
+                        <div class="text-uppercase genderFilter-disabledBtn">Mens</div>
+                        <div class="text-uppercase genderFilter-activeFilterBtn">Ladies</div>
+                        <div class="text-uppercase genderFilter-disabledBtn">Unisex</div>
+                    </div>
+                </div>
+                break;
+            case "MensWatches":
+                <div class="genderFilter-Container">
+                    <p>Gender</p>
+                    <div class="genderFilter-Wrapper">
+                        <div class="text-uppercase genderFilter-activeFilterBtn">Mens</div>
+                        <div class="text-uppercase genderFilter-disabledBtn">Ladies</div>
+                        <div class="text-uppercase genderFilter-disabledBtn">Unisex</div>
+                    </div>
+                </div>
+                break;
+            case "LadiesWatches":
+                <div class="genderFilter-Container">
+                    <p>Gender</p>
+                    <div class="genderFilter-Wrapper">
+                        <div class="text-uppercase genderFilter-disabledBtn">Mens</div>
+                        <div class="text-uppercase genderFilter-activeFilterBtn">Ladies</div>
+                        <div class="text-uppercase genderFilter-disabledBtn">Unisex</div>
+                    </div>
+                </div>
+                break;
+            case "UnisexWatches":
+                <div class="genderFilter-Container">
+                    <p>Gender</p>
+                    <div class="genderFilter-Wrapper">
+                        <div class="text-uppercase genderFilter-disabledBtn">Mens</div>
+                        <div class="text-uppercase genderFilter-disabledBtn">Ladies</div>
+                        <div class="text-uppercase genderFilter-activeFilterBtn">Unisex</div>
+                    </div>
+                </div>
+                break;
+            default:
+                <div class="genderFilter-Container">
+                    <p>Gender</p>
+                    <div class="genderFilter-Wrapper">
+                        @foreach (var gender in genders)
+                        {
+                            <div class="text-uppercase genderFilter-Btn" data-value="@gender">@GetDisplayValue(gender)</div>
+                        }
+                    </div>
+                </div>
+                break;
+        }
+    }
+
+    @if (controllerName == "Collections")
+    {
+        if (actionName == "BestSellersCollection" || actionName == "OurTopTenCollection" || actionName == "ExclusiveBrandsCollection" || actionName == "LimitedEditionCollection" || actionName == "ByOccasionCollection")
+        {
+            var productCategorys = Enum.GetValues(typeof(ProductCategory)).Cast<ProductCategory>();
+            var getWatchProduct = ProductCategory.Watch;
+            var getJewelleryProduct = ProductCategory.Jewellery;
+            var getAccessoryProduct = ProductCategory.Accessory;
+
+            switch (ViewContext.RouteData.Values["action"])
+            {
+                case "ByOccasionCollection":
+                    <div class="productCategoryFilter-Container">
+                        <p>Product Category</p>
+                        <div class="productCategoryFilter-Wrapper" id="shortList-productCategoryWrapper">
+                            @foreach (var productCategory in productCategorys)
+                            {
+                                var additionalClass = productCategory == getWatchProduct ? "productCategoryCheckbox-Watch" :
+                                productCategory == getJewelleryProduct ? "productCategoryCheckbox-Jewellery" :
+                                productCategory == getAccessoryProduct ? "productCategoryCheckbox-Accessory" : "";
+
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"productCategory-{productCategory}")"
+                                           class="productCategoryCheckbox @additionalClass"
+                                           name="productCategory" value="@productCategory" data-value="@productCategory"
+                                    @(productCategory == getAccessoryProduct ? "disabled" : "") />
+                                    <label class="filterLabel" for="@($"productCategory-{productCategory}")">@GetDisplayValue(productCategory)</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    break;
+                default:
+                    <div class="productCategoryFilter-Container">
+                        <p>Product Category</p>
+                        <div class="productCategoryFilter-Wrapper" id="shortList-productCategoryWrapper">
+                            @foreach (var productCategory in productCategorys)
+                            {
+                                var additionalClass = productCategory == getWatchProduct ? "productCategoryCheckbox-Watch" :
+                                productCategory == getJewelleryProduct ? "productCategoryCheckbox-Jewellery" :
+                                productCategory == getAccessoryProduct ? "productCategoryCheckbox-Accessory" : "";
+
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"productCategory-{productCategory}")"
+                                           class="productCategoryCheckbox @additionalClass"
+                                           name="productCategory" value="@productCategory" data-value="@productCategory" />
+                                    <label class="filterLabel" for="@($"productCategory-{productCategory}")">@GetDisplayValue(productCategory)</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    break;
+            }
+
+        }
+    }
+
+    @if (actionName == "BestSellersCollection" || actionName == "ByOccasionCollection" || actionName == "LimitedEditionCollection" || actionName == "ExclusiveBrandsCollection" || actionName == "OurTopTenCollection" || actionName == "ExclusiveWatchesCollection" || actionName == "NewInWatches" || actionName == "ExclusiveWatches" || actionName == "LimitedEditionWatches" || actionName == "MensWatches" || actionName == "LadiesWatches" || actionName == "UnisexWatches" || actionName == "BestSellersWatches" || actionName == "LuxuryWatches" || actionName == "DiamondWatches" || actionName == "SwissWatches" || actionName == "LeatherWatches" || actionName == "HeritageWatches" || actionName == "PocketWatches" || actionName == "SportWatches" || actionName == "DiveWatches" || actionName == "MechanicalWatches" || actionName == "AutomaticWatches" || actionName == "QuartzWatches" || actionName == "KineticWatches" || actionName == "EcoDriveWatches" || actionName == "Index")
+    {
+
+        if (controllerName == "Collections" || controllerName == "Watches" || (controllerName == "Jewellery" && actionName != "Index"))
+        {
+            var watchBrands = Enum.GetValues(typeof(WatchBrand)).Cast<WatchBrand>();
+
+            <div class="watchBrandFilter-Container">
+                <p>Brand</p>
+                <div class="watchBrandFilter-Wrapper" id="shortList-brandsWrapper">
+                    @foreach (var brand in watchBrands.Take(5))
+                    {
+                        <div class="filterCheckbox-Row">
+                            <input type="checkbox" id="@($"brand-{brand}")" class="brandCheckbox" name="brand" value="@brand" data-value="@brand" />
+                            <label class="filterLabel" for="@($"brand-{brand}")">@GetDisplayValue(brand)</label>
+                        </div>
+                    }
+                </div>
+                <div class="watchBrandFilter-Wrapper" id="fullList-brandsWrapper">
+                    @foreach (var brand in watchBrands.Skip(5))
+                    {
+                        <div class="filterCheckbox-Row">
+                            <input type="checkbox" id="@($"brand-{brand}")" class="brandCheckbox" name="brand" value="@brand" data-value="@brand" />
+                            <label class="filterLabel" for="@($"brand-{brand}")">@GetDisplayValue(brand)</label>
+                        </div>
+                    }
+                </div>
+                <div class="seeMore-brand-Btn">See More</div>
+                <div class="seeLess-brand-Btn" style="display:none;">See Less</div>
+            </div>
+        }
+    }
+
+    @if (controllerName == "Watches" || controllerName == "Collections" || controllerName == "Jewellery")
+    {
+
+        var goldProperty = ByMetal.Gold;
+        var silverProperty = ByMetal.Silver;
+        var platinumProperty = ByMetal.Platinum;
+        var stainlessSteelProperty = ByMetal.StainlessSteel;
+        var titaniumProperty = ByMetal.Titanium;
+        var roseGoldProperty = ByMetal.RoseGold;
+        var whiteGoldProperty = ByMetal.WhiteGold;
+        var yellowGoldProperty = ByMetal.YellowGold;
+
+        switch (ViewContext.RouteData.Values["action"])
+        {
+            case "PlatinumJewellery":
+                break;
+            case "SilverJewellery":
+                break;
+            case "YellowGoldJewellery":
+                break;
+            case "RoseGoldJewellery":
+                break;
+            case "WhiteGoldJewellery":
+                break;
+            case "GoldJewellery":
+                break;
+            default:
+                <div class="metalFilter-Container">
+                    <p>Metal</p>
+                    <div class="metalFilter-Wrapper">
+
+                        <div class="metalItem-Btn" data-value="@goldProperty">
+                            <div class="metalItem-Img metalItem-Img-gold"></div>
+                            <div class="metalItem-Title">@goldProperty</div>
+                        </div>
+
+                        <div class="metalItem-Btn" data-value="@silverProperty">
+                            <div class="metalItem-Img metalItem-Img-silver"></div>
+                            <div class="metalItem-Title">@silverProperty</div>
+                        </div>
+
+                        <div class="metalItem-Btn" data-value="@platinumProperty">
+                            <div class="metalItem-Img metalItem-Img-platinum"></div>
+                            <div class="metalItem-Title">@platinumProperty</div>
+                        </div>
+
+                        <div class="metalItem-Btn" data-value="@stainlessSteelProperty">
+                            <div class="metalItem-Img metalItem-Img-stainlessSteel"></div>
+                            <div class="metalItem-Title">@GetDisplayValue(stainlessSteelProperty)</div>
+                        </div>
+
+                        <div class="metalItem-Btn" data-value="@titaniumProperty">
+                            <div class="metalItem-Img metalItem-Img-titanium"></div>
+                            <div class="metalItem-Title">@titaniumProperty</div>
+                        </div>
+
+                        <div class="metalItem-Btn" data-value="@roseGoldProperty">
+                            <div class="metalItem-Img metalItem-Img-roseGold"></div>
+                            <div class="metalItem-Title">@GetDisplayValue(roseGoldProperty)</div>
+                        </div>
+
+                        <div class="metalItem-Btn" data-value="@whiteGoldProperty">
+                            <div class="metalItem-Img metalItem-Img-whiteGold"></div>
+                            <div class="metalItem-Title">@GetDisplayValue(whiteGoldProperty)</div>
+                        </div>
+
+                        <div class="metalItem-Btn" data-value="@yellowGoldProperty">
+                            <div class="metalItem-Img metalItem-Img-yellowGold"></div>
+                            <div class="metalItem-Title">@GetDisplayValue(yellowGoldProperty)</div>
+                        </div>
+
+                    </div>
+                </div>
+                break;
+        }
+
+    }
+
+    @if (actionName == "BestSellersCollection" || actionName == "ByOccasionCollection" || actionName == "LimitedEditionCollection" || actionName == "ExclusiveBrandsCollection" || actionName == "OurTopTenCollection" || actionName == "JaegerLeCoultreCollection" || actionName == "JaegerLeCoultreCollection" || actionName == "GirardPerregauxCollection" || actionName == "ChopardCollection" || actionName == "BaumeAndMercierCollection" || actionName == "BellAndRossCollection" || actionName == "TudorCollection" || actionName == "HublotCollection" || actionName == "TAGHeuerCollection" || actionName == "OmegaCollection" || actionName == "CartierCollection" || actionName == "BreitlingCollection" || actionName == "BvlgariCollection" || actionName == "BlancpainCollection" || actionName == "BreguetCollection" || actionName == "AudemarsPiguetCollection" || actionName == "ALangeAndSohneCollection" || actionName == "ExclusiveWatchesCollection" || actionName == "NewInWatches" || actionName == "ExclusiveWatches" || actionName == "LimitedEditionWatches" || actionName == "MensWatches" || actionName == "LadiesWatches" || actionName == "UnisexWatches" || actionName == "BestSellersWatches" || actionName == "LuxuryWatches" || actionName == "DiamondWatches" || actionName == "SwissWatches" || actionName == "LeatherWatches" || actionName == "HeritageWatches" || actionName == "PocketWatches" || actionName == "SportWatches" || actionName == "DiveWatches" || actionName == "MechanicalWatches" || actionName == "AutomaticWatches" || actionName == "QuartzWatches" || actionName == "KineticWatches" || actionName == "EcoDriveWatches" || actionName == "Index")
+    {
+        if (controllerName == "Collections" || controllerName == "Watches" || (controllerName == "Jewellery" && actionName != "Index"))
+        {
+            var watchDiameters = Enum.GetValues(typeof(WatchDiameter)).Cast<WatchDiameter>();
+
+            <div class="watchDiameterFilter-Container">
+                <p>Watch Diameter</p>
+                <div class="watchDiameterFilter-Wrapper" id="shortList-watchDiameterWrapper">
+                    @foreach (var watchDiameter in watchDiameters.Take(9))
+                    {
+                        <div class="text-uppercase watchDiameterFilter-Btn" data-value="@watchDiameter">@GetDisplayValue(watchDiameter)</div>
+                    }
+                    <div class="seeMore-watchDiameter-Btn">See More</div>
+                </div>
+                <div class="watchDiameterFilter-Wrapper" id="fullList-watchDiameterWrapper">
+                    @foreach (var watchDiameter in watchDiameters.Skip(9))
+                    {
+                        <div class="text-uppercase watchDiameterFilter-Btn" data-value="@watchDiameter">@GetDisplayValue(watchDiameter)</div>
+                    }
+                    <div class="seeLess-watchDiameter-Btn" style="display:none;">See Less</div>
+
+                </div>
+
+            </div>
+        }
+    }
+
+    @if ( actionName == "BestSellersCollection" || actionName == "ByOccasionCollection" || actionName == "LimitedEditionCollection" || actionName == "ExclusiveBrandsCollection" || actionName == "OurTopTenCollection" || actionName == "JaegerLeCoultreCollection" || actionName == "JaegerLeCoultreCollection" || actionName == "GirardPerregauxCollection" || actionName == "ChopardCollection" || actionName == "BaumeAndMercierCollection" || actionName == "BellAndRossCollection" || actionName == "TudorCollection" || actionName == "HublotCollection" || actionName == "TAGHeuerCollection" || actionName == "OmegaCollection" || actionName == "CartierCollection" || actionName == "BreitlingCollection" || actionName == "BvlgariCollection" || actionName == "BlancpainCollection" || actionName == "BreguetCollection" || actionName == "AudemarsPiguetCollection" || actionName == "ALangeAndSohneCollection" || actionName == "ExclusiveWatchesCollection" || actionName == "NewInWatches" || actionName == "ExclusiveWatches" || actionName == "LimitedEditionWatches" || actionName == "MensWatches" || actionName == "LadiesWatches" || actionName == "UnisexWatches" || actionName == "BestSellersWatches" || actionName == "LuxuryWatches" || actionName == "DiamondWatches" || actionName == "SwissWatches" || actionName == "LeatherWatches" || actionName == "HeritageWatches" || actionName == "PocketWatches" || actionName == "SportWatches" || actionName == "DiveWatches" || actionName == "MechanicalWatches" || actionName == "AutomaticWatches" || actionName == "QuartzWatches" || actionName == "KineticWatches" || actionName == "EcoDriveWatches" || actionName == "Index")
+    {
+        var watchMovements = Enum.GetValues(typeof(WatchMovement)).Cast<WatchMovement>();
+        var getMechanical = WatchMovement.Mechanical;
+        var getAutomatic = WatchMovement.Automatic;
+        var getQuartz = WatchMovement.Quartz;
+        var getKinetic = WatchMovement.Kinetic;
+        var getEcoDrive = WatchMovement.EcoDrive;
+
+        if (controllerName == "Collections" || controllerName == "Watches" || (controllerName == "Jewellery" && actionName != "Index"))
+        {
+            switch (ViewContext.RouteData.Values["action"])
+            {
+                case "EcoDriveWatches":
+                    <div class="watchMovementFilter-Container">
+                        <p>Watch Movement</p>
+                        <div class="watchMovementFilter-Wrapper" id="shortList-watchMovementWrapper">
+                            @foreach (var watchMovement in watchMovements.Take(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"watchMovement-{watchMovement}")"
+                                           class="watchMovementCheckbox"
+                                           name="watchMovement" value="@watchMovement" data-value="@watchMovement"
+                                    @(watchMovement == getEcoDrive ? "checked disabled" : "disabled") />
+                                    <label class="filterLabel" for="@($"watchMovement-{watchMovement}")">@GetDisplayValue(watchMovement)</label>
+                                </div>
+                            }
+                        </div>
+                        <div class="watchMovementFilter-Wrapper" id="fullList-watchMovementWrapper">
+                            @foreach (var watchMovement in watchMovements.Skip(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"watchMovement-{watchMovement}")" class="watchMovementCheckbox" name="watchMovement" value="@watchMovement" data-value="@watchMovement"
+                                    @(watchMovement == getEcoDrive ? "checked disabled" : "disabled") />
+                                    <label class="filterLabel" for="@($"watchMovement-{watchMovement}")">@GetDisplayValue(watchMovement)</label>
+                                </div>
+                            }
+                        </div>
+                        <div class="seeMore-watchMovement-Btn">See More</div>
+                        <div class="seeLess-watchMovement-Btn" style="display:none;">See Less</div>
+                    </div>
+                    break;
+                case "KineticWatches":
+                    <div class="watchMovementFilter-Container">
+                        <p>Watch Movement</p>
+                        <div class="watchMovementFilter-Wrapper" id="shortList-watchMovementWrapper">
+                            @foreach (var watchMovement in watchMovements.Take(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"watchMovement-{watchMovement}")"
+                                           class="watchMovementCheckbox"
+                                           name="watchMovement" value="@watchMovement" data-value="@watchMovement"
+                                    @(watchMovement == getKinetic ? "checked disabled" : "disabled") />
+                                    <label class="filterLabel" for="@($"watchMovement-{watchMovement}")">@GetDisplayValue(watchMovement)</label>
+                                </div>
+                            }
+                        </div>
+                        <div class="watchMovementFilter-Wrapper" id="fullList-watchMovementWrapper">
+                            @foreach (var watchMovement in watchMovements.Skip(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"watchMovement-{watchMovement}")" class="watchMovementCheckbox" name="watchMovement" value="@watchMovement" data-value="@watchMovement"
+                                    @(watchMovement == getKinetic ? "checked disabled" : "disabled") />
+                                    <label class="filterLabel" for="@($"watchMovement-{watchMovement}")">@GetDisplayValue(watchMovement)</label>
+                                </div>
+                            }
+                        </div>
+                        <div class="seeMore-watchMovement-Btn">See More</div>
+                        <div class="seeLess-watchMovement-Btn" style="display:none;">See Less</div>
+                    </div>
+                    break;
+                case "QuartzWatches":
+                    <div class="watchMovementFilter-Container">
+                        <p>Watch Movement</p>
+                        <div class="watchMovementFilter-Wrapper" id="shortList-watchMovementWrapper">
+                            @foreach (var watchMovement in watchMovements.Take(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"watchMovement-{watchMovement}")"
+                                           class="watchMovementCheckbox"
+                                           name="watchMovement" value="@watchMovement" data-value="@watchMovement"
+                                    @(watchMovement == getQuartz ? "checked disabled" : "disabled") />
+                                    <label class="filterLabel" for="@($"watchMovement-{watchMovement}")">@GetDisplayValue(watchMovement)</label>
+                                </div>
+                            }
+                        </div>
+                        <div class="watchMovementFilter-Wrapper" id="fullList-watchMovementWrapper">
+                            @foreach (var watchMovement in watchMovements.Skip(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"watchMovement-{watchMovement}")" class="watchMovementCheckbox" name="watchMovement" value="@watchMovement" data-value="@watchMovement"
+                                    @(watchMovement == getQuartz ? "checked disabled" : "disabled") />
+                                    <label class="filterLabel" for="@($"watchMovement-{watchMovement}")">@GetDisplayValue(watchMovement)</label>
+                                </div>
+                            }
+                        </div>
+                        <div class="seeMore-watchMovement-Btn">See More</div>
+                        <div class="seeLess-watchMovement-Btn" style="display:none;">See Less</div>
+                    </div>
+                    break;
+                case "AutomaticWatches":
+                    <div class="watchMovementFilter-Container">
+                        <p>Watch Movement</p>
+                        <div class="watchMovementFilter-Wrapper" id="shortList-watchMovementWrapper">
+                            @foreach (var watchMovement in watchMovements.Take(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"watchMovement-{watchMovement}")"
+                                           class="watchMovementCheckbox"
+                                           name="watchMovement" value="@watchMovement" data-value="@watchMovement"
+                                    @(watchMovement == getAutomatic ? "checked disabled" : "disabled") />
+                                    <label class="filterLabel" for="@($"watchMovement-{watchMovement}")">@GetDisplayValue(watchMovement)</label>
+                                </div>
+                            }
+                        </div>
+                        <div class="watchMovementFilter-Wrapper" id="fullList-watchMovementWrapper">
+                            @foreach (var watchMovement in watchMovements.Skip(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"watchMovement-{watchMovement}")" class="watchMovementCheckbox" name="watchMovement" value="@watchMovement" data-value="@watchMovement"
+                                    @(watchMovement == getAutomatic ? "checked disabled" : "disabled") />
+                                    <label class="filterLabel" for="@($"watchMovement-{watchMovement}")">@GetDisplayValue(watchMovement)</label>
+                                </div>
+                            }
+                        </div>
+                        <div class="seeMore-watchMovement-Btn">See More</div>
+                        <div class="seeLess-watchMovement-Btn" style="display:none;">See Less</div>
+                    </div>
+                    break;
+                case "MechanicalWatches":
+                    <div class="watchMovementFilter-Container">
+                        <p>Watch Movement</p>
+                        <div class="watchMovementFilter-Wrapper" id="shortList-watchMovementWrapper">
+                            @foreach (var watchMovement in watchMovements.Take(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"watchMovement-{watchMovement}")"
+                                           class="watchMovementCheckbox"
+                                           name="watchMovement" value="@watchMovement" data-value="@watchMovement"
+                                    @(watchMovement == getMechanical ? "checked disabled" : "disabled") />
+                                    <label class="filterLabel" for="@($"watchMovement-{watchMovement}")">@GetDisplayValue(watchMovement)</label>
+                                </div>
+                            }
+                        </div>
+                        <div class="watchMovementFilter-Wrapper" id="fullList-watchMovementWrapper">
+                            @foreach (var watchMovement in watchMovements.Skip(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"watchMovement-{watchMovement}")" class="watchMovementCheckbox" name="watchMovement" value="@watchMovement" data-value="@watchMovement"
+                                    @(watchMovement == getMechanical ? "checked disabled" : "disabled") />
+                                    <label class="filterLabel" for="@($"watchMovement-{watchMovement}")">@GetDisplayValue(watchMovement)</label>
+                                </div>
+                            }
+                        </div>
+                        <div class="seeMore-watchMovement-Btn">See More</div>
+                        <div class="seeLess-watchMovement-Btn" style="display:none;">See Less</div>
+                    </div>
+                    break;
+                default:
+
+                    <div class="watchMovementFilter-Container">
+                        <p>Watch Movement</p>
+                        <div class="watchMovementFilter-Wrapper" id="shortList-watchMovementWrapper">
+                            @foreach (var watchMovement in watchMovements.Take(6))
+                            {
+
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"watchMovement-{watchMovement}")" class="watchMovementCheckbox" name="watchMovement" value="@watchMovement" data-value="@watchMovement" />
+                                    <label class="filterLabel" for="@($"watchMovement-{watchMovement}")">@GetDisplayValue(watchMovement)</label>
+                                </div>
+
+                            }
+                        </div>
+                        <div class="watchMovementFilter-Wrapper" id="fullList-watchMovementWrapper">
+                            @foreach (var watchMovement in watchMovements.Skip(6))
+                            {
+
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"watchMovement-{watchMovement}")" class="watchMovementCheckbox" name="watchMovement" value="@watchMovement" data-value="@watchMovement" />
+                                    <label class="filterLabel" for="@($"watchMovement-{watchMovement}")">@GetDisplayValue(watchMovement)</label>
+                                </div>
+
+                            }
+                        </div>
+                        <div class="seeMore-watchMovement-Btn">See More</div>
+                        <div class="seeLess-watchMovement-Btn" style="display:none;">See Less</div>
+                    </div>
+                    break;
+
+            }
+        }
+    }
+
+    @if (actionName == "BestSellersCollection" || actionName == "ByOccasionCollection" || actionName == "LimitedEditionCollection" || actionName == "ExclusiveBrandsCollection" || actionName == "OurTopTenCollection" || actionName == "JaegerLeCoultreCollection" || actionName == "JaegerLeCoultreCollection" || actionName == "GirardPerregauxCollection" || actionName == "ChopardCollection" || actionName == "BaumeAndMercierCollection" || actionName == "BellAndRossCollection" || actionName == "TudorCollection" || actionName == "HublotCollection" || actionName == "TAGHeuerCollection" || actionName == "OmegaCollection" || actionName == "CartierCollection" || actionName == "BreitlingCollection" || actionName == "BvlgariCollection" || actionName == "BlancpainCollection" || actionName == "BreguetCollection" || actionName == "AudemarsPiguetCollection" || actionName == "ALangeAndSohneCollection" || actionName == "ExclusiveWatchesCollection" || actionName == "NewInWatches" || actionName == "ExclusiveWatches" || actionName == "LimitedEditionWatches" || actionName == "MensWatches" || actionName == "LadiesWatches" || actionName == "UnisexWatches" || actionName == "BestSellersWatches" || actionName == "LuxuryWatches" || actionName == "DiamondWatches" || actionName == "SwissWatches" || actionName == "LeatherWatches" || actionName == "HeritageWatches" || actionName == "PocketWatches" || actionName == "SportWatches" || actionName == "DiveWatches" || actionName == "MechanicalWatches" || actionName == "AutomaticWatches" || actionName == "QuartzWatches" || actionName == "KineticWatches" || actionName == "EcoDriveWatches" || actionName == "Index")
+    {
+        if (controllerName == "Collections" || controllerName == "Watches" || (controllerName == "Jewellery" && actionName != "Index"))
+        {
+            var waterResistants = Enum.GetValues(typeof(WaterResistant)).Cast<WaterResistant>();
+
+            <div class="waterResistantFilter-Container">
+                <p>Water Resistant</p>
+                <div class="waterResistantFilter-Wrapper">
+                    @foreach (var waterResistant in waterResistants)
+                    {
+
+                        <div class="filterCheckbox-Row">
+                            <input type="checkbox" id="@($"waterResistant-{waterResistant}")" class="waterResistantCheckbox" name="waterResistant" value="@waterResistant" data-value="@waterResistant" />
+                            <label class="filterLabel" for="@($"waterResistant-{waterResistant}")">@GetDisplayValue(waterResistant)</label>
+                        </div>
+
+                    }
+                </div>
+            </div>
+        }
+    }
+
+    @if (actionName == "BestSellersCollection" || actionName == "ByOccasionCollection" || actionName == "LimitedEditionCollection" || actionName == "ExclusiveBrandsCollection" || actionName == "OurTopTenCollection" || actionName == "JaegerLeCoultreCollection" || actionName == "JaegerLeCoultreCollection" || actionName == "GirardPerregauxCollection" || actionName == "ChopardCollection" || actionName == "BaumeAndMercierCollection" || actionName == "BellAndRossCollection" || actionName == "TudorCollection" || actionName == "HublotCollection" || actionName == "TAGHeuerCollection" || actionName == "OmegaCollection" || actionName == "CartierCollection" || actionName == "BreitlingCollection" || actionName == "BvlgariCollection" || actionName == "BlancpainCollection" || actionName == "BreguetCollection" || actionName == "AudemarsPiguetCollection" || actionName == "ALangeAndSohneCollection" || actionName == "ExclusiveWatchesCollection" || actionName == "NewInWatches" || actionName == "ExclusiveWatches" || actionName == "LimitedEditionWatches" || actionName == "MensWatches" || actionName == "LadiesWatches" || actionName == "UnisexWatches" || actionName == "BestSellersWatches" || actionName == "LuxuryWatches" || actionName == "DiamondWatches" || actionName == "SwissWatches" || actionName == "LeatherWatches" || actionName == "HeritageWatches" || actionName == "PocketWatches" || actionName == "SportWatches" || actionName == "DiveWatches" || actionName == "MechanicalWatches" || actionName == "AutomaticWatches" || actionName == "QuartzWatches" || actionName == "KineticWatches" || actionName == "EcoDriveWatches" || actionName == "Index")
+    {
+        if (controllerName == "Collections" || controllerName == "Watches" || (controllerName == "Jewellery" && actionName != "Index"))
+        {
+            var watchCaseShapes = Enum.GetValues(typeof(WatchCaseShape)).Cast<WatchCaseShape>();
+
+            <div class="watchCaseShapeFilter-Container">
+                <p>Case Shape</p>
+                <div class="watchCaseShapeFilter-Wrapper" id="shortList-watchCaseShapeWrapper">
+                    @foreach (var watchCaseShape in watchCaseShapes.Take(6))
+                    {
+                        <div class="filterCheckbox-Row">
+                            <input type="checkbox" id="@($"watchCaseShape-{watchCaseShape}")" class="watchCaseShapeCheckbox" name="watchCaseShape" value="@watchCaseShape" data-value="@watchCaseShape" />
+                            <label class="filterLabel" for="@($"watchCaseShape-{watchCaseShape}")">@GetDisplayValue(watchCaseShape)</label>
+                        </div>
+                    }
+                </div>
+                <div class="watchCaseShapeFilter-Wrapper" id="fullList-watchCaseShapeWrapper">
+                    @foreach (var watchCaseShape in watchCaseShapes.Skip(6))
+                    {
+                        <div class="filterCheckbox-Row">
+                            <input type="checkbox" id="@($"watchCaseShape-{watchCaseShape}")" class="watchCaseShapeCheckbox" name="watchCaseShape" value="@watchCaseShape" data-value="@watchCaseShape" />
+                            <label class="filterLabel" for="@($"watchCaseShape-{watchCaseShape}")">@GetDisplayValue(watchCaseShape)</label>
+                        </div>
+                    }
+                </div>
+                <div class="seeMore-watchCaseShape-Btn">See More</div>
+                <div class="seeLess-watchCaseShape-Btn" style="display:none;">See Less</div>
+            </div>
+        }
+    }
+
+    @if (actionName == "BestSellersCollection" || actionName == "ByOccasionCollection" || actionName == "LimitedEditionCollection" || actionName == "ExclusiveBrandsCollection" || actionName == "OurTopTenCollection" || actionName == "JaegerLeCoultreCollection" || actionName == "JaegerLeCoultreCollection" || actionName == "GirardPerregauxCollection" || actionName == "ChopardCollection" || actionName == "BaumeAndMercierCollection" || actionName == "BellAndRossCollection" || actionName == "TudorCollection" || actionName == "HublotCollection" || actionName == "TAGHeuerCollection" || actionName == "OmegaCollection" || actionName == "CartierCollection" || actionName == "BreitlingCollection" || actionName == "BvlgariCollection" || actionName == "BlancpainCollection" || actionName == "BreguetCollection" || actionName == "AudemarsPiguetCollection" || actionName == "ALangeAndSohneCollection" || actionName == "ExclusiveWatchesCollection" || actionName == "NewInWatches" || actionName == "ExclusiveWatches" || actionName == "LimitedEditionWatches" || actionName == "MensWatches" || actionName == "LadiesWatches" || actionName == "UnisexWatches" || actionName == "BestSellersWatches" || actionName == "LuxuryWatches" || actionName == "DiamondWatches" || actionName == "SwissWatches" || actionName == "LeatherWatches" || actionName == "HeritageWatches" || actionName == "PocketWatches" || actionName == "SportWatches" || actionName == "DiveWatches" || actionName == "MechanicalWatches" || actionName == "AutomaticWatches" || actionName == "QuartzWatches" || actionName == "KineticWatches" || actionName == "EcoDriveWatches" || actionName == "Index")
+    {
+
+        if (controllerName == "Collections" || controllerName == "Watches" || (controllerName == "Jewellery" && actionName != "Index"))
+        {
+            var watchStrapTypes = Enum.GetValues(typeof(WatchStrapType)).Cast<WatchStrapType>();
+
+            <div class="watchStrapTypeFilter-Container">
+                <p>Strap</p>
+                <div class="watchStrapTypeFilter-Wrapper" id="shortList-watchStrapTypeWrapper">
+                    @foreach (var watchStrapType in watchStrapTypes.Take(6))
+                    {
+                        <div class="filterCheckbox-Row">
+                            <input type="checkbox" id="@($"watchStrapType-{watchStrapType}")" class="watchStrapTypeCheckbox" name="watchCaseShape" value="@watchStrapType" data-value="@watchStrapType" />
+                            <label class="filterLabel" for="@($"watchStrapType-{watchStrapType}")">@GetDisplayValue(watchStrapType)</label>
+                        </div>
+                    }
+                </div>
+                <div class="watchStrapTypeFilter-Wrapper" id="fullList-watchStrapTypeWrapper">
+                    @foreach (var watchStrapType in watchStrapTypes.Skip(6))
+                    {
+                        <div class="filterCheckbox-Row">
+                            <input type="checkbox" id="@($"watchStrapType-{watchStrapType}")" class="watchStrapTypeCheckbox" name="watchCaseShape" value="@watchStrapType" data-value="@watchStrapType" />
+                            <label class="filterLabel" for="@($"watchStrapType-{watchStrapType}")">@GetDisplayValue(watchStrapType)</label>
+                        </div>
+                    }
+                </div>
+                <div class="seeMore-watchStrapType-Btn">See More</div>
+                <div class="seeLess-watchStrapType-Btn" style="display:none;">See Less</div>
+            </div>
+        }
+    }
+
+    @if (controllerName == "Collections" || controllerName == "Jewellery")
+    {
+
+        if (actionName != "ExclusiveWatchesCollection" && actionName != "ALangeAndSohneCollection" && actionName != "AudemarsPiguetCollection" && actionName != "BreguetCollection" && actionName != "BreguetCollection" && actionName != "BlancpainCollection" && actionName != "BvlgariCollection"
+        && actionName != "BreitlingCollection" && actionName != "CartierCollection" && actionName != "OmegaCollection" && actionName != "TAGHeuerCollection" && actionName != "HublotCollection" && actionName != "TudorCollection"
+        && actionName != "BellAndRossCollection" && actionName != "BaumeAndMercierCollection" && actionName != "ChopardCollection" && actionName != "GirardPerregauxCollection" && actionName != "JaegerLeCoultreCollection")
+        {
+            var JewelleryCategorys = Enum.GetValues(typeof(JewelleryCategory)).Cast<JewelleryCategory>();
+
+            if (actionName != "WeddingRingsJewellery" && actionName != "RingsJewellery" && actionName != "PendantsJewellery" && actionName != "NecklacesJewellery" && actionName != "LocketsJewellery" && actionName != "EngagementRingsJewellery" && actionName != "EaringsJewellery" && actionName != "CharmsJewellery" && actionName != "ChainsJewellery" && actionName != "CufflinksJewellery" && actionName != "BroochesJewellery" && actionName != "BraceletsJewellery" && actionName != "BanglesJewellery" && actionName != "AnkletsJewellery" && actionName != "BroochesCollection" && actionName != "BraceletsCollection" && actionName != "CartierRingsCollection" && actionName != "EngagementRingsCollection")
+            {
+                <div class="jewelleryCategoryFilter-Container">
+                    <p>Jewellery Category</p>
+                    <div class="jewelleryCategoryFilter-Wrapper" id="shortList-jewelleryCategoryWrapper">
+                        @foreach (var JewelleryCategory in JewelleryCategorys.Take(6))
+                        {
+                            <div class="filterCheckbox-Row">
+                                <input type="checkbox" id="@($"JewelleryCategory-{JewelleryCategory}")" class="jewelleryCategoryCheckbox" name="JewelleryCategory" value="@JewelleryCategory" data-value="@JewelleryCategory" />
+                                <label class="filterLabel" for="@($"JewelleryCategory-{JewelleryCategory}")">@GetDisplayValue(JewelleryCategory)</label>
+                            </div>
+                        }
+
+                    </div>
+                    <div class="jewelleryCategoryFilter-Wrapper" id="fullList-jewelleryCategoryWrapper">
+                        @foreach (var JewelleryCategory in JewelleryCategorys.Skip(6))
+                        {
+                            <div class="filterCheckbox-Row">
+                                <input type="checkbox" id="@($"JewelleryCategory-{JewelleryCategory}")" class="jewelleryCategoryCheckbox" name="JewelleryCategory" value="@JewelleryCategory" data-value="@JewelleryCategory" />
+                                <label class="filterLabel" for="@($"JewelleryCategory-{JewelleryCategory}")">@GetDisplayValue(JewelleryCategory)</label>
+                            </div>
+                        }
+                    </div>
+                    <div class="seeLess-jewelleryCategory-Btn" style="display:none;">See Less</div>
+                    <div class="seeMore-jewelleryCategory-Btn">See More</div>
+                </div>
+            }
+            var ByGemstones = Enum.GetValues(typeof(ByGemstone)).Cast<ByGemstone>();
+
+            if (actionName != "DiamondJewellery" && actionName != "LabGrownDiamondJewellery" && actionName != "PearlJewellery" &&
+            actionName != "RubyJewellery" && actionName != "EmeraldJewellery" && actionName != "SapphireJewellery")
+            {
+                <div class="byGemstoneFilter-Container">
+                    <p>By Gemstone</p>
+                    <div class="byGemstoneFilter-Wrapper" id="shortList-byGemstoneWrapper">
+                        @foreach (var ByGemstone in ByGemstones.Take(6))
+                        {
+                            <div class="filterCheckbox-Row">
+                                <input type="checkbox" id="@($"ByGemstone-{ByGemstone}")" class="byGemstoneCheckbox" name="ByGemstone" value="@ByGemstone" data-value="@ByGemstone" />
+                                <label class="filterLabel" for="@($"ByGemstone-{ByGemstone}")">@GetDisplayValue(ByGemstone)</label>
+                            </div>
+                        }
+
+                    </div>
+                    <div class="byGemstoneFilter-Wrapper" id="fullList-byGemstoneWrapper">
+                        @foreach (var ByGemstone in ByGemstones.Skip(6))
+                        {
+                            <div class="filterCheckbox-Row">
+                                <input type="checkbox" id="@($"ByGemstone-{ByGemstone}")" class="byGemstoneCheckbox" name="ByGemstone" value="@ByGemstone" data-value="@ByGemstone" />
+                                <label class="filterLabel" for="@($"ByGemstone-{ByGemstone}")">@GetDisplayValue(ByGemstone)</label>
+                            </div>
+                        }
+                    </div>
+                    <div class="seeMore-byGemstone-Btn">See More</div>
+                    <div class="seeLess-byGemstone-Btn" style="display:none;">See Less</div>
+                </div>
+            }
+        }
+    }
+
+    @{
+        var AccessoryCategorys = Enum.GetValues(typeof(AccessoryCategory)).Cast<AccessoryCategory>();
+    }
+
+    @if ((controllerName == "Accessories" && actionName == "Index"))
+    {
+        <div class="accessoryCategoryFilter-Container">
+            <p>Accessory Category</p>
+            <div class="accessoryCategoryFilter-Wrapper" id="shortList-accessoryCategoryWrapper">
+                @foreach (var AccessoryCategory in AccessoryCategorys.Take(6))
+                {
+                    <div class="filterCheckbox-Row">
+                        <input type="checkbox" id="@($"AccessoryCategory-{AccessoryCategory}")" class="accessoryCategoryCheckbox" name="AccessoryCategory" value="@AccessoryCategory" data-value="@AccessoryCategory" />
+                        <label class="filterLabel" for="@($"AccessoryCategory-{AccessoryCategory}")">@GetDisplayValue(AccessoryCategory)</label>
+                    </div>
+                }
+
+            </div>
+            <div class="accessoryCategoryFilter-Wrapper" id="fullList-accessoryCategoryWrapper">
+                @foreach (var AccessoryCategory in AccessoryCategorys.Skip(6))
+                {
+                    <div class="filterCheckbox-Row">
+                        <input type="checkbox" id="@($"AccessoryCategory-{AccessoryCategory}")" class="accessoryCategoryCheckbox" name="AccessoryCategory" value="@AccessoryCategory" data-value="@AccessoryCategory" />
+                        <label class="filterLabel" for="@($"AccessoryCategory-{AccessoryCategory}")">@GetDisplayValue(AccessoryCategory)</label>
+                    </div>
+                }
+            </div>
+            <div class="seeMore-accessoryCategory-Btn">See More</div>
+            <div class="seeLess-accessoryCategory-Btn" style="display:none;">See Less</div>
+        </div>
+    }
+    else
+    {
+        <div class="accessoryCategoryFilter-Container" style="display:none;">
+            <p>Accessory Category</p>
+            <div class="accessoryCategoryFilter-Wrapper" id="shortList-accessoryCategoryWrapper">
+                @foreach (var AccessoryCategory in AccessoryCategorys.Take(6))
+                {
+                    <div class="filterCheckbox-Row">
+                        <input type="checkbox" id="@($"AccessoryCategory-{AccessoryCategory}")" class="accessoryCategoryCheckbox" name="AccessoryCategory" value="@AccessoryCategory" data-value="@AccessoryCategory" />
+                        <label class="filterLabel" for="@($"AccessoryCategory-{AccessoryCategory}")">@GetDisplayValue(AccessoryCategory)</label>
+                    </div>
+                }
+
+            </div>
+            <div class="accessoryCategoryFilter-Wrapper" id="fullList-accessoryCategoryWrapper">
+                @foreach (var AccessoryCategory in AccessoryCategorys.Skip(6))
+                {
+                    <div class="filterCheckbox-Row">
+                        <input type="checkbox" id="@($"AccessoryCategory-{AccessoryCategory}")" class="accessoryCategoryCheckbox" name="AccessoryCategory" value="@AccessoryCategory" data-value="@AccessoryCategory" />
+                        <label class="filterLabel" for="@($"AccessoryCategory-{AccessoryCategory}")">@GetDisplayValue(AccessoryCategory)</label>
+                    </div>
+                }
+            </div>
+            <div class="seeMore-accessoryCategory-Btn">See More</div>
+            <div class="seeLess-accessoryCategory-Btn" style="display:none;">See Less</div>
+        </div>
+    }
+
+    @if (controllerName == "Watches" || controllerName == "Collections" || controllerName == "Jewellery")
+    {
+        var byOccassion = Enum.GetValues(typeof(ByOccassion)).Cast<ByOccassion>();
+
+        var hiddenOccassions = new[] {
+    ByOccassion.BridalJewellery,
+    ByOccassion.EngagementRings,
+    ByOccassion.WeddingRings,
+    ByOccassion.ValentiesDay
+    };
+
+        @switch (ViewContext.RouteData.Values["controller"])
+        {
+            case "Collections":
+
+                if (actionName == "ExclusiveWatchesCollection")
+                {
+                    <div class="byOccassionFilter-Container byOccassionFilter-Watches-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion)
+                            {
+                                <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                           value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                }
+                else if (actionName == "ExclusiveJewelleryCollection")
+                {
+                    <div class="byOccassionFilter-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion.Take(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion" value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                        <div class="byOccassionFilter-Wrapper" id="fullList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion.Skip(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion" value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+                        </div>
+                        <div class="seeMore-byOccassion-Btn">See More</div>
+                        <div class="seeLess-byOccassion-Btn" style="display:none;">See Less</div>
+                    </div>
+                }
+                else if (actionName == "ByOccasionCollection")
+                {
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Watches-Container" style="display:none;">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion)
+                            {
+                                <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                           value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Jewellery-Container" style="display:none;">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion.Take(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion" value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                        <div class="byOccassionFilter-Wrapper" id="fullList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion.Skip(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion" value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+                        </div>
+                        <div class="seeMore-byOccassion-Btn">See More</div>
+                        <div class="seeLess-byOccassion-Btn" style="display:none;">See Less</div>
+                    </div>
+
+                }
+                else if (actionName == "ALangeAndSohneCollection")
+                {
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Watches-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion)
+                            {
+                                <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                           value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                }
+                else if (actionName == "AudemarsPiguetCollection")
+                {
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Watches-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion)
+                            {
+                                <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                           value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                }
+                else if (actionName == "BreguetCollection")
+                {
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Watches-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion)
+                            {
+                                <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                           value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                }
+                else if (actionName == "BlancpainCollection")
+                {
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Watches-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion)
+                            {
+                                <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                           value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                }
+                else if (actionName == "BvlgariCollection")
+                {
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Watches-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion)
+                            {
+                                <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                           value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                }
+                else if (actionName == "BreitlingCollection")
+                {
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Watches-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion)
+                            {
+                                <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                           value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                }
+                else if (actionName == "CartierCollection")
+                {
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Watches-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion)
+                            {
+                                <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                           value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                }
+                else if (actionName == "OmegaCollection")
+                {
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Watches-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion)
+                            {
+                                <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                           value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                }
+                else if (actionName == "TAGHeuerCollection")
+                {
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Watches-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion)
+                            {
+                                <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                           value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                }
+                else if (actionName == "HublotCollection")
+                {
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Watches-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion)
+                            {
+                                <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                           value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                }
+                else if (actionName == "TudorCollection")
+                {
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Watches-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion)
+                            {
+                                <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                           value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                }
+                else if (actionName == "BellAndRossCollection")
+                {
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Watches-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion)
+                            {
+                                <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                           value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                }
+                else if (actionName == "BaumeAndMercierCollection")
+                {
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Watches-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion)
+                            {
+                                <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                           value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                }
+                else if (actionName == "ChopardCollection")
+                {
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Watches-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion)
+                            {
+                                <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                           value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                }
+                else if (actionName == "GirardPerregauxCollection")
+                {
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Watches-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion)
+                            {
+                                <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                           value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                }
+                else if (actionName == "JaegerLeCoultreCollection")
+                {
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Watches-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion)
+                            {
+                                <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                           value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                }
+                else if (actionName == "CartierRingsCollection")
+                {
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Jewellery-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion.Take(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion" value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                        <div class="byOccassionFilter-Wrapper" id="fullList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion.Skip(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion" value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+                        </div>
+                        <div class="seeMore-byOccassion-Btn">See More</div>
+                        <div class="seeLess-byOccassion-Btn" style="display:none;">See Less</div>
+                    </div>
+
+                }
+                else if (actionName == "BraceletsCollection")
+                {
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Jewellery-Container">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion.Take(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion" value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                        <div class="byOccassionFilter-Wrapper" id="fullList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion.Skip(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion" value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+                        </div>
+                        <div class="seeMore-byOccassion-Btn">See More</div>
+                        <div class="seeLess-byOccassion-Btn" style="display:none;">See Less</div>
+                    </div>
+
+                }
+                else
+                {
+                    <div class="byOccassionFilter-Container byOccassionFilter-Watches-Container" style="display:none;">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion)
+                            {
+                                <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                           value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                    <div class="byOccassionFilter-Container byOccassionFilter-Jewellery-Container" style="display:none;">
+                        <p>By Occassion</p>
+                        <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion.Take(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion" value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+
+                        </div>
+                        <div class="byOccassionFilter-Wrapper" id="fullList-byOccassionWrapper">
+                            @foreach (var Occassion in byOccassion.Skip(6))
+                            {
+                                <div class="filterCheckbox-Row">
+                                    <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion" value="@Occassion" data-value="@Occassion" />
+                                    <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                                </div>
+                            }
+                        </div>
+                        <div class="seeMore-byOccassion-Btn">See More</div>
+                        <div class="seeLess-byOccassion-Btn" style="display:none;">See Less</div>
+                    </div>
+                }
+
+                break;
+            case "Watches":
+                <div class="byOccassionFilter-Container">
+                    <p>By Occassion</p>
+                    <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                        @foreach (var Occassion in byOccassion)
+                        {
+                            <div class="filterCheckbox-Row" @(hiddenOccassions.Contains(Occassion) ? "hidden" : "")>
+                                <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion"
+                                       value="@Occassion" data-value="@Occassion" />
+                                <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+                break;
+            default:
+                <div class="byOccassionFilter-Container">
+                    <p>By Occassion</p>
+                    <div class="byOccassionFilter-Wrapper" id="shortList-byOccassionWrapper">
+                        @foreach (var Occassion in byOccassion.Take(6))
+                        {
+                            <div class="filterCheckbox-Row">
+                                <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion" value="@Occassion" data-value="@Occassion" />
+                                <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                            </div>
+                        }
+
+                    </div>
+                    <div class="byOccassionFilter-Wrapper" id="fullList-byOccassionWrapper">
+                        @foreach (var Occassion in byOccassion.Skip(6))
+                        {
+                            <div class="filterCheckbox-Row">
+                                <input type="checkbox" id="@($"Occassion-{Occassion}")" class="productbyOccassionCheckbox" name="Occassion" value="@Occassion" data-value="@Occassion" />
+                                <label class="filterLabel" for="@($"Occassion-{Occassion}")">@GetDisplayValue(Occassion)</label>
+                            </div>
+                        }
+                    </div>
+                    <div class="seeMore-byOccassion-Btn">See More</div>
+                    <div class="seeLess-byOccassion-Btn" style="display:none;">See Less</div>
+                </div>
+                break;
+
+        }
+
+    }
+
+</div>
+
+@section Scripts {
+        <script src="~/js/productFilterSystem.js" asp-append-version="true" ></script>
+}

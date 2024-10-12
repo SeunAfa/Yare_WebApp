@@ -1,0 +1,730 @@
+﻿@using System.ComponentModel.DataAnnotations;
+@using Yare.Models.Enums;
+@model Yare.Models.ViewModels.HomePgVM
+@{
+
+    ViewData["Title"] = "Collections";
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+
+}
+
+@if (actionName != "Index")
+{
+
+    @if (controllerName == "Collections" || controllerName == "Watches" || controllerName == "Jewellery" || controllerName == "Accessories" || (controllerName == "Collections" && actionName != "Index"))
+    {
+
+        if (controllerName == "Collections" && actionName == "Index")
+        {
+        }
+        else
+        {
+            <section class="productList-breadcrumb-Container">
+
+                <div class="productList-breadcrumbLeft-Wrapper">
+
+                    <partial name="_productList_breadcrumbLeftWrapper" />
+
+                </div>
+
+                <div class="productList-breadcrumbRight-Wrapper">
+
+                    <div class="productCount-Container">
+                        <p class="productCount-text text-black"><span class="productCount-Initial">@ViewBag.TotalProductCount</span><span class="productCount-Results"></span> Models</p>
+                    </div>
+
+                    <svg class="filter-Btn" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6.5 2.25C6.5 1.83579 6.16421 1.5 5.75 1.5C5.33579 1.5 5 1.83579 5 2.25V5.25C5 5.66421 5.33579 6 5.75 6C6.16421 6 6.5 5.66421 6.5 5.25V4.5H13.25C13.6642 4.5 14 4.16421 14 3.75C14 3.33579 13.6642 3 13.25 3H6.5V2.25Z" />
+                        <path d="M11 6.5C11 6.08579 10.6642 5.75 10.25 5.75C9.83579 5.75 9.5 6.08579 9.5 6.5V9.5C9.5 9.91421 9.83579 10.25 10.25 10.25C10.6642 10.25 11 9.91421 11 9.5V8.75H13.25C13.6642 8.75 14 8.41421 14 8C14 7.58579 13.6642 7.25 13.25 7.25H11V6.5Z" />
+                        <path d="M5.75 10C6.16421 10 6.5 10.3358 6.5 10.75V11.5H13.25C13.6642 11.5 14 11.8358 14 12.25C14 12.6642 13.6642 13 13.25 13H6.5V13.75C6.5 14.1642 6.16421 14.5 5.75 14.5C5.33579 14.5 5 14.1642 5 13.75V10.75C5 10.3358 5.33579 10 5.75 10Z" />
+                        <path d="M2.75 7.25H8.5V8.75H2.75C2.33579 8.75 2 8.41421 2 8C2 7.58579 2.33579 7.25 2.75 7.25Z" />
+                        <path d="M4 3H2.75C2.33579 3 2 3.33579 2 3.75C2 4.16421 2.33579 4.5 2.75 4.5H4V3Z" />
+                        <path d="M2.75 11.5H4V13H2.75C2.33579 13 2 12.6642 2 12.25C2 11.8358 2.33579 11.5 2.75 11.5Z" />
+                    </svg>
+
+                    <div class="fileterHeader-controlsContainer">
+                        <div class="clearAll-Btn">Clear All</div>
+                        <div class="filter-Title">Applied Filters<span class="appliedFilters-Text"></span></div>
+                        <svg class="close-Btn" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5.28033 4.22651C4.98744 3.93361 4.51256 3.93361 4.21967 4.22651C3.92678 4.5194 3.92678 4.99427 4.21967 5.28717L6.93934 8.00684L4.21967 10.7265C3.92678 11.0194 3.92678 11.4943 4.21967 11.7872C4.51256 12.0801 4.98744 12.0801 5.28033 11.7872L8 9.0675L10.7197 11.7872C11.0126 12.0801 11.4874 12.0801 11.7803 11.7872C12.0732 11.4943 12.0732 11.0194 11.7803 10.7265L9.06066 8.00684L11.7803 5.28717C12.0732 4.99427 12.0732 4.5194 11.7803 4.22651C11.4874 3.93361 11.0126 3.93361 10.7197 4.22651L8 6.94618L5.28033 4.22651Z" />
+                        </svg>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <div id="productsList-filterContainer">
+                <partial name="_productsList_Filters" />
+            </div>
+        }
+    }
+    <section class="productList-Container">
+
+        <section class="productList-ImgBanner-Container">
+            @{
+                switch (ViewContext.RouteData.Values["action"])
+                {
+
+                    case "OurTopTenCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-OurTopTenCollection"></div>
+                        break;
+                    case "ExclusiveBrandsCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-ExclusiveBrandsCollection"></div>
+                        break;
+                    case "ExclusiveWatchesCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-ExclusiveWatchesCollection"></div>
+                        break;
+                    case "ExclusiveJewelleryCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-ExclusiveJewelleryCollection"></div>
+                        break;
+                    case "LimitedEditionCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-LimitedEditionCollection"></div>
+                        break;
+                    case "ByOccasionCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-ByOccasionCollection"></div>
+                        break;
+                    case "ALangeAndSohneCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-ALangeAndSohneCollection"></div>
+                        break;
+                    case "AudemarsPiguetCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-AudemarsPiguetCollection"></div>
+                        break;
+                    case "BreguetCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-BreguetCollection"></div>
+                        break;
+                    case "BlancpainCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-BlancpainCollection"></div>
+                        break;
+                    case "BvlgariCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-BvlgariCollection"></div>
+                        break;
+                    case "BreitlingCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-BreitlingCollection"></div>
+                        break;
+                    case "CartierCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-CartierCollection"></div>
+                        break;
+                    case "OmegaCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-OmegaCollection"></div>
+                        break;
+                    case "TAGHeuerCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-TAGHeuerCollection"></div>
+                        break;
+                    case "HublotCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-HublotCollection"></div>
+                        break;
+                    case "TudorCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-TudorCollection"></div>
+                        break;
+                    case "BellAndRossCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-BellAndRossCollection"></div>
+                        break;
+                    case "BaumeAndMercierCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-BaumeAndMercierCollection"></div>
+                        break;
+                    case "ChopardCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-ChopardCollection"></div>
+                        break;
+                    case "GirardPerregauxCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-GirardPerregauxCollection"></div>
+                        break;
+                    case "JaegerLeCoultreCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-JaegerLeCoultreCollection"></div>
+                        break;
+                    case "CartierRingsCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-CartierRingsCollection"></div>
+                        break;
+                    case "EngagementRingsCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-EngagementRingsCollection"></div>
+                        break;
+                    case "BestSellersCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-BestSellersCollection"></div>
+                        break;
+                    case "BraceletsCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-BraceletsCollection"></div>
+                        break;
+                    case "BroochesCollection":
+                            <div class="productList-ImgBanner collections-ImgBanner-BroochesCollection"></div>
+                        break;
+                    default:
+                            <div class="productList-ImgBanner collections-ImgBanner-All"></div>
+                        break;
+
+                }
+            }
+
+            <div class="productList-ImgBanner-Text">
+                @{
+                    switch (ViewContext.RouteData.Values["action"])
+                    {
+                        case "OurTopTenCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Our Top Ten Collection</h5>
+                            break;
+                        case "ExclusiveBrandsCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Exclusive Brands Collection</h5>
+                            break;
+                        case "ExclusiveWatchesCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Exclusive Watches Collection</h5>
+                            break;
+                        case "ExclusiveJewelleryCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Exclusive Jewellery Collection</h5>
+                            break;
+                        case "LimitedEditionCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Limited Edition Collection</h5>
+                            break;
+                        case "ByOccasionCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Special Occasion Collection</h5>
+                            break;
+                        case "ALangeAndSohneCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">A.Lange & Söhne Collection</h5>
+                            break;
+                        case "AudemarsPiguetCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Audemars Piguet Collection</h5>
+                            break;
+                        case "BreguetCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Breguet Collection</h5>
+                            break;
+                        case "BlancpainCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Blancpain Collection</h5>
+                            break;
+                        case "BvlgariCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Bvlgari Collection</h5>
+                            break;
+                        case "BreitlingCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Breitling Collection</h5>
+                            break;
+                        case "CartierCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Cartier Collection</h5>
+                            break;
+                        case "OmegaCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Omega Collection</h5>
+                            break;
+                        case "TAGHeuerCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">TAG Heuer Collection</h5>
+                            break;
+                        case "HublotCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Hublot Collection</h5>
+                            break;
+                        case "TudorCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Tudor Collection</h5>
+                            break;
+                        case "BellAndRossCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Bell & Ross Collection</h5>
+                            break;
+                        case "BaumeAndMercierCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Baume & Mercier Collection</h5>
+                            break;
+                        case "ChopardCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Chopard Collection</h5>
+                            break;
+                        case "GirardPerregauxCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Girard-Perregaux Collection</h5>
+                            break;
+                        case "JaegerLeCoultreCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Jaeger-LeCoultre Collection</h5>
+                            break;
+                        case "CartierRingsCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Cartier Rings Collection</h5>
+                            break;
+                        case "EngagementRingsCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Engagement Rings Collection</h5>
+                            break;
+                        case "BestSellersCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Best Sellers Collection</h5>
+                            break;
+                        case "BraceletsCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Bracelets Collection</h5>
+                            break;
+                        case "BroochesCollection":
+                                <h5 class="productList-ImgBanner-Title text-black">Brooches Collection</h5>
+                            break;
+                        default:
+                                <h5 class="productList-ImgBanner-Title text-black">Collection</h5>
+                            break;
+                    }
+                }
+
+                @{
+                    switch (ViewContext.RouteData.Values["action"])
+                    {
+
+                        default:
+                                <p class="productList-ImgBanner-Description text-black">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                            break;
+
+                    }
+                }
+            </div>
+
+        </section>
+
+        @if (Model.ProductVM.objProductList.Any())
+        {
+            <div class="productSpecific-listRowContainer">
+
+
+                <div class="productSpecific-listRow">
+                    @foreach (var product in Model.ProductVM.objProductList)
+                    {
+                        string shortenedProductName = product.ProductName.Length > 21 ? $"{product.ProductName.Substring(0, 21)}..." : product.ProductName;
+
+                        if (product is Product collectionsProduct)
+                        {
+                            <div class="productCard-Container"
+                                 data-price="@product.Price.ToString()"
+                                 data-gender="@product.Gender"
+                                 data-productCategory="@product.ProductCategory.ToString()"
+                                 data-brand="@(product is Watch watchProduct1 ? watchProduct1.WatchBrand : null)"
+                                 data-metal="@(product is Watch watchProduct2 ? watchProduct2.ByMetal : null)"
+                                 data-watchDiameter="@(product is Watch watchProduct3 ? watchProduct3.WatchDiameter : null)"
+                                 data-watchMovement="@(product is Watch watchProduct4 ? watchProduct4.WatchMovement : null)"
+                                 data-waterResistant="@(product is Watch watchProduct5 ? watchProduct5.WaterResistant : null)"
+                                 data-watchCaseShape="@(product is Watch watchProduct6 ? watchProduct6.WatchCaseShape : null)"
+                                 data-watchStrapType="@(product is Watch watchProduct7 ? watchProduct7.WatchStrapType : null)"
+                                 data-byOccassion="@(product is Watch watchProduct8 ? watchProduct8.ByOccassion : null)"
+                                 data-metal="@(product is Jewellery jewelleryProduct1 ? jewelleryProduct1.ByMetal : null)"
+                                 data-jewelleryCategory="@(product is Jewellery jewelleryProduct2 ? jewelleryProduct2.JewelleryCategory : null)"
+                                 data-byGemstone="@(product is Jewellery jewelleryProduct3 ? jewelleryProduct3.ByGemstone : null)"
+                                 data-byOccassion="@(product is Jewellery jewelleryProduct4 ? jewelleryProduct4.ByOccassion : null)"
+                                 data-accessoryCategory="@(product is Accessory accessoryProduct1 ? accessoryProduct1.AccessoryCategory : null)">
+
+                                <a asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-productId="@collectionsProduct.Id">
+
+                                    <div class="productCard-imgs-Container">
+                                        <img class="productCard-imgs watchProduct-imgs" src="@collectionsProduct.PrimaryDisplayImageUrl" data-hover-image-url="@collectionsProduct.SecondaryDisplayImageUrl" />
+                                    </div>
+                                    <div class="productCard-info-Container">
+                                        <div class="productCard-info-Top">
+                                            <p class="text-black text-uppercase text-center productCard-info-productName">@shortenedProductName</p>
+                                        </div>
+                                        <div class="productCard-info-Bottom">
+                                            <p class="text-black text-center productCard-info-Price">@collectionsProduct.Price.ToString("c")</p>
+                                        </div>
+                                    </div>
+
+                                </a>
+                            </div>
+                        }
+                    }
+                </div>
+
+            </div>
+        }
+        else
+        {
+            <div class="noProducts-foundContainer">
+                <div style="text-align: center;">
+                      <svg class="sad-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.1823 14.3226C12.3075 13.4478 11.1623 13.0085 10.0158 13.0046C8.85898 13.0006 7.70095 13.4399 6.81834 14.3226M19 10.0046C19 14.9752 14.9706 19.0046 10 19.0046C5.02944 19.0046 1 14.9752 1 10.0046C1 5.03408 5.02944 1.00464 10 1.00464C14.9706 1.00464 19 5.03408 19 10.0046ZM7.75 7.75464C7.75 8.16885 7.58211 8.50464 7.375 8.50464C7.16789 8.50464 7 8.16885 7 7.75464C7 7.34043 7.16789 7.00464 7.375 7.00464C7.58211 7.00464 7.75 7.34043 7.75 7.75464ZM7.375 7.75464H7.3825V7.76964H7.375V7.75464ZM13 7.75464C13 8.16885 12.8321 8.50464 12.625 8.50464C12.4179 8.50464 12.25 8.16885 12.25 7.75464C12.25 7.34043 12.4179 7.00464 12.625 7.00464C12.8321 7.00464 13 7.34043 13 7.75464ZM12.625 7.75464H12.6325V7.76964H12.625V7.75464Z" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                </div>
+                <p class="noProduct-text text-black">Oops! It looks like there are no products available at the moment.</p>
+                <p class="noProduct-text text-black">Feel free to explore other categories or return to the <a class="text-black noProduct-link" asp-area="" asp-controller="" asp-action="">home</a> page to discover more products.</p>
+            </div>
+        }
+
+
+        <div class="noFilterResulst-Container">
+
+            <div style="text-align: center;">
+                <svg class="sad-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.1823 14.3226C12.3075 13.4478 11.1623 13.0085 10.0158 13.0046C8.85898 13.0006 7.70095 13.4399 6.81834 14.3226M19 10.0046C19 14.9752 14.9706 19.0046 10 19.0046C5.02944 19.0046 1 14.9752 1 10.0046C1 5.03408 5.02944 1.00464 10 1.00464C14.9706 1.00464 19 5.03408 19 10.0046ZM7.75 7.75464C7.75 8.16885 7.58211 8.50464 7.375 8.50464C7.16789 8.50464 7 8.16885 7 7.75464C7 7.34043 7.16789 7.00464 7.375 7.00464C7.58211 7.00464 7.75 7.34043 7.75 7.75464ZM7.375 7.75464H7.3825V7.76964H7.375V7.75464ZM13 7.75464C13 8.16885 12.8321 8.50464 12.625 8.50464C12.4179 8.50464 12.25 8.16885 12.25 7.75464C12.25 7.34043 12.4179 7.00464 12.625 7.00464C12.8321 7.00464 13 7.34043 13 7.75464ZM12.625 7.75464H12.6325V7.76964H12.625V7.75464Z" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+            <p class="noFilterResults-text text-black">Sorry, we couldn't find any results.</p>
+            <p class="noFilterResults-text text-black">Try adjusting or clearing your filters to get better results.</p>
+
+        </div>
+
+    </section>
+}
+else if (actionName == "Index")
+{
+
+    <section class="productList-breadcrumb-Container">
+
+        <div class="productList-breadcrumbLeft-Wrapper">
+
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+
+        </div>
+
+        <div class="productList-breadcrumbRight-Wrapper">
+
+            <div class="productCount-Container">
+                <p class="productCount-text text-black">Collections <span class="productCount-Initial">27</span><span class="productCount-Results"></span></p>
+            </div>
+
+
+        </div>
+
+    </section>
+
+    <section id="collectionsList-Container">
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-OurTopTenCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Our Top Ten Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll " asp-area="Customer" asp-controller="Collections" asp-action="OurTopTenCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-ExclusiveBrandsCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Exclusive Brands Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="ExclusiveBrandsCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-ExclusiveWatchesCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Exclusive Watches Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="ExclusiveWatchesCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-ExclusiveJewelleryCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Exclusive Jewellery Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="ExclusiveJewelleryCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-LimitedEditionCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Limited Edition Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="LimitedEditionCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-ByOccasionCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Special Occasion Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="ByOccasionCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-ALangeAndSohneCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">A.Lange & Söhne Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="ALangeAndSohneCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-AudemarsPiguetCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Audemars Piguet Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="AudemarsPiguetCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-BreguetCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Breguet Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="BreguetCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-BlancpainCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Blancpain Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="BlancpainCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-BvlgariCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Bvlgari Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="BvlgariCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-BreitlingCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Breitling Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="BreitlingCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-CartierCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Cartier Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="CartierCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-OmegaCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">OMEGA Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="OmegaCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-TAGHeuerCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">TAG Heuer Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="TAGHeuerCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-HublotCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Hublot Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="HublotCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-TudorCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Tudor Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="TudorCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-BellAndRossCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Bell & Ross Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="BellAndRossCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-BaumeAndMercierCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Baume & Mercier Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="BaumeAndMercierCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-ChopardCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Chopard Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="ChopardCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-GirardPerregauxCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Girard-Perregaux Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="GirardPerregauxCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-JaegerLeCoultreCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Jaeger-LeCoultre Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="JaegerLeCoultreCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-CartierRingsCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Cartier Rings Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="CartierRingsCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-EngagementRingsCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Engagement Rings Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="EngagementRingsCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-BestSellersCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Best Sellers Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="BestSellersCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-BraceletsCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Bracelets Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="BraceletsCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collectionsList-Item">
+            <div class="collectionsList-Item-Wrapper">
+                <div class="collectionsList-Item-Img collectionsList-itemImg-BroochesCollection"></div>
+                <div class="collectionsList-Item-Info">
+                    <h1 class="collectionsList-Item-Title">Brooches Collection</h1>
+                    <a class="nav-link text-black navLink-Animation collectionsList-Item-exploreAll" asp-area="Customer" asp-controller="Collections" asp-action="BroochesCollection">
+                        Explore All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+}
+
+@section Scripts {
+    <script src="~/js/productFilterSystem.js" asp-append-version="true"></script>
+
+    <script>
+         //////////////////////////////////
+        // CollectionsPg Search Component
+        const filterUrl = '@Url.Action("Filter", "Collections")';
+
+        ///////////////////////////////////////
+        // Collection Scroll Effect Component
+        function collectionPgScrollEffect() {
+
+            const collectionListPgElements = ['.collectionsList-Item'];
+
+            collectionListPgElements.forEach(homePgElement => {
+                gsap.utils.toArray(collectionListPgElements).forEach(element => {
+                    let tl = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: element,
+                            start: window.innerHeight.bottom,
+                            end: 'bottom ' + (window.innerHeight - 50) + 'px',
+                            scrub: true,
+                            //markers: true,
+                        }
+                    });
+                    tl.from(element, { ease: 'power3.out', y: 200, opacity: 0, });
+                });
+            });
+
+        }
+
+    </script>
+
+}

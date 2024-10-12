@@ -1,0 +1,499 @@
+﻿@using System.ComponentModel.DataAnnotations;
+@using System.Reflection;
+@using Yare.Models.Enums;
+@model Yare.Models.ViewModels.HomePgVM
+
+@{
+
+    ViewData["Title"] = @Model.ShoppingCartVM.Product.ProductName;
+}
+
+@functions {
+//Product Details Properties
+    public string GetBaseProperties(Yare.Models.Product product)
+    {
+        if (product is Yare.Models.Watch watch)
+        {
+            string diameter = GetEnumDisplayName(watch.WatchDiameter);
+            string waterResistant = GetEnumDisplayName(watch.WaterResistant);
+            string watchBrand = GetEnumDisplayName(watch.WatchBrand);
+            string byMetal = GetEnumDisplayName(watch.ByMetal);
+
+            return $"{watchBrand}, {watch.ProductCategory}, {watch.Gender}, {byMetal}, {diameter}, {waterResistant}";
+        }
+        else if (product is Yare.Models.Jewellery jewellery)
+        {
+            string byMetal = GetEnumDisplayName(jewellery.ByMetal);
+            string jewelleryCategory = GetEnumDisplayName(jewellery.JewelleryCategory);
+
+            return $"{jewellery.Supplier}, {jewelleryCategory}, {jewellery.Gender}, {byMetal}";
+        }
+        else if (product is Yare.Models.Accessory accessory)
+        {
+                        string accessoryCategory = GetEnumDisplayName(accessory.AccessoryCategory);
+
+            return $"{accessory.Supplier}, {accessoryCategory}, {accessory.Gender}";
+        }
+        else
+        {
+            return ""; // Throw an exception if necessary
+        }
+    }
+    //Display Enum Attribute Value
+    public string GetEnumDisplayName(Enum value)
+    {
+        var field = value.GetType().GetField(value.ToString());
+        var displayAttribute = (DisplayAttribute)Attribute.GetCustomAttribute(field, typeof(DisplayAttribute));
+        return displayAttribute?.GetName() ?? value.ToString();
+    }
+}
+@*Display Enum Attribute Value For Product Specification*@ 
+@functions {
+    public static string GetEnumDisplayName_ProdSpec(Enum value)
+    {
+        if (value == null)
+            return null;
+
+        var field = value.GetType().GetField(value.ToString());
+
+        if (field == null)
+            return value.ToString();
+
+        var displayAttribute = field.GetCustomAttribute<DisplayAttribute>();
+
+        return displayAttribute?.Name ?? value.ToString();
+    }
+}
+@*Show And Hide Short Or Full Description*@ 
+@{
+    var description = Model.ShoppingCartVM.Product.ProductDescription;
+    var maxLength = 100;
+}
+
+<div class="productList-breadcrumbLeft-Wrapper">
+    <a asp-area="Customer" asp-controller="Home" asp-action="Index" class="text-black">Home</a>
+    <span>/</span>
+    <a asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-productId="@Model.ShoppingCartVM.Product.Id" class="text-black">@Model.ShoppingCartVM.Product.ProductName</a>
+</div>
+
+<form method="post">
+    <input asp-for="@Model.ShoppingCartVM.ProductId" hidden />
+    <div id="productDetailsPg-Container">
+
+        <div class="productDetailsPg-secondaryAddToCart-Container">
+
+            <div class="productDetailsPg-secondaryAddToCart-Wrapper">
+
+                <div class="productDetailsPg-secondaryAddToCart-imgContainer">
+                    <img class="productDetailsPg-secondaryAddToCart-imgBckContainer" src="@Model.ShoppingCartVM.Product.PrimaryDisplayImageUrl" />
+                </div>
+
+                <div class="productDetailsPg-secondaryAddToCart-infoContainer">
+                    <h3 class="productTitle-secondaryAddToCart text-black text-uppercase">@Model.ShoppingCartVM.Product.ProductName</h3>
+                    <p class="detailPrice-secondaryAddToCart text-black">@Model.ShoppingCartVM.Product.Price.ToString("c")<span class="vat">incl. VAT</span></p>
+                </div>
+
+                <div class="secondaryAddToCart-Container">
+                    <input asp-for="@Model.ShoppingCartVM.Count" style="display:none;" />
+                    @if (Model.ShoppingCartVM.Product.RemainigQuantity == 0)
+                    {
+                        <button id="secondaryAddToCart-NoStock-Btn" class="" type="submit" disabled>
+                            Out Of Stock
+                        </button>
+                    }
+                    else
+                    {
+                        <button id="secondaryAddToCart-Btn" class="" type="submit">
+                            Add To Cart
+                        </button>
+                    }
+                </div>
+
+            </div>
+
+        </div>
+        <div class="productDetailsPg-Top-Container">
+
+            <div class="productDetailsPg-topLeft-Container">
+
+                  <div class="productDetailsPg-topLeft-imgControlContainer">
+                    <img class="productDetailsPg-imgsController-items" src="@Model.ShoppingCartVM.Product.PrimaryDisplayImageUrl" />
+                    <img class="productDetailsPg-imgsController-items" src="@Model.ShoppingCartVM.Product.SecondaryDisplayImageUrl" />
+                    <img class="productDetailsPg-imgsController-items" src="@Model.ShoppingCartVM.Product.SliderImageUrlOne" />
+                    <img class="productDetailsPg-imgsController-items" src="@Model.ShoppingCartVM.Product.SliderImageUrlTwo" />
+                    <img class="productDetailsPg-imgsController-items" src="@Model.ShoppingCartVM.Product.SliderImageUrlThree" />
+                    <img class="productDetailsPg-imgsController-items" src="@Model.ShoppingCartVM.Product.SliderImageUrlFour" />
+                </div>
+
+                <div class="productDetailsPg-topLeft-mainImg">
+                    <img class="productDetailsPg-img-bckContainer" src="@Model.ShoppingCartVM.Product.PrimaryDisplayImageUrl" />
+                </div>            
+
+            </div> 
+
+            <div class="productDetailsPg-topRight-Container">
+
+                <span class="productNumber"><b>Product Number</b> @Model.ShoppingCartVM.Product.ProductNumber</span>
+
+                <h3 class="productTitle text-black text-uppercase">@Model.ShoppingCartVM.Product.ProductName</h3>
+
+                <p class="text-black product-properties">@GetBaseProperties(Model.ShoppingCartVM.Product)</p>
+
+                <p class="text-black" id="description">
+                    @if (description.Length <= maxLength)
+                    {
+                        @description
+                    }
+                    else
+                    {
+                        <span>@description.Substring(0, maxLength)</span>
+                        <span id="dots">...</span>
+                        <span id="more" style="display: none;">@description.Substring(maxLength)</span>
+                        <span id="read-more-btn" class="text-black" style="background-color:transparent;color:black;font-size:12px;margin-top:-10px;">Read more</span>
+                    }
+                </p>
+
+                <a class="productDetailsPg-additionalInfo-Links">
+                    <svg class="DetailsPgSvg-Icon" viewBox="0 0 18 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8.53975 20.3626C8.56995 20.3801 8.59369 20.3936 8.6105 20.4031L8.63843 20.4187C8.8613 20.541 9.13776 20.5401 9.36084 20.4191L9.3895 20.4031C9.40631 20.3936 9.43005 20.3801 9.46025 20.3626C9.52066 20.3276 9.60697 20.2766 9.7155 20.2098C9.93246 20.0762 10.2388 19.8792 10.6046 19.6207C11.3351 19.1047 12.3097 18.339 13.2865 17.3389C15.2307 15.3484 17.25 12.3578 17.25 8.5116C17.25 3.95525 13.5563 0.261597 9 0.261597C4.44365 0.261597 0.75 3.95525 0.75 8.5116C0.75 12.3578 2.76932 15.3484 4.71346 17.3389C5.69025 18.339 6.66491 19.1047 7.39539 19.6207C7.76125 19.8792 8.06754 20.0762 8.2845 20.2098C8.39303 20.2766 8.47934 20.3276 8.53975 20.3626ZM9 11.5116C10.6569 11.5116 12 10.1685 12 8.5116C12 6.85474 10.6569 5.5116 9 5.5116C7.34315 5.5116 6 6.85474 6 8.5116C6 10.1685 7.34315 11.5116 9 11.5116Z" />
+                    </svg>
+                    <span class="" style="margin-left:5px;">Find In Store</span>
+                    <svg class="detailsPgSvg-arrowIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M6.21967 4.22431C6.51256 3.93142 6.98744 3.93142 7.28033 4.22431L10.5303 7.47431C10.8232 7.7672 10.8232 8.24208 10.5303 8.53497L7.28033 11.785C6.98744 12.0779 6.51256 12.0779 6.21967 11.785C5.92678 11.4921 5.92678 11.0172 6.21967 10.7243L8.93934 8.00464L6.21967 5.28497C5.92678 4.99208 5.92678 4.5172 6.21967 4.22431Z" />
+                    </svg>
+                </a>
+
+                <a class="productDetailsPg-additionalInfo-Links">
+                    <svg class="DetailsPgSvg-Icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12.75 12.7546C12.75 13.1689 12.4142 13.5046 12 13.5046C11.5858 13.5046 11.25 13.1689 11.25 12.7546C11.25 12.3404 11.5858 12.0046 12 12.0046C12.4142 12.0046 12.75 12.3404 12.75 12.7546Z" />
+                        <path d="M7.5 15.7546C7.91421 15.7546 8.25 15.4189 8.25 15.0046C8.25 14.5904 7.91421 14.2546 7.5 14.2546C7.08579 14.2546 6.75 14.5904 6.75 15.0046C6.75 15.4189 7.08579 15.7546 7.5 15.7546Z" />
+                        <path d="M8.25 17.2546C8.25 17.6689 7.91421 18.0046 7.5 18.0046C7.08579 18.0046 6.75 17.6689 6.75 17.2546C6.75 16.8404 7.08579 16.5046 7.5 16.5046C7.91421 16.5046 8.25 16.8404 8.25 17.2546Z" />
+                        <path d="M9.75 15.7546C10.1642 15.7546 10.5 15.4189 10.5 15.0046C10.5 14.5904 10.1642 14.2546 9.75 14.2546C9.33579 14.2546 9 14.5904 9 15.0046C9 15.4189 9.33579 15.7546 9.75 15.7546Z" />
+                        <path d="M10.5 17.2546C10.5 17.6689 10.1642 18.0046 9.75 18.0046C9.33579 18.0046 9 17.6689 9 17.2546C9 16.8404 9.33579 16.5046 9.75 16.5046C10.1642 16.5046 10.5 16.8404 10.5 17.2546Z" />
+                        <path d="M12 15.7546C12.4142 15.7546 12.75 15.4189 12.75 15.0046C12.75 14.5904 12.4142 14.2546 12 14.2546C11.5858 14.2546 11.25 14.5904 11.25 15.0046C11.25 15.4189 11.5858 15.7546 12 15.7546Z" />
+                        <path d="M12.75 17.2546C12.75 17.6689 12.4142 18.0046 12 18.0046C11.5858 18.0046 11.25 17.6689 11.25 17.2546C11.25 16.8404 11.5858 16.5046 12 16.5046C12.4142 16.5046 12.75 16.8404 12.75 17.2546Z" />
+                        <path d="M14.25 15.7546C14.6642 15.7546 15 15.4189 15 15.0046C15 14.5904 14.6642 14.2546 14.25 14.2546C13.8358 14.2546 13.5 14.5904 13.5 15.0046C13.5 15.4189 13.8358 15.7546 14.25 15.7546Z" />
+                        <path d="M15 17.2546C15 17.6689 14.6642 18.0046 14.25 18.0046C13.8358 18.0046 13.5 17.6689 13.5 17.2546C13.5 16.8404 13.8358 16.5046 14.25 16.5046C14.6642 16.5046 15 16.8404 15 17.2546Z" />
+                        <path d="M16.5 15.7546C16.9142 15.7546 17.25 15.4189 17.25 15.0046C17.25 14.5904 16.9142 14.2546 16.5 14.2546C16.0858 14.2546 15.75 14.5904 15.75 15.0046C15.75 15.4189 16.0858 15.7546 16.5 15.7546Z" />
+                        <path d="M15 12.7546C15 13.1689 14.6642 13.5046 14.25 13.5046C13.8358 13.5046 13.5 13.1689 13.5 12.7546C13.5 12.3404 13.8358 12.0046 14.25 12.0046C14.6642 12.0046 15 12.3404 15 12.7546Z" />
+                        <path d="M16.5 13.5046C16.9142 13.5046 17.25 13.1689 17.25 12.7546C17.25 12.3404 16.9142 12.0046 16.5 12.0046C16.0858 12.0046 15.75 12.3404 15.75 12.7546C15.75 13.1689 16.0858 13.5046 16.5 13.5046Z" />
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M6.75 2.25464C7.16421 2.25464 7.5 2.59043 7.5 3.00464V4.50464H16.5V3.00464C16.5 2.59043 16.8358 2.25464 17.25 2.25464C17.6642 2.25464 18 2.59043 18 3.00464V4.50464H18.75C20.4069 4.50464 21.75 5.84778 21.75 7.50464V18.7546C21.75 20.4115 20.4069 21.7546 18.75 21.7546H5.25C3.59315 21.7546 2.25 20.4115 2.25 18.7546V7.50464C2.25 5.84778 3.59315 4.50464 5.25 4.50464H6V3.00464C6 2.59043 6.33579 2.25464 6.75 2.25464ZM20.25 11.2546C20.25 10.4262 19.5784 9.75464 18.75 9.75464H5.25C4.42157 9.75464 3.75 10.4262 3.75 11.2546V18.7546C3.75 19.5831 4.42157 20.2546 5.25 20.2546H18.75C19.5784 20.2546 20.25 19.5831 20.25 18.7546V11.2546Z" />
+                    </svg>
+                    <span class="" style="margin-left:5px;">Book An Appointment</span>
+                    <svg class="detailsPgSvg-arrowIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M6.21967 4.22431C6.51256 3.93142 6.98744 3.93142 7.28033 4.22431L10.5303 7.47431C10.8232 7.7672 10.8232 8.24208 10.5303 8.53497L7.28033 11.785C6.98744 12.0779 6.51256 12.0779 6.21967 11.785C5.92678 11.4921 5.92678 11.0172 6.21967 10.7243L8.93934 8.00464L6.21967 5.28497C5.92678 4.99208 5.92678 4.5172 6.21967 4.22431Z" />
+                    </svg>
+                </a>
+
+                @if (Model.ShoppingCartVM.Product is Yare.Models.Watch watch)
+                {
+                    <a class="productDetailsPg-additionalInfo-Links">
+
+                        <svg class="DetailsPgSvg-Icon" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21.7312 2.28276C20.706 1.25763 19.044 1.25763 18.0189 2.28276L16.8617 3.43992L20.574 7.15223L21.7312 5.99507C22.7563 4.96995 22.7563 3.30789 21.7312 2.28276Z" />
+                            <path d="M19.5134 8.21289L15.801 4.50058L3.65021 16.6514C3.03342 17.2682 2.58003 18.029 2.33101 18.8649L1.53123 21.5498C1.45261 21.8137 1.52496 22.0995 1.71969 22.2942C1.91442 22.489 2.2002 22.5613 2.46413 22.4827L5.14902 21.6829C5.98499 21.4339 6.74574 20.9805 7.36253 20.3637L19.5134 8.21289Z" />
+                        </svg>
+
+                        <span class="" style="margin-left:5px;">Add Engraving</span>
+                        <svg class="detailsPgSvg-arrowIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.21967 4.22431C6.51256 3.93142 6.98744 3.93142 7.28033 4.22431L10.5303 7.47431C10.8232 7.7672 10.8232 8.24208 10.5303 8.53497L7.28033 11.785C6.98744 12.0779 6.51256 12.0779 6.21967 11.785C5.92678 11.4921 5.92678 11.0172 6.21967 10.7243L8.93934 8.00464L6.21967 5.28497C5.92678 4.99208 5.92678 4.5172 6.21967 4.22431Z" />
+                        </svg>
+                    </a>
+                 
+                }
+                else if (Model.ShoppingCartVM.Product is Yare.Models.Jewellery jewellery)
+                {
+
+                    <a class="productDetailsPg-additionalInfo-Links">
+                        <svg class="DetailsPgSvg-Icon" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21.7312 2.28276C20.706 1.25763 19.044 1.25763 18.0189 2.28276L16.8617 3.43992L20.574 7.15223L21.7312 5.99507C22.7563 4.96995 22.7563 3.30789 21.7312 2.28276Z" />
+                            <path d="M19.5134 8.21289L15.801 4.50058L3.65021 16.6514C3.03342 17.2682 2.58003 18.029 2.33101 18.8649L1.53123 21.5498C1.45261 21.8137 1.52496 22.0995 1.71969 22.2942C1.91442 22.489 2.2002 22.5613 2.46413 22.4827L5.14902 21.6829C5.98499 21.4339 6.74574 20.9805 7.36253 20.3637L19.5134 8.21289Z" />
+                        </svg>
+
+                        <span class="text-uppercase" style="margin-left:5px;">Add Engraving</span>
+                        <svg class="detailsPgSvg-arrowIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.21967 4.22431C6.51256 3.93142 6.98744 3.93142 7.28033 4.22431L10.5303 7.47431C10.8232 7.7672 10.8232 8.24208 10.5303 8.53497L7.28033 11.785C6.98744 12.0779 6.51256 12.0779 6.21967 11.785C5.92678 11.4921 5.92678 11.0172 6.21967 10.7243L8.93934 8.00464L6.21967 5.28497C5.92678 4.99208 5.92678 4.5172 6.21967 4.22431Z" />
+                        </svg>
+                    </a>
+
+                }
+
+                <a class="productDetailsPg-additionalInfo-Links">
+                    <svg class="DetailsPgSvg-Icon" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 4.51611C1.5 2.85926 2.84315 1.51611 4.5 1.51611H5.87163C6.732 1.51611 7.48197 2.10167 7.69064 2.93636L8.79644 7.35954C8.97941 8.09141 8.70594 8.86166 8.10242 9.3143L6.8088 10.2845C6.67447 10.3853 6.64527 10.5328 6.683 10.6358C7.81851 13.7356 10.2805 16.1976 13.3803 17.3331C13.4833 17.3708 13.6309 17.3416 13.7316 17.2073L14.7018 15.9137C15.1545 15.3102 15.9247 15.0367 16.6566 15.2197L21.0798 16.3255C21.9144 16.5341 22.5 17.2841 22.5 18.1445V19.5161C22.5 21.173 21.1569 22.5161 19.5 22.5161H17.25C8.55151 22.5161 1.5 15.4646 1.5 6.76611V4.51611Z" fill="#0F172A" />
+                    </svg>
+                    <span class="" style="margin-left:5px;">Order By Phone +44 (0)20 3587 8019</span>
+                    <svg class="detailsPgSvg-arrowIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M6.21967 4.22431C6.51256 3.93142 6.98744 3.93142 7.28033 4.22431L10.5303 7.47431C10.8232 7.7672 10.8232 8.24208 10.5303 8.53497L7.28033 11.785C6.98744 12.0779 6.51256 12.0779 6.21967 11.785C5.92678 11.4921 5.92678 11.0172 6.21967 10.7243L8.93934 8.00464L6.21967 5.28497C5.92678 4.99208 5.92678 4.5172 6.21967 4.22431Z" />
+                    </svg>
+                </a>
+
+                <a class="productDetailsPg-additionalInfo-Links">
+                    <svg class="DetailsPgSvg-Icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M15.75 4.5C15.75 2.84315 17.0931 1.5 18.75 1.5C20.4069 1.5 21.75 2.84315 21.75 4.5C21.75 6.15685 20.4069 7.5 18.75 7.5C17.8933 7.5 17.1212 7.14074 16.5751 6.56624L8.15392 11.2447C8.21665 11.4863 8.25 11.7395 8.25 12C8.25 12.2605 8.21665 12.5137 8.15392 12.7553L16.5751 17.4338C17.1212 16.8593 17.8933 16.5 18.75 16.5C20.4069 16.5 21.75 17.8431 21.75 19.5C21.75 21.1569 20.4069 22.5 18.75 22.5C17.0931 22.5 15.75 21.1569 15.75 19.5C15.75 19.2395 15.7833 18.9863 15.8461 18.7447L7.42488 14.0662C6.87885 14.6407 6.10667 15 5.25 15C3.59315 15 2.25 13.6569 2.25 12C2.25 10.3431 3.59315 9 5.25 9C6.10667 9 6.87885 9.35926 7.42488 9.93377L15.8461 5.25532C15.7833 5.01367 15.75 4.76045 15.75 4.5Z" fill="#0F172A" />
+                    </svg>
+                    <span class="" style="margin-left:5px;">Share</span>
+                    <svg class="detailsPgSvg-arrowIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M6.21967 4.22431C6.51256 3.93142 6.98744 3.93142 7.28033 4.22431L10.5303 7.47431C10.8232 7.7672 10.8232 8.24208 10.5303 8.53497L7.28033 11.785C6.98744 12.0779 6.51256 12.0779 6.21967 11.785C5.92678 11.4921 5.92678 11.0172 6.21967 10.7243L8.93934 8.00464L6.21967 5.28497C5.92678 4.99208 5.92678 4.5172 6.21967 4.22431Z" />
+                    </svg>
+                </a>
+
+                <div class="productDetailsPg-priceContainer">
+                    <p class="detailPrice text-black">@Model.ShoppingCartVM.Product.Price.ToString("c")<span class="vat">incl. VAT</span></p>
+                    <input asp-for="@Model.ShoppingCartVM.Count" style="display:none;" />
+                    @if (Model.ShoppingCartVM.Product.RemainigQuantity == 0)
+                    {
+                        <button id="addTo-NoStock-cartBtn" class="" type="submit" disabled>
+                            Out Of Stock
+                        </button>
+                    }
+                    else
+                    {
+                        <button id="addTo-cartBtn" class="" type="submit">
+                            Add To Cart
+                        </button>
+
+                    }
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="productDetailsPg-Middle-Container">
+
+            <h3 class="designSpec-Title text-black">Design Specification</h3>
+
+            <div class="designSpec-Wrapper">
+
+                @if (Model.ShoppingCartVM.Product is Yare.Models.Watch watch02)
+                {
+                    <div class="productDetails-specInfo">
+                        <label asp-for="@watch02.WatchBrand" class="productDetails-label"></label>
+                        <p class="productDetails-text">@GetEnumDisplayName(watch02.WatchBrand)</p>
+                    </div>
+                    <div class="productDetails-specInfo">
+                        <label asp-for="@watch02.ModelNumber" class="productDetails-label"></label>
+                        <p class="productDetails-text">@watch02.ModelNumber</p>
+                    </div>
+                    <div class="productDetails-specInfo">
+                        <label asp-for="@watch02.Supplier" class="productDetails-label"></label>
+                        <p class="productDetails-text">@watch02.Supplier</p>
+                    </div>
+                    <div class="productDetails-specInfo">
+                        <label asp-for="@watch02.WatchStrapType" class="productDetails-label"></label>
+                        <p class="productDetails-text">@GetEnumDisplayName(watch02.WatchStrapType)</p>
+                    </div>
+                    <div class="productDetails-specInfo">
+                        <label asp-for="@watch02.ByMetal" class="productDetails-label"></label>
+                        <p class="productDetails-text">@GetEnumDisplayName(watch02.ByMetal)</p>
+                    </div>
+                    <div class="productDetails-specInfo">
+                        <label asp-for="@watch02.WatchMovement" class="productDetails-label"></label>
+                        <p class="productDetails-text">@GetEnumDisplayName(watch02.WatchMovement)</p>
+                    </div>
+                    <div class="productDetails-specInfo">
+                        <label asp-for="@watch02.WaterResistant" class="productDetails-label"></label>
+                        <p class="productDetails-text">@GetEnumDisplayName(watch02.WaterResistant)</p>
+                    </div>
+                    <div class="productDetails-specInfo">
+                        <label asp-for="@watch02.StrapColour" class="productDetails-label"></label>
+                        <p class="productDetails-text">@watch02.StrapColour</p>
+                    </div>
+                    <div class="productDetails-specInfo">
+                        <label asp-for="@watch02.WatchCaseShape" class="productDetails-label"></label>
+                        <p class="productDetails-text">@GetEnumDisplayName(watch02.WatchCaseShape)</p>
+                    </div>
+                    <div class="productDetails-specInfo">
+                        <label asp-for="@watch02.WatchDiameter" class="productDetails-label"></label>
+                        <p class="productDetails-text">@GetEnumDisplayName(watch02.WatchDiameter)</p>
+                    </div>
+                    <div class="productDetails-specInfo">
+                        <label asp-for="@watch02.DialColor" class="productDetails-label"></label>
+                        <p class="productDetails-text">@watch02.DialColor</p>
+                    </div>
+
+                    @if (watch02.ByGemstone != null)
+                    {
+                        <div class="productDetails-specInfo">
+                            <label asp-for="@watch02.ByGemstone" class="productDetails-label"></label>
+                            <p class="productDetails-text">@GetEnumDisplayName(watch02.ByGemstone)</p>
+                        </div>
+                    }
+
+                }
+                @if (Model.ShoppingCartVM.Product is Yare.Models.Jewellery jewellery02)
+                {
+                    <div class="productDetails-specInfo">
+                        <label asp-for="@jewellery02.ModelNumber" class="productDetails-label"></label>
+                        <p class="productDetails-text">@jewellery02.ModelNumber</p>
+                    </div>
+                    <div class="productDetails-specInfo">
+                        <label asp-for="@jewellery02.Supplier" class="productDetails-label"></label>
+                        <p class="productDetails-text">@jewellery02.Supplier</p>
+                    </div>
+                    <div class="productDetails-specInfo">
+                        <label asp-for="@jewellery02.JewelleryCategory" class="productDetails-label"></label>
+                        <p class="productDetails-text">@GetEnumDisplayName(jewellery02.JewelleryCategory)</p>
+                    </div>
+                    <div class="productDetails-specInfo">
+                        <label asp-for="@jewellery02.ByMetal" class="productDetails-label"></label>
+                        <p class="productDetails-text">@GetEnumDisplayName(jewellery02.ByMetal)</p>
+                    </div>
+
+                    @if (jewellery02.ByGemstone != null)
+                    {
+                        <div class="productDetails-specInfo">
+                            <label asp-for="@jewellery02.ByGemstone" class="productDetails-label"></label>
+                            <p class="productDetails-text">@GetEnumDisplayName(jewellery02.ByGemstone)</p>
+                        </div>
+                    }
+                }
+                @if (Model.ShoppingCartVM.Product is Yare.Models.Accessory accessory02)
+                {
+                    <div class="productDetails-specInfo">
+                        <label asp-for="@accessory02.ModelNumber" class="productDetails-label"></label>
+                        <p class="productDetails-text">@accessory02.ModelNumber</p>
+                    </div>
+                    <div class="productDetails-specInfo">
+                        <label asp-for="@accessory02.Supplier" class="productDetails-label"></label>
+                        <p class="productDetails-text">@accessory02.Supplier</p>
+                    </div>
+                    <div class="productDetails-specInfo">
+                        <label asp-for="@accessory02.AccessoryCategory" class="productDetails-label"></label>
+                        <p class="productDetails-text">@GetEnumDisplayName(accessory02.AccessoryCategory)</p>
+                    </div>
+
+                }
+                <div class="productDetails-specInfo">
+                    <label asp-for="@Model.ShoppingCartVM.Product.WarrantyYears" class="productDetails-label"></label>
+                    <p class="productDetails-text">@GetEnumDisplayName(Model.ShoppingCartVM.Product.WarrantyYears)</p>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="productDetailsPg-Bottom-Container">
+            @await Component.InvokeAsync("BestSellingProducts")
+        </div>
+
+    </div>
+</form>
+
+
+
+@section Scripts {
+
+    <script>
+
+        ///////////////////////////////
+        // DetailsPg Search Component
+        const filterUrl = '@Url.Action("Filter", "Home")';
+
+        //////////////////////////////////////
+        // DetailsPg Img Controlls Component
+        const productDetailsPg_imgsController_items = document.querySelectorAll(".productDetailsPg-imgsController-items");
+        const productDetailsPg_img_bckContainer = document.querySelector(".productDetailsPg-img-bckContainer");
+
+        let previousClickedItem = null;
+
+        productDetailsPg_imgsController_items.forEach((item, index) => {
+            item.addEventListener("click", () => {
+                const getSrcFrom_imgsControls_items = item.getAttribute("src");
+
+                if (previousClickedItem) {
+
+                    previousClickedItem.classList.remove("productDetailsPg-img-bckContainer-Active");
+
+                    void previousClickedItem.offsetWidth;
+                    previousClickedItem.classList.add("productDetailsPg-img-bckContainer-Active");
+
+                }
+
+                productDetailsPg_img_bckContainer.src = getSrcFrom_imgsControls_items;
+                productDetailsPg_img_bckContainer.classList.add("productDetailsPg-img-bckContainer-Active");
+
+                previousClickedItem = productDetailsPg_img_bckContainer;
+            });
+        });
+
+        //////////////////////////////////
+        // DetailsPg Read More Component
+        const readMore_Btn = document.getElementById("read-more-btn");
+
+        //Toggle the description
+        function toggleDescription() {
+            var dots = document.getElementById("dots");
+            var moreText = document.getElementById("more");
+            var btnText = document.getElementById("read-more-btn");
+
+            if (dots.style.display === "none") {
+                dots.style.display = "inline";
+                btnText.innerHTML = "Read more";
+                moreText.style.display = "none";
+            } else {
+                dots.style.display = "none";
+                btnText.innerHTML = "Read less";
+                moreText.style.display = "inline";
+            }
+        }
+
+        if (readMore_Btn) {
+            readMore_Btn.addEventListener("click", toggleDescription);
+        }
+
+
+        /////////////////////////////////////
+        //DetailsPg Scroll Effect Component
+        gsap.registerPlugin(ScrollTrigger);
+
+        let secondaryAddToCartTriggers = [];
+
+        function detailsPgZoomScrollTriggers() {
+            const detailsPgImgContainers = document.querySelectorAll('.productDetailsPg-img-bckContainer');
+
+            detailsPgImgContainers.forEach(element => {
+                let tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: element,
+                        start: "20px",
+                        end: "bottom top",
+                        scrub: 1,
+                        toggleActions: "play reverse play reverse",
+                        invalidateOnRefresh: true,
+                    }
+                });
+                tl.to(element, { scale: 1.2, ease: 'power2.out', duration: 3 });
+            });
+        }
+
+        function detailsPgAddToCartBtnScrollTriggers() {
+            const secondaryAddToCartContainers = document.querySelectorAll('.productDetailsPg-secondaryAddToCart-Container');
+
+            secondaryAddToCartContainers.forEach(element => {
+                const trigger = gsap.to(element, {
+                    y: 100,
+                    duration: 1,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: ".productDetailsPg-priceContainer",
+                        start: "top top",
+                        end: "top top",
+                        toggleActions: "play none none reverse"
+                    }
+                });
+                secondaryAddToCartTriggers.push(trigger.scrollTrigger);
+            });
+        }
+
+        /////////////////////////////////////////////////////////////////////
+        //End Secondary Cart Btn Effect When Shopping Cart In Use Component
+        function killAddToCartBtnScrollTriggers() {
+            secondaryAddToCartTriggers.forEach(trigger => trigger.kill());
+            secondaryAddToCartTriggers = [];
+        }
+
+
+    </script>
+
+}

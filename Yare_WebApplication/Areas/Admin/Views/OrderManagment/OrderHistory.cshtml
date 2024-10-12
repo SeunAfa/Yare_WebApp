@@ -1,0 +1,197 @@
+﻿@using Yare_WebApplication.Data.Utility;
+@model Yare.Models.ViewModels.OrderManagmentVM;
+
+@{
+    ViewData["Title"] = "My Order History";
+}
+<style>
+
+</style>
+<div class="breadcrumbs">
+    <a asp-area="Admin" asp-controller="OrderManagement" asp-action="Index">My Order History</a>
+</div>
+<div class="listTitle-Container">
+    <h1 class="text-black">My Order History</h1>
+</div>
+@{
+    var approvedStatus = SD.StatusApproved;
+    var pendingStatus = SD.StatusPending;
+    var processingStatus = SD.StatusInProcess;
+    var shippedStatus = SD.StatusShipped;
+    var cancelledStatus = SD.StatusCancelled;
+    var refundedStatus = SD.StatusRefunded;
+}
+<button type="button" class="btn btn-dark filterStat-btn" data-status="@approvedStatus">@approvedStatus</button>
+<button type="button" class="btn btn-dark filterStat-btn" data-status="@pendingStatus">@pendingStatus</button>
+<button type="button" class="btn btn-dark filterStat-btn" data-status="@processingStatus">@processingStatus</button>
+<button type="button" class="btn btn-dark filterStat-btn" data-status="@shippedStatus">@shippedStatus</button>
+<button type="button" class="btn btn-dark filterStat-btn" data-status="@cancelledStatus">@cancelledStatus</button>
+<button type="button" class="btn btn-dark filterStat-btn" data-status="@refundedStatus">@refundedStatus</button>
+<button type="button" class="btn btn-dark filterStat-btn" data-status="All">All</button>
+
+<hr />
+<table id="orderTableBody" class="table row-bordered table-hover compact" style="width:100%">
+    <thead>
+        <tr>
+            <th class="text-black">Id</th>
+            <th class="text-black">Last Name</th>
+            <th class="text-black">Email</th>
+            <th class="text-black text-center">Order Status</th>
+            <th class="text-black text-center">Order Total</th>
+            <th class="text-black">Order Date</th>
+            <th class="text-black"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var orderItem in Model.OrderHeaderListUser)
+        {
+            string shortenedEmail = orderItem.ApplicationUser.Email.Length > 18 ? $"{orderItem.ApplicationUser.Email.Substring(0, 18)}..." : orderItem.ApplicationUser.Email;
+            string shortenedLastName = orderItem.ApplicationUser.LastName.Length > 8 ? $"{orderItem.ApplicationUser.LastName.Substring(0, 8)}..." : orderItem.ApplicationUser.LastName;
+
+            <tr data-orderstatus="@orderItem.OrderStatus">
+                <td class="align-middle">@orderItem.Id</td>
+                <td class="align-middle">@shortenedLastName</td>
+                <td class="align-middle">@shortenedEmail</td>
+                <td class="align-middle text-center">@orderItem.OrderStatus</td>
+                <td class="align-middle text-center">@orderItem.OrderTotal.ToString("c")</td>
+                <td class="align-middle">@orderItem.OrderDate</td>
+                <td class="align-middle">
+                    <a id="" asp-action="Details" asp-route-id="@orderItem.Id" class="btn btn-dark">
+                        <i class="bi bi-box-arrow-up-right"></i>
+                        <span style="padding-right:5px;"></span>Details
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <ul class="pagination">
+        @for (int i = 1; i <= (int)ViewData["TotalPages"]; i++)
+        {
+            <li class="page-item @(i == (int)ViewData["CurrentPage"] ? "Active" : "")">
+                <a class="page-link" href="?page=@i&status=@(ViewData["CurrentStatus"] ?? "All")"> @i </a>
+            </li>
+        }
+    </ul>
+</div>
+
+@section Scripts {
+    <script>
+        /////////////////////////////////
+        ///Fillter Status Btn Component
+        // const filterStatusBtn = document.querySelectorAll(".filterStat-btn");
+
+        const filterStatusBtn = document.querySelectorAll(".filterStat-btn");
+
+        filterStatusBtn.forEach(btn => {
+            btn.addEventListener('click', function () {
+                // Reset the color of all buttons to white
+                filterStatusBtn.forEach(b => b.style.color = 'white');
+
+                // Set the color of the clicked button to red
+                this.style.color = 'red';
+            });
+        });
+
+
+        /////////////////////////////////////
+        //Order Managament Filter Component
+        var selectedStatus = "All";  // Variable to store the selected status
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var buttons = document.querySelectorAll('.filterStat-btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function () {
+                    selectedStatus = this.getAttribute('data-status');  // Store the selected status
+                    filterOrdersByStatus(selectedStatus);
+                    updatePaginationLinks();
+                });
+            });
+
+            var paginationLinks = document.querySelectorAll('.page-link');
+            paginationLinks.forEach(link => {
+                link.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    var page = this.getAttribute('href').split('page=')[1].split('&')[0];
+                    fetchPageWithFilter(page, selectedStatus);
+                });
+            });
+
+            // Apply the filter on page load
+            applyFilterOnPageLoad();
+        });
+
+        function filterOrdersByStatus(status) {
+            var rows = document.querySelectorAll('#orderTableBody tbody tr');
+            rows.forEach(row => {
+                if (status === "All" || row.getAttribute('data-orderstatus') === status) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        function updatePaginationLinks() {
+            var paginationLinks = document.querySelectorAll('.page-link');
+            paginationLinks.forEach(link => {
+                var page = link.getAttribute('href').split('page=')[1].split('&')[0];
+                link.setAttribute('href', `?page=${page}&status=${selectedStatus}`);
+            });
+        }
+
+        function fetchPageWithFilter(page, status) {
+            var url = new URL(window.location.href);
+            url.searchParams.set('page', page);
+            url.searchParams.set('status', status);
+
+            fetch(url.toString(), {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(response => response.text())
+                .then(html => {
+                    var tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = html;
+
+                    // Update only the table body to avoid overwriting the header
+                    var newTableBody = tempDiv.querySelector('#orderTableBody tbody');
+                    var currentTableBody = document.querySelector('#orderTableBody tbody');
+                    currentTableBody.innerHTML = newTableBody.innerHTML;
+
+                    // Update the pagination
+                    var newPagination = tempDiv.querySelector('.pagination');
+                    var currentPagination = document.querySelector('.pagination');
+                    currentPagination.innerHTML = newPagination.innerHTML;
+
+                    updatePaginationLinks();
+
+                    // Reapply the filter after loading new content
+                    filterOrdersByStatus(selectedStatus);
+
+                    // Rebind pagination links
+                    var paginationLinks = document.querySelectorAll('.page-link');
+                    paginationLinks.forEach(link => {
+                        link.addEventListener('click', function (event) {
+                            event.preventDefault();
+                            var page = this.getAttribute('href').split('page=')[1].split('&')[0];
+                            fetchPageWithFilter(page, selectedStatus);
+                        });
+                    });
+                })
+                .catch(error => console.error('Error fetching page:', error));
+        }
+
+        function applyFilterOnPageLoad() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var status = urlParams.get('status') || 'All';
+            selectedStatus = status;
+            filterOrdersByStatus(status);
+        }
+
+    </script>
+}

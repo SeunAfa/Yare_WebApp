@@ -1,0 +1,512 @@
+/*deviceNotSupported----------
+----------------------------*/
+.admin-deviceNotSupported-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 100vh;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    display: none;
+}
+
+.deviceNotSupported-text {
+    width: 90%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+.deviceNotSupported-Icon {
+    width: 100px;
+    height: 100px;
+    fill: red;
+    transform: translateY(-20px);
+}
+
+.appDownload-Container {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    height: 100px;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.appBadge-Img {
+    max-height: 100%;
+    max-width: 100%;
+}
+/*Sider Bar-Navigation--------
+----------------------------*/
+.sidebar-nav ul .sidebar-item .sidebar-link.active, .sidebar-nav ul .sidebar-item .sidebar-link:hover {
+    background-color: #808080;
+    /*color:blue;*/
+}
+
+.sidebar-nav ul .sidebar-item .sidebar-link.active {
+    background-color: #404040;
+}
+
+.sidebar-nav ul .sidebar-item.selected > .sidebar-link {
+    background: #1a1a1a;
+    opacity: 1;
+}
+.sidebar-link:hover{
+    color:red;
+}
+/*DashBoard------------
+----------------------*/
+#DashboardTitleArea {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+#DashboardControlsBtnContainer {
+    height: 30px;
+    margin-left: 90px;
+    margin-top:5px;
+}
+#DashboardTitle{
+    color:black;
+}
+
+#dashboard-titleContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.analyticsControls-Container {
+    display: flex;
+    flex-direction: row;
+    gap:2px;
+}
+.analytics-Btn {
+    padding: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: solid 2px black;
+    cursor: pointer
+}
+
+.activeAnalytics-Btn {
+    border: solid 2px red;
+    color:red;
+}
+
+#kpiCard-Container {
+    overflow: hidden;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-column-gap: 0;
+    grid-row-gap: 0;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.kpiCard-Item {
+    overflow: hidden;
+    background-color: black;
+    border: 0.1px solid white;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 12px;
+}
+.title-percentage {
+}
+
+.custom-dt-Title {
+    font-size: 1rem; 
+    font-weight: 600; 
+    color: white; 
+}
+
+.custom-dd-Percentage {
+    font-size: 0.875rem; 
+    font-weight: 500;
+    color: white;
+}
+
+.custom-dd-Amount {
+    font-size: 1.25rem; 
+    font-weight: 700; 
+    color: white;
+}
+.dataPeriod {
+    font-size: 0.755rem;
+    font-weight: 500;
+    color: white;
+}
+.dataAnalytics-Tab {
+    display: none !important;
+}
+
+.activeDataAnalytics-Tab {
+    display: block !important;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+}
+
+/*Overview Data*/
+#Overview-Data {
+
+}
+/*Overview Top*/
+#overviewData-top-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 325px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.overviewData-top-Left {
+    overflow: hidden;
+    width: 60%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.revenueVsOrdersChart {
+    height: 100% !important;
+}
+
+.overviewData-top-Right {
+    overflow: hidden;
+    width: 40%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding:5px;
+}
+
+.productsSoldByCategoryChart {
+    height: 100% !important;
+}
+/*Overview Middle*/
+#overviewData-middle-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bestSellingProductsChart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/*Overview Bottom*/
+#overviewData-bottom-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 700px;
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+}
+
+#overviewData-bottom-topContainer {
+    overflow: hidden;
+    width: 100%;
+    height: 50%;
+}
+
+.salesMultiPeriodChart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+#overviewData-bottom-bottomContainer {
+    overflow: hidden;
+    width: 100%;
+    height: 50%;
+    display:flex;
+    flex-direction:row;
+    gap:20px;
+}
+
+.overviewData-bottom-bottomLeftContainer {
+    overflow: hidden;
+    width: 50%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+#DeliveryStatusChart {
+    padding-top:25px;
+    width: 100% !important;
+    height: 80% !important;
+}
+
+.overviewData-bottom-bottomRightContainer {
+    overflow: hidden;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.deliveryStatusChart-Key {
+    overflow: hidden;
+    width: 100%;
+    height: 25px;
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 30px;
+    border-bottom: black 0.5px solid;
+}
+
+.deliveryStatusChart-statusKey {
+    display: flex;
+    flex-direction: row;
+    gap:5px;
+    width: 100%;
+    height: 25px;
+}
+
+.deliveryStatusChart-statusKey-Colour{
+    height:100%;
+    width:1%;
+}
+
+.deliveryStatusChart-statusKey-Colour-1 {
+    background-color: #2d53de;
+}
+
+.deliveryStatusChart-statusKey-Colour-2 {
+    background-color: #553772;
+}
+
+.deliveryStatusChart-statusKey-Colour-3 {
+    background-color: #8f3b76;
+}
+
+.deliveryStatusChart-statusKey-Colour-4 {
+    background-color: #c7417b;
+}
+
+.deliveryStatusChart-statusKey-Colour-5 {
+    background-color: #f5477e;
+}
+
+.deliveryStatusChart-statusKey-Colour-6 {
+    background-color: black;
+}
+
+/*Sale Data*/
+#Sales-Data {
+
+}
+
+#salesData-top-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#salesData-middle-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 325px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+#salesData-middle-leftContainer {
+    overflow: hidden;
+    width: 60%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#salesData-middle-rightContainer {
+    overflow: hidden;
+    width: 40%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+
+#salesData-bottom-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 700px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#salesData-bottom-topContainer {
+    overflow: hidden;
+    width: 100%;
+    height: 50%;
+}
+
+#salesData-bottom-bottomContainer {
+    overflow: hidden;
+    width: 100%;
+    height: 50%;
+}
+
+.AllOrderTotalByUsers {
+    width: 100% !important;
+    height: 100% !important;
+}
+/*Product Data*/
+#Product-Data {
+
+}
+
+#productData-top-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 325px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.productData-top-leftContainer {
+    overflow: hidden;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+
+.ProductsByCategoryChart {
+    height: 100% !important;
+}
+
+.productData-top-rightContainer {
+    overflow: hidden;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+
+.ProductsByGenderChart {
+    height: 100% !important;
+}
+
+#productData-middle-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 650px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.productData-middle-topContainer {
+    overflow: hidden;
+    width: 100%;
+    height: 50%;
+}
+
+.ProductInventoryChart {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+.productData-middle-bottomContainer {
+    overflow: hidden;
+    width: 100%;
+    height: 50%;
+}
+
+.ProductPriceChart {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+#productData-bottom-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 325px;
+}
+/*Logistic Data*/
+#Logistic-Data {
+
+}
+
+#logisticData-top-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 325px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.logisticData-top-leftContainer {
+    overflow: hidden;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+
+.logisticData-top-rightContainer {
+    overflow: hidden;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+
+.logisticData-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 325px;
+}
+
+/*END OF DashBoard------------
+----------------------------*/
+
+

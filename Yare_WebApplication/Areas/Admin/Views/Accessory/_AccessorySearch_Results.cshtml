@@ -1,0 +1,176 @@
+﻿@model IEnumerable<Accessory>
+
+@{
+    ViewData["Title"] = "Accessory Products";
+}
+
+@if (ViewBag.NoResults != null)
+{
+    <div class="adminNo-searchResults">
+
+    <p class="text-black text-center">@ViewBag.NoResults</p>
+    <div class="text-center">
+        <a class="mx-auto" style="text-decoration: underline;" asp-controller="Accessory" asp-action="Index">
+            Return to accessory list
+        </a>
+    </div>
+
+    </div>
+}
+else
+{
+
+    <div id="searchLiveResultsContainer">
+
+        <table id="" class="table row-bordered table-hover compact" style="width:100%">
+            <thead>
+                <tr>
+
+                    <th id="ProductName" class="text-black">
+                        @Html.DisplayNameFor(model => model.ProductName)
+                    </th>
+
+                    <th class="text-black text-center">
+                        Image
+                    </th>
+
+                    <th class="text-black text-center">
+                        @Html.DisplayNameFor(model => model.Price)
+                    </th>
+
+                    <th class="text-black text-center">
+                        Remainig Quantity
+                    </th>
+
+                    <th class="text-black text-center">
+                        Stock Status
+                    </th>
+
+                    <th class="text-black" style="width:170px;">
+                        @Html.DisplayNameFor(model => model.LastUpdate)
+                    </th>
+
+                    <th class="text-black">
+                        Actions
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+
+                    string shortenedProductName = item.ProductName.Length > 21 ? $"{item.ProductName.Substring(0, 21)}..." : item.ProductName;
+
+                    <tr>
+
+                        <td class="align-middle text-black" style="">
+                            @shortenedProductName
+                        </td>
+
+                        <td class="align-middle text-center">
+                            <img src="@item.PrimaryDisplayImageUrl" class="rounded-circle" style="width:80px;height:80px;">
+                        </td>
+
+                        <td class="align-middle text-center text-black">
+                            @item.Price.ToString("c")
+                        </td>
+
+                        <td class="align-middle text-center text-black">
+                            @Html.DisplayFor(modelItem => item.RemainigQuantity)
+                        </td>
+
+                        @if (item.RemainigQuantity == 0)
+                        {
+
+                            <td class="align-middle text-center" style="white-space: nowrap;">
+
+                                <span style="display: inline-flex; align-items: center;">
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" class="size-5" style="margin-right: 4px;">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd" fill="red" />
+                                    </svg> @item.StockStatus
+
+                                </span>
+
+                            </td>
+
+                        }
+                        else if (item.RemainigQuantity <= 50)
+                        {
+
+                            <td class="align-middle text-center" style="white-space: nowrap;">
+
+                                <span style="display: inline-flex; align-items: center;">
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" class="size-5" style="margin-right: 4px;">
+                                        <path fill-rule="evenodd" d="M1.22 5.222a.75.75 0 0 1 1.06 0L7 9.942l3.768-3.769a.75.75 0 0 1 1.113.058 20.908 20.908 0 0 1 3.813 7.254l1.574-2.727a.75.75 0 0 1 1.3.75l-2.475 4.286a.75.75 0 0 1-1.025.275l-4.287-2.475a.75.75 0 0 1 .75-1.3l2.71 1.565a19.422 19.422 0 0 0-3.013-6.024L7.53 11.533a.75.75 0 0 1-1.06 0l-5.25-5.25a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill="red" />
+                                    </svg>@item.StockStatus
+
+                                </span>
+
+                            </td>
+                        }
+                        else if (item.RemainigQuantity >= 50)
+                        {
+
+                            <td class="align-middle text-center" style="white-space: nowrap;">
+
+                                <span style="display: inline-flex; align-items: center;">
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" class="size-5" style="margin-right: 4px;">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" fill="green" />
+                                    </svg>@item.StockStatus
+
+                                </span>
+
+                            </td>
+
+                        }
+
+                        <td class="align-middle text-black" style="width:170px;">
+
+                            @item.LastUpdate
+
+                        </td>
+
+                        <td class="align-middle text-center">
+                            <form asp-action="DeletePost" asp-route-id="@item.Id" method="post">
+                                <div class="dropdown">
+                                    <button id="ListActionBtn" class="btn btn-secondary bi bi-three-dots" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-dark dropdown-item"><i class="bi bi-pencil-square"></i><span style="padding-right:5px;"></span>Edit</a>
+                                        </li>
+                                        <li>
+                                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-dark dropdown-item"><i class="bi bi-box-arrow-up-right"></i><span style="padding-right:5px;"></span>Details</a>
+                                        </li>
+                                        <li>
+                                            <button type="submit" class="btn btn-danger dropdown-item text-black" style="width:100%;"
+                                                    onclick="return confirm('Are you sure you want to delete @item.ProductName!')">
+                                                <i class="bi bi-trash3"></i><span style="padding-right:5px;"></span>Delete
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </form>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+}
+@await Html.PartialAsync("_CreateItem", "Accessory")
+@section Scripts{
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+
+    </script>
+
+}

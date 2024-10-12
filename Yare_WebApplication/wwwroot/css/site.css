@@ -1,0 +1,217 @@
+/*Start Of Permanent Styling */
+body {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.noscroll {
+    overflow: hidden;
+}
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: red;
+    }
+
+h1, h2, h3, h4, h5, h6, p, a {
+    text-decoration: none;
+    color: white;
+}
+
+.navLinks-topNav.nav-link {
+    color: white;
+}
+
+.navLinks-topNav {
+    font-size: 12px;
+    padding: 0.2em;
+    cursor: pointer;
+    width: max-content;
+    color: white !important;
+}
+
+    .navLinks-topNav:hover {
+        color: red !important;
+    }
+
+/*Yare  links*/
+.categoryItem-Links {
+    display: none;
+}
+/*Start of 1 */
+.navLink-Animation {
+    color: inherit;
+    text-decoration: none;
+    width: fit-content;
+}
+
+.navLink-Animation {
+    display: block;
+    position: relative;
+    padding: 0.2em;
+}
+
+    .navLink-Animation::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 0.05em;
+        background-color: red;
+        opacity: 0;
+        transition: opacity 300ms, transform 300ms;
+    }
+
+    .navLink-Animation:hover::after,
+    .navLink-Animation:focus::after {
+        opacity: 1;
+        transform: translate3d(0, 0.05em, 0);
+    }
+
+.navLink-Animation {
+    overflow: hidden;
+}
+
+    .navLink-Animation::after {
+        opacity: 1;
+        transform: translate3d(-110%, 0, 0);
+    }
+
+    .navLink-Animation:hover::after,
+    .navLink-Animation:focus::after {
+        transform: translate3d(0, 0, 0);
+    }
+/*Start of 2 */
+.navLink-jewelleryCategoryAnimation {
+    color: inherit;
+    text-decoration: none;
+    width: fit-content;
+}
+
+.navLink-jewelleryCategoryAnimation {
+    position: relative;
+    padding: 0.2em;
+    color: white;
+}
+
+    .navLink-jewelleryCategoryAnimation::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 0.05em;
+        background-color: red;
+        opacity: 0;
+        transition: opacity 300ms, transform 300ms;
+    }
+
+    .navLink-jewelleryCategoryAnimation:hover::after,
+    .navLink-jewelleryCategoryAnimation:focus::after {
+        opacity: 1;
+        transform: translate3d(0, 0.05em, 0);
+    }
+
+.navLink-jewelleryCategoryAnimation {
+    overflow: hidden;
+}
+
+    .navLink-jewelleryCategoryAnimation::after {
+        opacity: 1;
+        transform: translate3d(-110%, 0, 0);
+    }
+
+    .navLink-jewelleryCategoryAnimation:hover::after,
+    .navLink-jewelleryCategoryAnimation:focus::after {
+        transform: translate3d(0, 0, 0);
+    }
+/*Start of 3 */
+.navLink-categoryItemAnimation {
+    text-decoration: none;
+    font-size: 12px;
+    color: white;
+}
+
+    .navLink-categoryItemAnimation:hover {
+        text-decoration: none;
+        font-size: 12px;
+        color: red;
+    }
+
+/*animatedUnderline*/
+.animatedUnderline-Links {
+    display: inline-block;
+    position: relative;
+}
+
+    .animatedUnderline-Links:after {
+        background: none repeat scroll 0 0 transparent;
+        bottom: 2px;
+        content: "";
+        display: block;
+        height: 2px;
+        left: 0%;
+        position: absolute;
+        background: red;
+        transition: width 0.3s ease 0s, left 0.3s ease 0s;
+        width: 0;
+    }
+
+    .animatedUnderline-Links:hover:after {
+        width: 100%;
+        left: 0;
+    }
+
+.animatedCollection-Links {
+    display: inline-block;
+    position: relative;
+}
+
+    .animatedCollection-Links:after {
+        background: none repeat scroll 0 0 transparent;
+        bottom: 2px;
+        content: "";
+        display: block;
+        height: 1px;
+        left: 0%;
+        position: absolute;
+        background: red;
+        /* transition: width 0.3s ease 0s, left 0.3s ease 0s;*/
+        transition: width 250ms ease 0s, left 250ms ease 0s;
+        width: 0;
+    }
+
+    .animatedCollection-Links:hover:after {
+        width: 100%;
+        left: 0;
+    }
+
+button, input[type="button"], input[type="submit"] {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+
+    button:focus, input[type="button"]:focus, input[type="submit"]:focus {
+        outline: none;
+    }
+/*End Of Permanent Styling */

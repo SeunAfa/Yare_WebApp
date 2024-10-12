@@ -1,0 +1,39 @@
+﻿@model Yare.Models.ViewModels.HomePgVM
+
+@{
+    ViewData["Title"] = "Order Confirmation";
+}
+<style>
+
+</style>
+
+<div id="orderConfirmation-Container">
+
+    <div class="orderConfirmation-Wrapper">
+        
+        <div style="text-align: center;">
+
+            <svg class="tick-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M6.60288 1.80339C7.42705 0.85557 8.64332 0.254639 10 0.254639C11.3566 0.254639 12.5728 0.855511 13.397 1.80325C14.6501 1.7157 15.9352 2.1508 16.8946 3.11021C17.854 4.06962 18.2891 5.35473 18.2016 6.60783C19.1492 7.43199 19.75 8.64812 19.75 10.0046C19.75 11.3614 19.149 12.5777 18.2011 13.4019C18.2884 14.6548 17.8533 15.9397 16.8941 16.8989C15.9348 17.8581 14.65 18.2933 13.3971 18.2059C12.5729 19.1537 11.3567 19.7546 10 19.7546C8.6434 19.7546 7.4272 19.1538 6.60304 18.2061C5.34992 18.2936 4.0648 17.8585 3.10537 16.8991C2.14596 15.9397 1.71086 14.6546 1.79841 13.4015C0.850785 12.5773 0.25 11.3612 0.25 10.0046C0.25 8.64806 0.850846 7.43186 1.79855 6.6077C1.7111 5.35469 2.14621 4.06971 3.10554 3.11038C4.06488 2.15104 5.34987 1.71593 6.60288 1.80339ZM13.6103 8.19057C13.8511 7.85351 13.773 7.3851 13.4359 7.14434C13.0989 6.90358 12.6305 6.98165 12.3897 7.31871L9.1543 11.8483L7.53033 10.2243C7.23744 9.93142 6.76256 9.93142 6.46967 10.2243C6.17678 10.5172 6.17678 10.9921 6.46967 11.285L8.71967 13.535C8.87556 13.6909 9.09215 13.7703 9.31186 13.7521C9.53157 13.7339 9.73216 13.62 9.8603 13.4406L13.6103 8.19057Z" />
+            </svg>
+
+        </div>
+        
+        <h5 class="text-black text-center">Thank you for your order!</h5>
+        <p class="text-black text-center">Your order number is: @Model.OrderHeader.Id</p>
+        <a asp-area="Admin" asp-controller="OrderManagment" asp-action="Details" asp-route-id="@Model.OrderHeader.Id" id="orderManagment-Btn" class="text-center">Order Details</a>
+        <a asp-area="Customer" asp-controller="Home" asp-action="Index" id="orderManagment-Btn" class="text-center">Continue Shopping</a>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        ///////////////////////////////////
+        // _Layout Searchbar Component
+        const filterUrl = '@Url.Action("Filter", "Checkout")';
+
+    </script>
+}
+

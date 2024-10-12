@@ -1,0 +1,188 @@
+﻿/*Background*/
+.shoppingBag-contentActive {
+    z-index: 1;
+    position: relative;
+    transition: all ease-in-out 250ms;
+}
+
+    .shoppingBag-contentActive::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 100;
+    }
+
+
+#shoppingBag-Container {
+    overflow: hidden;
+    width: 50%;
+    height: 100vh;
+    max-height: 100%;
+    background-color: black;
+    top: 0;
+    right: 0;
+    z-index: 300;
+    position: absolute;
+    display: block;
+    padding: 20px;
+    display: none;
+}
+
+.shoppingBag-Wrapper {
+    overflow: hidden;
+    height: 100%;
+}
+/*Top*/
+.shoppingBag-topSection {
+    overflow: hidden;
+    height: 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.continueShopping-Btn {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    cursor: pointer;
+}
+
+.deliveryIcon {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+}
+
+#shoppingBag-productItems-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 92%;
+    position: relative;
+}
+/*Middle*/
+#shoppingBag-productItems-Top {
+    overflow: hidden;
+    overflow-y: scroll;
+    width: 100%;
+    height: 75%;
+    padding: 10px;
+}
+
+    #shoppingBag-productItems-Top::-webkit-scrollbar {
+        width: 0px; /* width of the scrollbar */
+    }
+
+    #shoppingBag-productItems-Top::-webkit-scrollbar-track {
+        background: transparent; /* make scrollbar track transparent */
+    }
+
+    #shoppingBag-productItems-Top::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 6px;
+    }
+
+.shoppingBag-Item {
+    overflow: hidden;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+
+.shoppingBag-imgItem-Container {
+    overflow: hidden;
+    width: 20%;
+    height: 100%;
+}
+
+.shoppingBag-imgItem-Wrapper {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    object-fit: cover;
+}
+
+.shoppingBag-infoItem-Container {
+    overflow: hidden;
+    width: 80%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.shoppingBag-infoItem-Left {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    padding-left: 10px;
+    width: 60%;
+    height: 100%;
+    line-height: 1.5;
+}
+
+.shoppingBag-info-Text {
+    font-size: 12px;
+    margin: 0px;
+}
+
+.shoppingBag-infoItem-Right {
+    overflow: hidden;
+    width: 40%;
+    height: 100%;
+    position: relative;
+}
+
+.shoppingBag-infoItem-Right-Wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.item-count {
+    overflow: hidden;
+    width: 32px;
+}
+
+.removeItemBtn {
+    position: absolute;
+    right: 10px;
+}
+/*Bottom*/
+#shoppingBag-productItems-bottom {
+    overflow: hidden;
+    width: 100%;
+    height: 25%;
+    padding: 10px;
+}
+
+#checkoutBtn {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    color: black;
+    background-color: white;
+    border: 2px white solid;
+    border-radius: 0px;
+    text-align: center;
+    padding: 3px;
+}
+
+    #checkoutBtn:hover {
+        color: white;
+        background-color: black;
+        border: 2px white solid;
+    }

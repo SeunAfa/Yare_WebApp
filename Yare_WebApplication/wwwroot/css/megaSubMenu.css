@@ -1,0 +1,887 @@
+/*Start of Navigation----
+-----------------------*/
+/*Start of TopNav*/
+#headerNav-Wrapper {
+/*    overflow: hidden;*/
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+}
+/*Left*/
+.navigationContainer-Left {
+    display: flex;
+    flex-direction: row;
+    left: 0px;
+    height: fit-content;
+}
+
+/*Center*/
+.navigationContainer-Center {
+    display: block;
+    margin: auto;
+}
+.logoSvg-Icon{
+    padding:5px;
+    fill:white;
+}
+/*Right*/
+.navigationContainer-Right {
+    display: flex;
+    flex-direction: row;
+    right: 0;
+    height: fit-content;
+}
+.personSvg-Icon{
+    fill:white;
+}
+
+    .personSvg-Icon:hover {
+        fill: red;
+        transition: all ease-in-out 250ms;
+    }
+.locationSvg-Icon {
+    fill: white;
+}
+    .locationSvg-Icon:hover {
+        fill: red;
+        transition: all ease-in-out 250ms;
+    }
+.shoppingbagSvg-Icon {
+    fill: white;
+    padding-bottom:4px;
+}
+.shoppingbagSvg-Icon:hover {
+    fill: red;
+    transition:all ease-in-out 250ms;
+}
+#shoppingBag-Icon {
+    position: relative;
+    display: inline-block;
+}
+.cartCounter {
+    display: inline-block;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    position: absolute;
+    top: -6px;
+    right: 5px;
+    padding-right: 0.1em;
+    padding-left: 0.1em;
+    color: #fff;
+    border: none;
+}
+
+/*Right Drop down*/
+.dropdownCustomer-Container {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdownCustomer-content-Container {
+    display: none;
+    right: 10px;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    height: fit-content;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding:5px;
+    z-index: 19;
+}
+    .dropdownCustomer-content-Container a {
+        color: black;
+        padding: 12px 10px;
+        text-decoration: none;
+        display: block;
+        width: 100%;
+        font-size: 12px;
+        cursor: pointer;
+    }
+
+        .dropdownCustomer-content-Container a:hover {
+            background-color: #f9f9f9;
+            color: red;
+        }
+
+.dropdownCustomer-Container:hover .dropdownCustomer-content-Container {
+    display: block;
+}
+
+.dropdownCustomer-content-Wrapper{
+
+}
+
+.logoutForm-btn {
+    all: unset;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+}
+/*End of TopNav*/
+
+/*Start of Tab Nav*/
+#subMenu-Navigation {
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    background-color: black;
+    justify-content: center;
+    align-items: center;
+}
+
+.subMenu-Links {
+    color: white;
+    font-size: 12px;
+    padding: 0.2em;
+    margin-left: 1em;
+    margin-right: 1em;
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+#searchBtn {
+}
+
+.searchbtnSvg-Icon{
+    /*padding:1px;*/
+}
+
+.searchBtn-link {
+}
+
+.home-subMenu-Links {
+    color: white;
+    font-size: 12px;
+    padding: 0.2em;
+    margin-left: 1em;
+    margin-right: 1em;
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+    .home-subMenu-Links:hover {
+        color: white;
+        font-size: 12px;
+        padding: 0.2em;
+        margin-left: 1em;
+        margin-right: 1em;
+        cursor: pointer;
+        opacity: 1;
+    }
+
+.subMenu-linksActive {
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    opacity: 1;
+}
+/*End of Tab Nav*/
+
+/*Start of Default Tabs subMenu*/
+
+#subMenu-Tabs {
+    overflow: hidden;
+    z-index: 2;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.subMenu-Tabs {
+    width: 95%;
+    height: 0px;
+}
+
+.subMenu-Tabs_Active {
+    animation: showHeight_subMenu-Tabs forwards ease-in-out 250ms;
+}
+
+@keyframes showHeight_subMenu-Tabs {
+    from {
+        height: 0px;
+        display: none;
+    }
+
+    to {
+        height: 420px;
+        display: block;
+    }
+}
+
+.subMenu-TabsContainer {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    display: none;
+    transition: all ease-in-out 250ms;
+    background-color: black;
+}
+
+.subMenu-TabsContainer_Active {
+    display: block;
+    transition: all ease-in-out 250ms;
+}
+
+.subMenuTabsContent {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+    .subMenuTabsContent.subMenuTabsContent_Active {
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+
+.subMenu-tabWrapper {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    z-index:-5;
+}
+
+.subMenu-tabWrapper-Left {
+    overflow: hidden;
+    height: 100%;
+}
+
+.subMenu-tabWrapper-Right {
+    overflow: hidden;
+    height: 100%;
+}
+
+.subMenu-tablinksList-Wrapper {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: fit-content;
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.subMenu-subTitles {
+    opacity: 0.5;
+    cursor: default;
+    padding: 0.2em;
+    font-size: 12px;
+}
+
+.submMenu-navLink {
+    font-size: 12px;
+    padding: 0.2em;
+}
+
+.tabClose_Btn {
+    position: absolute;
+    top: 0px;
+    right: 5px;
+    z-index: 2;
+    cursor: pointer;
+    fill:red;
+}
+
+/*End of Default Tabs subMenu*/
+
+/*Start of Watches*/
+#yareWatches-tabWrapper {
+}
+
+#yareWatches-subMenu-tabWrapper-Left {
+    overflow:hidden;
+    width: 40%;
+    height: 100%;
+}
+
+#yareWatches-subMenu-Navigation-LeftImg {
+    width: 100%;
+    height: 120%;
+    object-fit: cover;
+    object-position: bottom center;
+}
+
+#yareWatches-subMenu-tabWrapper-Right {
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+    padding: 25px;
+}
+
+.watches-tablinksList-Wrapper:nth-child(2) {
+    border-left: 0.1px solid white;
+}
+/*End of Watches*/
+
+/*Start of Jewellery*/
+#yareJewellery-tabWrapper {
+    background-color: black;
+}
+
+#yareJewellery-subMenu-tabWrapper-Left {
+    overflow: hidden;
+    width: 30%;
+    display: flex;
+    flex-direction: row;
+    padding-top: 25px;
+    padding-left: 25px;
+}
+
+#yareJewellery-subMenu-tabWrapper-Right {
+    overflow: hidden;
+    width: 70%;
+    display: flex;
+    flex-direction: row;
+padding-top:25px;
+}
+
+#yareJewellery-imgRight-Container {
+    overflow: hidden;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.yareJewellery-eachImgRight-imgContainer {
+    overflow: hidden;
+    display:flex;
+    flex-direction:column;
+    width: 33.33%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.yareJewellery-eachImg-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 55%;
+}
+
+.yareJewellery-eachImg {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-size: cover;
+    background-repeat: no-repeat;
+    transition: all ease-in-out 250ms;
+}
+
+.yareJewellery-eachImg-Active {
+    overflow: hidden;
+    transform: scale(1.2);
+    object-fit: cover;
+    background-size: cover;
+    background-repeat: no-repeat;
+    transition: all ease-in-out 250ms;
+}
+
+.yareJewellery-eachImgRight-imgContainer:nth-child(1) .yareJewellery-eachImg {
+    background-image: url('https://www.goldsmiths.co.uk/medias/gs-engagement-guide-3w.png?context=bWFzdGVyfGltYWdlc3w3MzI3OTN8aW1hZ2UvcG5nfGltYWdlcy9oZWUvaDI4LzkyNDM1MjY0MzA3NTAucG5nfDczNDQ0YTVjNjNkOTVmMzZmNDJmMzE3NGQ4YTc5ZTQ4NTMzZjY5NDljNGU5MDYwZTg3ODBkNDQyNTk0OTA1ZDE&imwidth=640');
+}
+
+.yareJewellery-eachImgRight-imgContainer:nth-child(2) .yareJewellery-eachImg {
+    background-image: url('https://content.beaverbrooks.co.uk/static/images/category/jewellery/bb/goldjewellery/ifc-1223.jpg');
+}
+
+.yareJewellery-eachImgRight-imgContainer:nth-child(3) .yareJewellery-eachImg {
+    background-image: url('https://content.thewosgroup.com/goldsmiths/product-grid/gemstone-jewellery/gemstone-emerald-sep22.jpg');
+}
+
+.yareJewellery-eachLinks-Container {
+    display: flex;
+    flex-direction: column;
+}
+
+.yareJewellery-eachLinks {
+    font-size: 12px;
+}
+
+/*End of Jewellery*/
+
+/*Start of Accessories*/
+#yareAccessories-tabWrapper {
+    background-color: black;
+}
+
+#yareAccessories-subMenu-tabWrapper-Left {
+    overflow: hidden;
+    width: 30%;
+    padding: 25px;
+}
+
+#yareAccessories-subMenu-tabWrapper-Right {
+    overflow: hidden;
+    width: 70%;
+    padding: 20px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: top top;
+    background-image: url('https://image.harrods.com/tibaldi-gold-trim-bononia-fountain-pen_20028191_45457921_800.jpg');
+    border-right: 3px black solid;
+    border-bottom: 3px black solid;
+}
+/*End of Accessories*/
+
+/*Start of Collection*/
+#yareCollections-tabWrapper {
+    background-color: black;
+}
+
+#yareCollections-subMenu-tabWrapper-Left {
+    overflow: hidden;
+    width: 50%;
+    padding: 25px;
+    display: flex;
+    flex-direction: row;
+}
+
+.collection-tablinksList-Wrapper:nth-child(2) {
+    border-left: 0.1px solid white;
+}
+
+#yareCollections-subMenu-tabWrapper-Right {
+    overflow: hidden;
+    width: 50%;
+    height: 100%;
+}
+
+.subMenu-tablinksList-CollectionsWrapper {
+    padding-top: 32px;
+}
+
+.yareCollections-imgContainer-Right {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://cdn-media.glamira.com/media/wysiwyg/slider3.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), url('https://cdn-media.glamira.com/media/wysiwyg/slider3.png');
+}
+
+/*Recomended Collection Slider*/
+.yareCollections-slider-container {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 25%;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: auto;
+    bottom: -10px;
+}
+
+.yareCollections-slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    height: 100%;
+}
+
+.yareCollections-slide {
+    min-width: 100%;
+    box-sizing: border-box;
+}
+
+.yareCollections-slide-prev, .yareCollections-slide-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    cursor: pointer;
+    color: red;
+    background-color: transparent;
+    padding: 10px;
+    border: none;
+    outline: none;
+    border-radius: 50%;
+}
+
+.yareCollections-slide-prev {
+    left: -4px;
+}
+
+.yareCollections-slide-next {
+    right: -4px;
+}
+
+.leftSvg-yareCollections-slide-prev, .rightSvg-yareCollections-slide-prev {
+    fill: red;
+}
+
+.yareCollections-eachSlide-Content {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 500px;
+    height: 100%;
+}
+
+.yareCollections-eachItem-Container {
+    overflow: hidden;
+    width: 45%;
+    height: 65%;
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+    background-color: black;
+}
+
+.yareCollections-eachItem-imgLeft {
+    overflow: hidden;
+    width: 35%;
+    height: 100%;
+}
+
+.yareCollections-eachItem-Img {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    transition: all ease-in-out 250ms;
+}
+
+.yareCollections-eachItem-Img-Active {
+    width: 110%;
+    height: 110%;
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    transition: all ease-in-out 250ms;
+}
+
+.img-recomendedCollection-rings {
+    background-image: url('https://www.cartier.com/content/images/cms/ycm/resource/blob/50222/ccef5d9c91c6489eba1fd5f28948d405/love-data.png/w400.jpg');
+}
+
+.img-recomendedCollection-topTen {
+    background-image: url('https://magzoid.com/wp-content/uploads/2023/04/watches.jpg');
+}
+
+.img-recomendedCollection-exclusiveWatches {
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlCXArG5aFRa6Vhcfd_pOtCGwDrl0wg02SlJtrNhuV7PbltT2HUWV5ZiV9JuzqnP1_otQ&usqp=CAU');
+}
+
+.img-recomendedCollection-engagementRings {
+    background-image: url('https://www.cartier.com/content/images/cms/ycm/resource/blob/329124/98a7c5ddde22860f72894357493b9e43/create-your-ring-picture-data.png/w1280.jpg');
+}
+
+.img-recomendedCollection-limitedEditionWatches {
+    background-image: url('https://transform.octanecdn.com/crop/700x650/https://dynamix-cdn.s3.amazonaws.com/jacobandcocom/jacobandcocom_532678462.jpg');
+}
+
+.img-recomendedCollection-bestSellers {
+    background-image: url('https://content.thewosgroup.com/productimage/12153299/12153299_1.jpg?impolicy=zoom');
+}
+
+.img-recomendedCollection-Bracelets {
+    background-image: url('https://content.thewosgroup.com/productimage/37340979/37340979_2.jpg?impolicy=zoom');
+}
+
+.img-recomendedCollection-viewAllRecomended {
+    background-image: url('https://content.thewosgroup.com/productimage/37341030/37341030_2.jpg?impolicy=zoom');
+}
+
+.yareCollections-eachItem-infoLeft {
+    width: 65%;
+    height: 100%;
+    padding-left: 5px;
+    cursor: pointer;
+}
+
+.yareCollections-eachItem-Title {
+    font-size: 12px;
+    margin-top: 22px;
+    transition: all ease-in-out 250ms;
+}
+
+.yareCollections-eachItem-Title-Active {
+    margin-top: 0px;
+    transition: all ease-in-out 250ms;
+}
+
+.yareCollections-eachItem-Link {
+    font-size: 11px;
+    color: red;
+    cursor: pointer;
+    display: none;
+    transition: all ease-in-out 250ms;
+    margin-top: 20px;
+}
+
+.yareCollections-eachItem-Link-Active {
+    font-size: 11px;
+    color: red;
+    cursor: pointer;
+    display: block;
+    transition: all ease-in-out 250ms;
+    animation: forwards yareCollections-eachItem-Link-Active ease-in-out 250ms;
+}
+
+@keyframes yareCollections-eachItem-Link-Active {
+    from {
+        margin-top: 30px;
+    }
+
+    to {
+        margin-top: 5px;
+    }
+}
+
+.yareCollections-eachItem-Link:hover {
+    color: red;
+}
+/*End of Collection*/
+
+/*Start of Search*/
+#search-TabsContainer {
+    background-color: white;
+}
+
+.search-subMenu-Tabs_Active {
+    animation: search-subMenu-Tabs_Active forwards ease-in-out 250ms;
+}
+
+@keyframes search-subMenu-Tabs_Active {
+    from {
+        height: 0px;
+        display: none;
+    }
+
+    to {
+        height: 520px;
+        display: block;
+    }
+}
+
+#yareSearch-tabWrapper {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+/*Top*/
+#yareSearchBar-subMenu-container {
+    overflow: hidden;
+    width: 100%;
+    height: 17%;
+    background-color: white;
+    padding: 20px;
+}
+
+#suggestedSearch {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.suggestedSearch-pills {
+    display: inline-block;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 4px;
+    padding-top: 4px;
+    border-radius: 20px;
+    background-color: black;
+    color: white;
+    font-size: 12px;
+    text-align: center;
+    line-height: 1;
+    cursor: pointer;
+}
+
+    .suggestedSearch-pills:hover {
+        color: red;
+    }
+
+.searchCollectionsList-Item {
+    /*overflow: hidden;*/
+    position: relative;
+    width: 100%;
+    height: 380px;
+    margin-top: 10px;
+}
+
+.searchCollectionsList-Item-Wrapper {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.searchCollectionsList-Item-Img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+    .searchCollectionsList-Item-Img::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+.searchCollectionsList-itemImg-OurTopTenCollection {
+    background-image: url('https://media.bulgari.com/image/upload/f_auto,q_auto/cm/4916/data/1d05b7a1f5226c6345245891ad125189/landscape_ratio16x9/1000/2020-16-11-bvlgari72254-cc.jpg');
+}
+
+.searchCollectionsList-Item-Info {
+    position: absolute;
+    width: 85%;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    background-color: white;
+}
+
+.searchCollectionsList-Item-Title {
+    text-align: center;
+    letter-spacing: 5px;
+    font-weight: 900;
+    color: black;
+}
+
+.searchCollectionsList-Item-exploreAll {
+    margin-left: auto;
+    margin-right: auto;
+}
+/*searchBar*/
+#searchContainer {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin:auto;
+    width: 500px;
+    height: 30px;
+    padding: 1px;
+    margin-top:-8px;
+}
+
+#searchWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.searchContainer {
+    border: solid 1px black;
+    border-radius: 20px;
+    transition: ease-in-out 150ms all;
+}
+
+.searchContainer-active {
+    border-bottom: solid 1px black;
+    transition: ease-in-out 150ms all;
+}
+
+.searchSvg-icon {
+    padding: 1px;
+    margin-left:4px;
+    fill: black;
+}
+
+#searchInput {
+    border: none;
+    width: 450px;
+    margin: auto;
+    background-color: white;
+    font-size:12px;
+}
+
+    #searchInput:focus {
+        outline: none;
+    }
+
+.closeSearchSvg-icon {
+    cursor: pointer;
+    fill: black;
+    padding: 1px;
+    margin-right: 4px;
+}
+/*Bottom*/
+#yareSearch-subMenu-contentContainer {
+    overflow: hidden;
+    padding-bottom: 30px;
+    height: 83%;
+}
+
+#yareSearch-subMenu-topTenCollectionContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    width: 100%;
+}
+/*searchBar liveResults*/
+#tab-searchLiveResultsContainer {
+    padding-bottom: 20px;
+}
+
+#data-searchLiveResultsContainer {
+    overflow: hidden;
+    width: 65%;
+    margin: auto;
+}
+
+.searchResult-imgs {
+    width: 10%;
+    overflow: hidden;
+}
+
+.searchResult-links {
+    
+}
+.searchProduct-sliderContainer {
+    margin-top: 20px;
+}
+
+/*End  of Search*/
+
+/*End of Sub Menu Navigation------
+--------------------------------*/
+
+
+

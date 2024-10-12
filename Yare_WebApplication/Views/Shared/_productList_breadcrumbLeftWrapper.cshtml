@@ -1,0 +1,634 @@
+﻿@{
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+
+@if (controllerName == "Watches")
+{
+
+    switch (ViewContext.RouteData.Values["action"])
+    {
+        case "NewInWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="NewInWatches">New In</a>
+            break;
+        case "ExclusiveWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="ExclusiveWatches">Exclusive Watches</a>
+            break;
+        case "LimitedEditionWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="LimitedEditionWatches">Limited Edition</a>
+            break;
+        case "MensWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="MensWatches">Mens</a>
+            break;
+        case "LadiesWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="LadiesWatches">Ladies</a>
+            break;
+        case "UnisexWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="UnisexWatches">Unisex</a>
+            break;
+        case "BestSellersWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="BestSellersWatches">Best Sellers</a>
+            break;
+        case "LuxuryWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="LuxuryWatches">Luxury Watches</a>
+            break;
+        case "DiamondWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="DiamondWatches">Diamond Watches</a>
+            break;
+        case "SwissWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="SwissWatches">Swiss Watches</a>
+            break;
+        case "LeatherWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="LeatherWatches">Leather Watches</a>
+            break;
+        case "HeritageWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="HeritageWatches">Heritage Watches</a>
+            break;
+        case "PocketWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="PocketWatches">Pocket Watches</a>
+            break;
+        case "SportWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="SportWatches">Sport Watches</a>
+            break;
+        case "DiveWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="DiveWatches">Dive Watches</a>
+            break;
+        case "MechanicalWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="MechanicalWatches">Mechanical Watches</a>
+            break;
+        case "AutomaticWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="AutomaticWatches">Automatic Watches</a>
+            break;
+        case "QuartzWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="QuartzWatches">Quartz Watches</a>
+            break;
+        case "KineticWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="KineticWatches">Kinetic Watches</a>
+            break;
+        case "EcoDriveWatches":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="EcoDriveWatches">Eco Drive Watches</a>
+            break;
+        default:
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Watches" asp-action="Index">Watches</a>
+            break;
+    }
+
+}
+else if (controllerName == "Collections")
+{
+    switch (ViewContext.RouteData.Values["action"])
+    {
+        case "OurTopTenCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="NewInWatches">Our Top Ten Collection</a>
+            break;
+        case "ExclusiveBrandsCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="ExclusiveBrandsCollection">Exclusive Brands Collection</a>
+            break;
+        case "ExclusiveWatchesCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="ExclusiveWatchesCollection">Exclusive Watches Collection</a>
+            break;
+        case "ExclusiveJewelleryCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="ExclusiveJewelleryCollection">Exclusive Jewellery Collection</a>
+            break;
+        case "LimitedEditionCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="LimitedEditionCollection">Limited Edition Collection</a>
+            break;
+        case "ByOccasionCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="LimitedEditionCollection">Limited Edition Collection</a>
+            break;
+        case "ALangeAndSohneCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="ByOccasionCollection">By Occasion Collection</a>
+            break;
+        case "AudemarsPiguetCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="AudemarsPiguetCollection">Audemars Piguet Collection</a>
+            break;
+        case "BreguetCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="BreguetCollection">Breguet Collection</a>
+            break;
+        case "BlancpainCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="BlancpainCollection">Blancpain Collection</a>
+            break;
+        case "BvlgariCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="BvlgariCollection">Bvlgari Collection</a>
+            break;
+        case "BreitlingCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="BreitlingCollection">Breitling Collection</a>
+            break;
+        case "CartierCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="CartierCollection">Cartier Collection</a>
+            break;
+        case "OmegaCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="OmegaCollection">OMEGA Collection</a>
+            break;
+        case "TAGHeuerCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="OmegaCollection">TAG Heuer Collection</a>
+            break;
+        case "HublotCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="HublotCollection">Hublot Collection</a>
+            break;
+        case "TudorCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="TudorCollection">Tudor Collection</a>
+            break;
+        case "BellAndRossCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="BellAndRossCollection">Bell & Ross Collection</a>
+            break;
+        case "BaumeAndMercierCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="BaumeAndMercierCollection">Baume & Mercier Collection</a>
+            break;
+        case "ChopardCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="ChopardCollection">Chopard Collection</a>
+            break;
+        case "GirardPerregauxCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="ChopardCollection">Girard Perregaux Collection</a>
+            break;
+        case "JaegerLeCoultreCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="JaegerLeCoultreCollection">Jaeger-LeCoultre Collection</a>
+            break;
+        case "CartierRingsCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="CartierRingsCollection">Cartier Rings Collection</a>
+            break;
+        case "EngagementRingsCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="EngagementRingsCollection">Engagement Rings Collection</a>
+            break;
+        case "BestSellersCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="BestSellersCollection">Best Sellers Collection</a>
+            break;
+        case "BraceletsCollection":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="BraceletsCollection">Bracelets Collection</a>
+            break;
+        case "BroochesCollection":
+            break;
+        default:
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Collections" asp-action="Index">All Collections</a>
+            break;
+    }
+}
+else if (controllerName == "Jewellery")
+{
+    switch (ViewContext.RouteData.Values["action"])
+    {
+        case "MensJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="MensJewellery">Mens Jewellery</a>
+            break;
+        case "LadiesJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="LadiesJewellery">Ladies Jewellery</a>
+            break;
+        case "ExclusiveJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="ExclusiveJewellery">Exclusive Jewellery</a>
+            break;
+        case "AnkletsJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="AnkletsJewellery">Anklets Jewellery</a>
+            break;
+        case "BanglesJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="BanglesJewellery">Bangles Jewellery</a>
+            break;
+        case "BraceletsJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="BraceletsJewellery">Bracelets Jewellery</a>
+            break;
+        case "BroochesJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="BroochesJewellery">Brooches Jewellery</a>
+            break;
+        case "CufflinksJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="CufflinksJewellery">Cufflinks Jewellery</a>
+            break;
+        case "ChainsJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="ChainsJewellery">Chains Jewellery</a>
+            break;
+        case "CharmsJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="CharmsJewellery">Charms Jewellery</a>
+            break;
+        case "EaringsJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="EaringsJewellery">Earings Jewellery</a>
+            break;
+        case "EngagementRingsJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="EngagementRingsJewellery">Engagement Rings Jewellery</a>
+            break;
+        case "LocketsJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="LocketsJewellery">Lockets Jewellery</a>
+            break;
+        case "NecklacesJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="NecklacesJewellery">Necklaces Jewellery</a>
+            break;
+        case "PendantsJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="PendantsJewellery">Pendants Jewellery</a>
+            break;
+        case "RingsJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="RingsJewellery">Rings Jewellery</a>
+            break;
+        case "WeddingRingsJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="WeddingRingsJewellery">Wedding Rings Jewellery</a>
+            break;
+        case "ByOccasionJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="ByOccasionJewellery">By Occasion Jewellery</a>
+            break;
+        case "GoldJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="GoldJewellery">Gold Jewellery</a>
+            break;
+        case "WhiteGoldJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="WhiteGoldJewellery">White Gold Jewellery</a>
+            break;
+        case "RoseGoldJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="RoseGoldJewellery">Rose Gold Jewellery</a>
+            break;
+        case "YellowGoldJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="YellowGoldJewellery">Yellow Gold Jewellery</a>
+            break;
+        case "SilverJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="SilverJewellery">Silver Jewellery</a>
+            break;
+        case "PlatinumJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="PlatinumJewellery">Platinum Jewellery</a>
+            break;
+        case "DiamondJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="DiamondJewellery">Diamond Jewellery</a>
+            break;
+        case "LabGrownDiamondJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="LabGrownDiamondJewellery">Lab Grown Diamond Jewellery</a>
+            break;
+        case "PearlJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="PearlJewellery">Pearl Jewellery</a>
+            break;
+        case "RubyJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="RubyJewellery">Ruby Jewellery</a>
+            break;
+        case "EmeraldJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="EmeraldJewellery">Emerald Jewellery</a>
+            break;
+        case "SapphireJewellery":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="SapphireJewellery">Sapphire Jewellery</a>
+            break;
+        default:
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Jewellery" asp-action="Index">Jewellery</a>
+            break;
+    }
+}
+else if (controllerName == "Accessories")
+{
+    switch (ViewContext.RouteData.Values["action"])
+    {
+        case "WatchStrapsAccessories":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Accessories" asp-action="Index">All Accessories</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Accessories" asp-action="WatchStrapsAccessories">Watch Straps Accessories</a>
+            break;
+        case "CasesAndBoxesAccessories":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Accessories" asp-action="Index">All Accessories</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Accessories" asp-action="CasesAndBoxesAccessories">Cases & Boxes Accessories</a>
+            break;
+        case "WalletsAccessories":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Accessories" asp-action="Index">All Accessories</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Accessories" asp-action="WalletsAccessories">Wallets Accessories</a>
+            break;
+        case "KeyringsAccessories":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Accessories" asp-action="Index">All Accessories</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Accessories" asp-action="KeyringsAccessories">Keyrings Accessories</a>
+            break;
+        case "LightersAccessories":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Accessories" asp-action="Index">All Accessories</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Accessories" asp-action="LightersAccessories">Lighters Accessories</a>
+            break;
+        case "PensAccessories":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Accessories" asp-action="Index">All Accessories</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Accessories" asp-action="PensAccessories">Pens Accessories</a>
+            break;
+        case "CleaningProductsAccessories":
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Accessories" asp-action="Index">All Accessories</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Accessories" asp-action="CleaningProductsAccessories">Cleaning Products Accessories</a>
+            break;
+        default:
+            <a class="text-black" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+            <span>/</span>
+            <a class="text-black" asp-area="Customer" asp-controller="Accessories" asp-action="Index">All Accessories</a>
+            break;
+    }
+}

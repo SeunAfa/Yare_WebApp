@@ -1,0 +1,37 @@
+﻿@model Yare.Models.ViewModels.HomePgVM
+
+@if (ViewBag.NoResults != null)
+{
+    <br>
+    <p class="text-black text-center">@ViewBag.NoResults</p>
+    <p class="text-black text-center">Please type something else</p>
+}
+else
+{
+    <div id="tab-searchLiveResultsContainer">
+        <div style="height: 400px; overflow-y: auto; padding-bottom:30px;">
+            <table id="data-searchLiveResultsContainer" class="table row-bordered table-hover compact">
+                <tbody>
+                    @if (Model?.ProductVM?.objProductList != null && Model.ProductVM.objProductList.Any())
+                    {
+                        @foreach (var item in Model.ProductVM.objProductList)
+                        {
+                            string shortenedProductName = item.ProductName.Length > 21 ? $"{item.ProductName.Substring(0, 21)}..." : item.ProductName;
+                            <tr>
+                                <td class="align-middle searchResult-links">
+                                    <a asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-productId="@item.Id" class="text-black navLink-Animation">@shortenedProductName</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td class="text-center text-black">No products found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

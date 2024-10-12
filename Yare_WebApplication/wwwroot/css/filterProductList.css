@@ -1,0 +1,634 @@
+﻿/*filter section*/
+.filetersProperties-Container {
+    overflow: hidden;
+    overflow-y: scroll;
+    height: 100%;
+    width: 292px;
+    background-color: black;
+    margin-left: auto;
+    padding: 15px;
+    padding-bottom: 100px;
+    display: none;
+}
+
+
+    .filetersProperties-Container::-webkit-scrollbar {
+        width: 0px;
+    }
+
+    .filetersProperties-Container::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .filetersProperties-Container::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 6px;
+    }
+
+.filterCheckbox-Row {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+input[type="checkbox"] {
+    accent-color: black;
+}
+
+.filterLabel {
+    font-size: 12px;
+    color: white;
+}
+
+.priceFilter-Container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+    .priceFilter-Container p {
+        margin: 0;
+        padding: 0;
+    }
+
+.priceFilter-Wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.min-priceRangeLabel {
+    order: 1;
+    margin-right: auto;
+    font-size: 14px;
+    margin-top: -5px;
+}
+
+.max-priceRangeLabel {
+    order: 2;
+    margin-left: auto;
+    font-size: 14px;
+    margin-top: -5px;
+}
+
+
+.genderFilter-Container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+    .genderFilter-Container p {
+        margin: 0;
+        padding: 0;
+    }
+
+.genderFilter-Wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 10px
+}
+
+.genderFilter-Btn {
+    flex: 0 0 calc(33.33% - 10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border: solid 1px white;
+    font-size: 10px;
+    text-align: center;
+    width: 30%;
+    cursor: pointer;
+    color: white;
+}
+
+.genderFilter-activeFilterBtn {
+    flex: 0 0 calc(33.33% - 10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border: solid 1px red;
+    font-size: 10px;
+    text-align: center;
+    width: 30%;
+    color: red;
+    cursor: default;
+}
+
+.genderFilter-disabledBtn {
+    flex: 0 0 calc(33.33% - 10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border: solid 1px white;
+    font-size: 10px;
+    text-align: center;
+    width: 30%;
+    color: white;
+    opacity: 0.5;
+    cursor: default;
+}
+
+.genderFilter-btnActive {
+    border: solid 1px red;
+    color: red;
+}
+
+.watchBrandFilter-Container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+    .watchBrandFilter-Container p {
+        margin: 0;
+        padding: 0;
+    }
+
+.watchBrandFilter-Wrapper {
+}
+
+#shortList-brandsWrapper {
+}
+
+#fullList-brandsWrapper {
+    display: none;
+    /*display: flex;*/
+    flex-direction: column;
+}
+
+.seeMore-brand-Btn {
+    cursor: pointer;
+    font-size: 12px;
+    color: white;
+}
+
+.seeLess-brand-Btn {
+    cursor: pointer;
+    display: none;
+    font-size: 12px;
+    color: white;
+}
+
+.metalFilter-Container {
+    margin-top: 10px;
+}
+
+    .metalFilter-Container p {
+        margin: 0;
+        padding: 0;
+    }
+
+.metalFilter-Wrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.metalItem-Btn {
+    flex: 0 0 calc(33.33% - 10px);
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.metalItem-Img {
+    overflow: hidden;
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    object-fit: cover;
+}
+
+.metalItem-imgActive {
+    padding: 4px;
+    border: solid 2px red;
+}
+
+.metalItem-Img-gold {
+    background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0MIi-z4jiU7FFsuA4TKpjOd9niICKgB1ZbDsdcsP-VQ&s");
+}
+
+.metalItem-Img-silver {
+    background-image: url("https://t3.ftcdn.net/jpg/06/12/45/14/360_F_612451442_TfPLKsM85GLuZDRineh9V893AzyLcks3.jpg");
+}
+
+.metalItem-Img-platinum {
+    background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS53n9fbJdERd0LQKSX7nY3TK5vc93vzVxzPg&s");
+}
+
+.metalItem-Img-stainlessSteel {
+    background-image: url("https://png.pngtree.com/thumb_back/fw800/background/20231103/pngtree-gleaming-and-polished-stainless-steel-texture-with-a-curved-pattern-image_13743513.png");
+}
+
+.metalItem-Img-titanium {
+    background-image: url("https://img.freepik.com/free-photo/silver-liquid-element-texture-background-with-waves_125540-4469.jpg?size=626&ext=jpg&ga=GA1.1.2008272138.1712102400&semt=ais");
+}
+
+.metalItem-Img-roseGold {
+    background-image: url("https://www.shutterstock.com/shutterstock/videos/1040531042/thumb/12.jpg?ip=x480");
+}
+
+.metalItem-Img-whiteGold {
+    background-image: url("https://imagedelivery.net/9sCnq8t6WEGNay0RAQNdvQ/clajuvmnt002vmr08o5rmia9r_1/public");
+}
+
+.metalItem-Img-yellowGold {
+    background-image: url("https://png.pngtree.com/background/20240319/original/pngtree-luxurious-liquid-gold-wave-background-in-3d-render-picture-image_8164904.jpg");
+}
+
+.metalItem-Title {
+    font-size: 10px;
+    font-weight: 600;
+    margin-top: 5px;
+    color: white;
+}
+
+.watchDiameterFilter-Container {
+    margin-top: 10px;
+}
+
+    .watchDiameterFilter-Container p {
+        margin: 0;
+        padding: 0;
+    }
+
+.watchDiameterFilter-Wrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#shortList-watchDiameterWrapper {
+    display: flex;
+}
+
+#fullList-watchDiameterWrapper {
+    display: flex;
+    display: none;
+}
+
+.watchDiameterFilter-Btn {
+    flex: 0 0 calc(33.33% - 10px);
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border: solid 1px white;
+    font-size: 10px;
+    text-align: center;
+    width: 30%;
+    cursor: pointer;
+    color: white;
+}
+
+.watchDiameterFilter-btnActive {
+    border: solid 1px red;
+    color: red;
+}
+
+.seeMore-watchDiameter-Btn {
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border: solid 1px white;
+    font-size: 10px;
+    text-align: center;
+    width: 100%;
+    cursor: pointer;
+    color: white;
+}
+
+.seeLess-watchDiameter-Btn {
+    display: none;
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border: solid 1px white;
+    font-size: 10px;
+    text-align: center;
+    width: 100%;
+    cursor: pointer;
+    color: white;
+}
+
+.watchMovementFilter-Container {
+    margin-top: 10px;
+}
+
+    .watchMovementFilter-Container p {
+        margin: 0;
+        padding: 0;
+    }
+
+.watchMovementFilter-Wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+#shortList-watchMovementWrapper {
+}
+
+#fullList-watchMovementWrapper {
+    display: none;
+}
+
+.seeMore-watchMovement-Btn {
+    cursor: pointer;
+    font-size: 12px;
+    color: white;
+}
+
+.seeLess-watchMovement-Btn {
+    cursor: pointer;
+    font-size: 12px;
+    color: white;
+    display: none;
+}
+
+.waterResistantFilter-Container {
+    margin-top: 10px;
+}
+
+    .waterResistantFilter-Container p {
+        margin: 0;
+        padding: 0;
+    }
+
+.waterResistantFilter-Wrapper {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.byGemstoneFilter-Container {
+}
+
+.byGemstoneFilter-Wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+#shortList-byGemstoneWrapper {
+}
+
+#fullList-byGemstoneWrapper {
+    display: none;
+}
+
+.seeMore-byGemstone-Btn {
+    cursor: pointer;
+    font-size: 12px;
+    color: white;
+}
+
+.seeLess-byGemstone-Btn {
+    cursor: pointer;
+    font-size: 12px;
+    color: white;
+    display: none;
+}
+
+.watchCaseShapeFilter-Container {
+    margin-top: 10px;
+}
+
+    .watchCaseShapeFilter-Container p {
+        margin: 0;
+        padding: 0;
+    }
+
+.watchCaseShapeFilter-Wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+#shortList-watchCaseShapeWrapper {
+}
+
+#fullList-watchCaseShapeWrapper {
+    display: none;
+}
+
+.seeMore-watchCaseShape-Btn {
+    cursor: pointer;
+    font-size: 12px;
+    color: white;
+}
+
+.seeLess-watchCaseShape-Btn {
+    cursor: pointer;
+    font-size: 12px;
+    color: white;
+    display: none;
+}
+
+.watchStrapTypeFilter-Container {
+    margin-top: 10px;
+}
+
+    .watchStrapTypeFilter-Container p {
+        margin: 0;
+        padding: 0;
+    }
+
+.watchStrapTypeFilter-Wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+#shortList-watchStrapTypeWrapper {
+}
+
+#fullList-watchStrapTypeWrapper {
+    display: none;
+}
+
+.seeMore-watchStrapType-Btn {
+    cursor: pointer;
+    font-size: 12px;
+    color: white;
+}
+
+.seeLess-watchStrapType-Btn {
+    cursor: pointer;
+    font-size: 12px;
+    color: white;
+    display: none;
+}
+
+/**/
+.byOccassionFilter-Container {
+    margin-top: 10px;
+}
+
+    .byOccassionFilter-Container p {
+        margin: 0;
+        padding: 0;
+    }
+
+.byOccassionFilter-Wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+#shortList-byOccassionWrapper {
+}
+
+#fullList-byOccassionWrapper {
+    display: none;
+}
+
+.seeMore-byOccassion-Btn {
+    cursor: pointer;
+    font-size: 12px;
+    color: white;
+}
+
+.seeLess-byOccassion-Btn {
+    cursor: pointer;
+    font-size: 12px;
+    color: white;
+    display: none;
+}
+
+
+/**/
+.jewelleryCategoryFilter-Container {
+    margin-top: 10px;
+}
+
+    .jewelleryCategoryFilter-Container p {
+        margin: 0;
+        padding: 0;
+    }
+
+.jewelleryCategoryFilter-Wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+#shortList-jewelleryCategoryWrapper {
+}
+
+#fullList-jewelleryCategoryWrapper {
+    display: none;
+}
+
+.seeMore-jewelleryCategory-Btn {
+    cursor: pointer;
+    font-size: 12px;
+    color: white;
+}
+
+.seeLess-jewelleryCategory-Btn {
+    cursor: pointer;
+    font-size: 12px;
+    color: white;
+    display: none;
+}
+
+/**/
+.byGemstoneFilter-Container {
+    margin-top: 10px;
+}
+
+    .byGemstoneFilter-Container p {
+        margin: 0;
+        padding: 0;
+    }
+
+.byGemstoneFilter-Wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+#shortList-byGemstoneWrapper {
+}
+
+#fullList-byGemstoneWrapper {
+    display: none;
+}
+
+.seeMore-byGemstone-Btn {
+    cursor: pointer;
+    font-size: 12px;
+    color: white;
+}
+
+.seeLess-byGemstone-Btn {
+    cursor: pointer;
+    font-size: 12px;
+    color: white;
+    display: none;
+}
+/**/
+.accessoryCategoryFilter-Container {
+    margin-top: 10px;
+}
+
+    .accessoryCategoryFilter-Container p {
+        margin: 0;
+        padding: 0;
+    }
+
+.accessoryCategoryFilter-Wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+#shortList-accessoryCategoryWrapper {
+}
+
+#fullList-accessoryCategoryWrapper {
+    display: none;
+}
+
+.seeMore-accessoryCategory-Btn {
+    cursor: pointer;
+    font-size: 12px;
+    color: white;
+}
+
+.seeLess-accessoryCategory-Btn {
+    cursor: pointer;
+    font-size: 12px;
+    color: white;
+    display: none;
+}
+/**/
+.productCategoryFilter-Container {
+    margin-top: 10px;
+}
+
+    .productCategoryFilter-Container p {
+        margin: 0;
+        padding: 0;
+    }
+
+.productCategoryFilter-Wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+#shortList-productCategoryWrapper {
+}
+

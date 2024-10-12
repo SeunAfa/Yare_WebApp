@@ -1,0 +1,67 @@
+﻿#orderConfirmation-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 100vh;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin-top: 15px;
+    padding-top: 40px;
+}
+
+    #orderConfirmation-Container h5,
+    #orderConfirmation-Container p,
+    #orderConfirmation-Container a {
+        margin: 5px 0;
+    }
+
+    #orderConfirmation-Container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://www.watchswiss.com/wp-content/uploads/2022/10/Untitled-2_0002_Spirit-of-Big-Bang-Titanium-White-Diamonds-42-mm-lifestyle-shot.png'); /* Replace 'your-background-image.jpg' with the path to your background image */
+        background-size: cover;
+        background-position: center;
+        opacity: 0.2;
+        z-index: -1;
+        filter: blur(0.1px);
+        mix-blend-mode: overlay;
+    }
+
+.orderConfirmation-Wrapper {
+    overflow: hidden;
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+}
+
+.tick-icon {
+    fill: green;
+    width: 100px;
+    height: 100px;
+}
+
+#orderManagment-Btn {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    color: white;
+    background-color: black;
+    border-radius: 0px;
+    border: 2px black solid;
+    text-align: center;
+    padding: 3px;
+}
+
+    #orderManagment-Btn:hover {
+        color: black;
+        background-color: white;
+        border: 2px black solid;
+    }

@@ -1,0 +1,967 @@
+﻿/*Start of Home Page Slider*/
+#slider-hmPg-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 360px;
+}
+
+.slider-hmPg {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.slide-hmPg {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 1s;
+    overflow: hidden;
+}
+
+.sliderControls-Container-hmPg {
+    display: flex;
+    flex-direction: row;
+}
+
+.slider__btn-hmPg {
+    position: absolute;
+    top: 50%;
+    z-index: 10;
+    border: none;
+    height: 5.5rem;
+    width: 2.5rem;
+    color: red;
+    background-color: transparent;
+    outline: none;
+    cursor: pointer;
+}
+
+.slider__btn-hmPg {
+    position: absolute;
+    top: 50%;
+    z-index: 10;
+    border: none;
+    height: 5.5rem;
+    width: 2.5rem;
+    color: red;
+    background-color: transparent;
+    outline: none;
+    cursor: pointer;
+}
+
+.slider__btn--left-hmPg {
+    left: 2%;
+    transform: translate(-50%, -50%);
+}
+
+.slider__btn--right-hmPg {
+    right: 2%;
+    transform: translate(50%, -50%);
+}
+
+.dots-hmPg {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+}
+
+.dots__dot-hmPg {
+    border: none;
+    background-color: red;
+    opacity: 0.3;
+    height: 6px;
+    width: 6px;
+    border-radius: 100%;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+    .dots__dot-hmPg:last-child {
+        margin: 0;
+    }
+
+.dots__dot-hmPg--active {
+    height: 6px;
+    width: 20px;
+    border-radius: 25px;
+    background-color: red;
+    color: green;
+    opacity: 1;
+}
+/*Slider Content 1*/
+.slide-1-Img {
+    width: 100%;
+    height: 100%;
+    background-image: url('https://www.audemarspiguet.com/content/dam/ap/com/collection-page/collection-page/collection-landing-4000x1923_RO_2024.jpg.transform.apfw.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    position: relative;
+}
+
+.slide-1-infoContent {
+    position: absolute;
+    width: 35%;
+    top: 70%;
+    left: 7%;
+    transform: translate(0%, -50%);
+}
+
+.slide-1-Btn {
+    left: -4px;
+    margin-top: -10px;
+}
+/*Slider Content 2*/
+.slide-2-Img {
+    width: 100%;
+    height: 100%;
+    background-image: url("https://cdn-media.glamira.com/media/stoneslp/stone-category-images/platinum/bracelet.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    position: relative;
+}
+
+    .slide-2-Img::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+.slide-2-infoContent {
+    position: absolute;
+    width: 30%;
+    top: 20%;
+    right: 16%;
+    transform: translate(50%, -0%);
+    padding: 10px;
+}
+
+.slide-2-Btn {
+    left: -4px;
+    margin-top: -10px;
+}
+/*Slider Content 3*/
+.slide-3-Img {
+    width: 100%;
+    height: 100%;
+    background-image: url('https://www.cartier.com/content/images/cms/ycm/resource/blob/329124/98a7c5ddde22860f72894357493b9e43/create-your-ring-picture-data.png/w1280.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    position: relative;
+}
+
+    .slide-3-Img::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+.slide-3-infoContent {
+    position: absolute;
+    width: 30%;
+    top: 25%;
+    left: 19%;
+    transform: translate(-50%, -0%);
+    padding: 10px;
+}
+
+.slide-3-Btn {
+    left: -4px;
+    margin-top: -10px;
+}
+/*End of Home Page Slider*/
+
+/*Start of service banner Container*/
+#service-banner-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 30px;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.serviceFeature-itemContainer {
+    overflow: hidden;
+    width: 320px;
+    height: 100%;
+    border: solid 1px black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+
+.serviceFeatureSvg-Icons {
+    width: 48px;
+    height: 48px;
+}
+
+.serviceFeature-Text {
+    font-size: 14px;
+}
+/*End of service banner Container*/
+
+/*Start of Shop By category Container*/
+#shopBy-category-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.title-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+}
+
+.shopBy-Btn {
+    display: flex;
+    flex-direction: row;
+}
+
+.shopBy-btnIcon {
+    margin-left: 8px;
+}
+
+#shopBy-Category-Wrapper {
+    overflow: hidden;
+    width: 100%;
+    height: 90%;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+#shopBy-Category-leftContainer {
+    overflow: hidden;
+    width: 70%;
+    height: 100%;
+}
+
+#shopBy-Category-rightContainer {
+    overflow: hidden;
+    width: 30%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.shopBy-categoryItem-Left {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.shopBy-categoryItem-Right {
+    overflow: hidden;
+    width: 100%;
+    height: 50%;
+}
+
+.categoryItem {
+    position: relative;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.categoryItem-Media-Container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+    .categoryItem-Media-Container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 1;
+    }
+
+.categoryItem-Media-ContainerActive {
+}
+
+    .categoryItem-Media-ContainerActive::before {
+        background-color: transparent;
+    }
+
+.categoryItem-Media-Watches {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.categoryItem-Media-Jewellery {
+    background-image: url('https://images.pexels.com/photos/6474922/pexels-photo-6474922.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+}
+
+.categoryItem-Media-Accessories {
+    background-image: url('https://images.pexels.com/photos/7265875/pexels-photo-7265875.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+}
+
+.categoryItem-infoContent-Container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+    padding: 10px;
+    z-index: 50;
+}
+
+.categoryItem-Title {
+    color: white;
+    font-size: 15px;
+}
+
+.categoryItem-titleActive {
+    color: red;
+}
+
+/*End of Shop By category Container*/
+
+/*Start of product slider Container*/
+#productCard-sliderControls-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.productCard-Row-Wrapper {
+    overflow: hidden;
+    width: 100%;
+    height: 90%;
+}
+
+.productCard-sliderContainer {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.productCard-slides {
+    display: flex;
+    gap: 0px;
+    transition: transform 0.5s ease-in-out;
+    height: 100%;
+    margin-right: -5px;
+}
+
+.productCard-slide {
+    min-width: 100%;
+    box-sizing: border-box;
+}
+
+.productCard-slide-prev, .productCard-slide-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px !important;
+    cursor: pointer;
+    color: red;
+    background-color: transparent;
+    border: solid 1px red;
+    padding: 10px;
+    border: none;
+    outline: none;
+    border-radius: 50%;
+}
+
+.productCard-slide-prev {
+    left: 0px;
+}
+
+.productCard-slide-next {
+    right: 0px;
+}
+
+.productCard-eachSlide-Content {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+/*End of product slider Container*/
+
+/*Start of watch brands Container*/
+#watch-brands-Container {
+    overflow: hidden;
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#watch-brands-Wrapper {
+    overflow: hidden;
+    width: 100%;
+    height: 800px;
+    display: flex;
+    flex-direction: column;
+}
+/*Top*/
+#watchBrands-topItem-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 50%;
+    padding: 15px;
+}
+
+.watchBrands-topItem {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.watchBrands-topItem-imgContainer {
+    overflow: hidden;
+    width: 100%;
+    height: 80%;
+}
+
+.watchBrands-topItem-Img {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-image: url('https://www.chisholmhunter.co.uk/media/.renditions/wysiwyg/watches/luxury-watches/breitling/ChronomatB01_42_Titanium-Banner-Desktop.jpg');
+}
+
+.watchBrands-topItem-Info {
+    overflow: hidden;
+    width: 100%;
+    height: 20%;
+    padding: 5px;
+}
+
+.watchBrands-topItem-Title {
+    text-align: center;
+}
+
+.watchBrands-topItem-Description {
+    text-align: center;
+    font-size: 12px;
+    margin-top: -2px;
+}
+
+.watchBrands-topItem-Links {
+    margin: auto;
+    margin-top: -15px;
+    font-size: 12px;
+}
+/*Bottom*/
+#watchBrands-bottomItem-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 50%;
+    padding: 15px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.watchBrands-bottomItem {
+    overflow: hidden;
+    width: 33.33%;
+    height: 100%;
+}
+
+.watchBrands-bottomItem-imgContainer {
+    overflow: hidden;
+    width: 100%;
+    height: 80%;
+}
+
+.watchBrands-bottomItem-Img {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.watchBrands-bottomItem-Img-Omega {
+    background-image: url('https://www.goldsmiths.co.uk/medias/gs-hp-3w-omega-feb24.jpg?context=bWFzdGVyfGltYWdlc3wxNTk2Njd8aW1hZ2UvanBlZ3xpbWFnZXMvaGMxL2gyOS85MjYwODgxOTAzNjQ2LmpwZ3w3MjA2YzdmMDVmZDJhZmI4NGU4M2UzNWMwZTNkYzkzODM5MmJmZTJmOGU4OTRkNjhjM2U3ZmE2ZmI2OTQzYTQ1&imwidth=400');
+}
+
+.watchBrands-bottomItem-Img-TagHeuer {
+    background-image: url('https://www.goldsmiths.co.uk/medias/gs-hp-3w-tag-heuer-jan24.jpg?context=bWFzdGVyfGltYWdlc3wyNjE1Mzl8aW1hZ2UvanBlZ3xpbWFnZXMvaGUwL2g2Ni85MjU5NjYyMjEzMTUwLmpwZ3w1YmI5YzZkNzc2NGVkMzc0ZWUxMDg0MmY3N2Y5YjE1ODdlMjE5NzhmN2IxYzUzZDM0Y2ExOTJiNjkzMDdiOTUx&imwidth=400');
+}
+
+.watchBrands-bottomItem-Img-Tudor {
+    background-image: url('https://www.goldsmiths.co.uk/medias/gs-hp-3wide-tudor-feb24.jpg?context=bWFzdGVyfGltYWdlc3wxMzcxNTB8aW1hZ2UvanBlZ3xpbWFnZXMvaDFkL2hhNi85MjYwNjU3OTY3MTM0LmpwZ3wwZGUzMjU0NTM3NGRiMGFhZWZlZDVhODNlZWYzOGQ5NTcyMTE4YmM5MTVhYzRmMjRjYTNhZDI2MWU1YTdlODBi&imwidth=400');
+}
+
+.watchBrands-bottomItem-Info {
+    overflow: hidden;
+    width: 100%;
+    height: 20%;
+    padding: 5px;
+}
+
+.watchBrands-bottomItem-Title {
+    text-align: center;
+}
+
+.watchBrands-bottomItem-Description {
+    text-align: center;
+    font-size: 12px;
+    margin-top: -2px;
+}
+
+.watchBrands-bottomItem-Links {
+    margin: auto;
+    margin-top: -15px;
+    font-size: 12px;
+}
+/*End of watch brands Container*/
+
+/*Start of jewellery category Container*/
+#jewellery-category-Container {
+    overflow: hidden;
+    width: 100%;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#jewellery-category-Wrapper {
+    overflow: hidden;
+    width: 100%;
+    height: 90%;
+}
+/*jewellery slider*/
+.jewelleryCategory-sliderContainer {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.jewelleryCategory-slides {
+    display: flex;
+    gap: 0px;
+    transition: transform 0.5s ease-in-out;
+    height: 100%;
+    margin-right: -5px;
+}
+
+.jewelleryCategory-slide {
+    min-width: 100%;
+    box-sizing: border-box;
+}
+
+.jewelleryCategory-slide-prev, .jewelleryCategory-slide-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px !important;
+    cursor: pointer;
+    color: red;
+    background-color: transparent;
+    padding: 10px;
+    border: none;
+    outline: none;
+    border-radius: 50%;
+}
+
+.jewelleryCategory-slide-prev {
+    left: 0px;
+}
+
+.jewelleryCategory-slide-next {
+    right: 0px;
+}
+
+.jewelleryCategory-eachSlide-Content {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.jewelleryCategory-eachItem-Container {
+    overflow: hidden;
+    width: 30%;
+    height: 100%;
+    position: relative;
+    cursor: pointer;
+}
+
+.jewelleryCategory-eachItem-ImgContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+    .jewelleryCategory-eachItem-ImgContainer::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+.jewelleryCategory-eachItem-ImgMenJewellery {
+    background-image: url('https://images.selfridges.com/is/image/selfridges/R03927506_18KYELLOWGOLD_ALT01?wid=392&hei=522&fmt=webp&qlt=80,1&bgc=F6F6F6&dpr=on,2&extend=-18,0,-18,0');
+}
+
+.jewelleryCategory-eachItem-ImgWomenJewellery {
+    background-image: url('https://image.harrods.com/cartier-white-yellow-rose-gold-and-diamond-trinity-necklace_21978866_47734022_800.jpg');
+}
+
+.jewelleryCategory-eachItem-ImgCollections {
+    background-image: url('https://media.tiffany.com/is/image/tiffanydm/AtlasX-2X2MktgTile?$tile$&wid=1488&hei=1488&defaultImage=NoImageAvailableInternal&fmt=webp');
+}
+
+.jewelleryCategory-eachItem-ImgAnklets {
+    background-image: url('https://cdn11.bigcommerce.com/s-mqq1i1xa2c/images/stencil/640w/products/178896/5588714/983561_GOLD_2__47621.1707477155.jpg?c=1');
+}
+
+.jewelleryCategory-eachItem-ImgBangles {
+    background-image: url('https://media.tiffany.com/is/image/Tiffany/EcomItemL2/tiffany-tsquare-bracelet-33263422_1008488_SV_1_M.jpg?&op_usm=2.0,1.0,6.0&defaultImage=NoImageAvailableInternal&&defaultImage=NoImageAvailableInternal&fmt=webp');
+}
+
+.jewelleryCategory-eachItem-ImgBracelets {
+    background-image: url('https://media.tiffany.com/is/image/Tiffany/EcomItemL2/tiffany-knotdouble-row-hinged-bangle-68887240_1028566_SV_1_M.jpg?&op_usm=2.0,1.0,6.0&defaultImage=NoImageAvailableInternal&&defaultImage=NoImageAvailableInternal&fmt=webp');
+}
+
+.jewelleryCategory-eachItem-ImgCufflinks {
+    background-image: url('https://image.harrods.com/tateossian-circle-gear-cufflinks_18817021_43899914_800.jpg');
+}
+
+.jewelleryCategory-eachItem-ImgChains {
+    background-image: url('https://www.versace.com/dw/image/v2/BGWN_PRD/on/demandware.static/-/Sites-ver-master-catalog/default/dw64e59b7a/original/90_DG18451-DJMT_KVOP_24_Medusa~Chain~Necklace--Versace-online-store_1_0.jpg?sw=1200&q=85&strip=true');
+}
+
+.jewelleryCategory-eachItem-ImgChains {
+    background-image: url('https://www.versace.com/dw/image/v2/BGWN_PRD/on/demandware.static/-/Sites-ver-master-catalog/default/dw64e59b7a/original/90_DG18451-DJMT_KVOP_24_Medusa~Chain~Necklace--Versace-online-store_1_0.jpg?sw=1200&q=85&strip=true');
+}
+
+.jewelleryCategory-eachItem-ImgCharms {
+    background-image: url('https://images.selfridges.com/is/image/selfridges/R04207261_YELLOWGOLD_ALT01?wid=392&hei=522&fmt=webp&qlt=80,1&bgc=F6F6F6&dpr=on,2&extend=-18,0,-18,0');
+}
+
+.jewelleryCategory-eachItem-ImgEarings {
+    background-image: url('https://image.harrods.com/de-beers-jewellers-white-gold-and-diamond-dewdrop-ear-cuff_15965921_48719065_800.jpg');
+}
+
+.jewelleryCategory-eachItem-ImgEngagementRings {
+    background-image: url('https://images.selfridges.com/is/image/selfridges/R00134181_WHITEGOLD_ALT01?wid=476&hei=634&fmt=webp&qlt=80,1&bgc=F6F6F6&extend=-18,0,-18,0');
+}
+
+.jewelleryCategory-eachItem-ImgNecklaces {
+    background-image: url('https://images.selfridges.com/is/image/selfridges/R04265932_WHITE_ALT01?wid=476&hei=634&fmt=webp&qlt=80,1&bgc=F6F6F6&extend=-18,0,-18,0');
+}
+
+.jewelleryCategory-eachItem-ImgContainerActive {
+}
+
+    .jewelleryCategory-eachItem-ImgContainerActive::before {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+.jewelleryCategory-eachItem-InfoContainer {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+    padding: 10px;
+    z-index: 1;
+}
+
+.jewelleryCategory-Title {
+    color: white;
+}
+
+.jewelleryCategory-titleActive {
+    color: red;
+    transition: all ease-in-out;
+}
+
+.jewelleryCategory-eachItem-Links {
+    font-size: 12px;
+    color: white;
+    display: none;
+}
+
+    .jewelleryCategory-eachItem-Links:hover {
+        color: white;
+    }
+
+.jewelleryCategory-linksActive {
+    animation: jewelleryCategory-linksActive 150ms forwards ease-in-out;
+    display: block;
+    color: white;
+    font-size: 12px;
+}
+
+    .jewelleryCategory-linksActive:hover {
+        color: white;
+    }
+
+@keyframes jewelleryCategory-linksActive {
+    from {
+        top: 150px;
+        display: none;
+    }
+
+    to {
+        top: 0px;
+        display: block;
+    }
+}
+
+/*End of jewellery category Container*/
+
+/*Start of Collection Container*/
+#collection-product-Container {
+    overflow:hidden;
+    width: 100%;
+    height: 1300px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.collection-product-Item {
+    position: relative;
+    width: 100%;
+    height: 33.33%;
+    border:solid 2px white;
+}
+
+.collection-product-Wrapper {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.collection-product-Img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+    .collection-product-Img::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+.collection-product-watchesImg {
+    background-image: url('https://www.goldsmiths.co.uk/medias/gs-watches-breitling-desktop-jan24.jpg?context=bWFzdGVyfGltYWdlc3wyMjc2MzB8aW1hZ2UvanBlZ3xpbWFnZXMvaDFhL2g4Ny85MjU5Njg4NjU2OTI2LmpwZ3xkYmE1Y2YwZDBhY2Y4NzZlNzAxMDYzZDAzNTNkMjU2NjQ1NGZmMGNiZTk4YzViNzMzMjhjYTNiOTE4ZWIxOTJm&imwidth=1200');
+}
+
+.collection-product-jewelleryImg {
+    background-image: url('https://www.cartier.com/content/images/cms/ycm/resource/blob/44370/990d6112ec4067761d6f158a010dd6ee/header-panthere-data.jpg/w1280.jpg');
+}
+
+.collection-product-accessoriesImg {
+    background-image: url('https://images.selfridges.com/is/image/selfridges/R04058399_BLACK_ALT01?wid=392&hei=522&fmt=webp&qlt=80,1&bgc=F6F6F6&dpr=on,2&extend=-18,0,-18,0');
+}
+
+.collection-product-Info {
+    position: absolute;
+    width: 85%;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    background-color: white;
+}
+
+.collection-product-Title {
+    text-align: center;
+    letter-spacing: 5px;
+    font-weight: 900;
+    color: black;
+}
+
+.collection-product-exploreAll {
+    margin-left: auto;
+    margin-right: auto;
+}
+/*End of Collection Container*/
+
+/*Start of news Container*/
+#news-Container {
+    overflow: hidden;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.news-Wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 130px;
+    margin-top: 20px;
+}
+
+.news-item-Container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 400px;
+    padding-top: 40px;
+    padding-left: 60px;
+    padding-right: 60px;
+    background-color: black;
+}
+
+.news-itemTop-Img {
+    overflow:hidden;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.news-itemTop-Img-1 {
+    background-image: url('https://content.thewosgroup.com/productimage/17361761/17361761_5.jpg?impolicy=hero&imwidth=700');
+}
+
+.news-itemTop-Img-2 {
+    background-image: url('https://krylov-service.kz/img/why2.png?v=1');
+}
+
+.news-item-Title {
+}
+
+.news-item-Info {
+    text-align: justify;
+    margin-top: 20px;
+}
+
+/*Top*/
+.news-itemTop-Left {
+    overflow: hidden;
+    width: 30%;
+    height: 460px;
+}
+
+.news-itemTop-Right {
+    overflow: hidden;
+    padding: 30px;
+    width: 70%;
+    height: 100%;
+}
+
+/*Bottom*/
+.news-itemBottom-Container {
+    height: 460px;
+    background-color: white;
+    padding-top: 0px;
+}
+
+.news-itemBottom-Left {
+    width: 70%;
+    height: 100%;
+    padding: 30px;
+}
+
+.news-itemBottom-Right {
+    overflow: hidden;
+    width: 30%;
+    height: 100%;
+}
+/*End of news Container*/
