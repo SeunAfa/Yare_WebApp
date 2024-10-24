@@ -1,17 +1,27 @@
-﻿.checkout-header {
+﻿#order-form{
+    z-index:-2;
+}
+
+.checkout-header {
     display: flex;
     flex-direction: row;
     align-content: center;
     justify-items: center;
+    width: 100%;
+    margin: auto;
 }
 
 .checkout-card-body {
     display: flex;
     flex-direction: row;
+    justify-content: center; 
+    margin: 0 auto; 
     gap: 30px;
     width: 100%;
+    height: 100vh;
+    padding-top: 10px
 }
-
+/*Left*/
 .checkout-card-bodyLeft {
     overflow: hidden;
     width: 50%;
@@ -40,7 +50,7 @@ input:-webkit-autofill:active {
     box-shadow: 0 0 0px 1000px white inset !important;
     -webkit-text-fill-color: black !important;
 }
-
+/*Right*/
 .checkout-card-bodyRight {
     width: 50%;
 }
@@ -48,7 +58,7 @@ input:-webkit-autofill:active {
 .checkout-product-Item {
     overflow: hidden;
     width: 100%;
-    height: 100px;
+    height: 115px;
     display: flex;
     flex-direction: row;
     margin-top: 10px;
@@ -88,8 +98,8 @@ input:-webkit-autofill:active {
 .checkout-card-bodyRight-topWrapper {
     overflow-y: scroll;
     width: 100%;
-    height: 470px;
-    padding-bottom: 150px;
+    height: 100%;
+    padding-bottom: 100px;
 }
 
     .checkout-card-bodyRight-topWrapper::-webkit-scrollbar {
@@ -108,12 +118,12 @@ input:-webkit-autofill:active {
 .checkout-card-bodyRight-Bottom {
     overflow: hidden;
     width: 100%;
-    height: 28%;
+  /*  height: 28%;*/
 }
 
 #placeOrderBtn {
     box-shadow: none;
-    width: 100%;
+    width: 35%;
     background-color: black;
     color: white;
     border-radius: 0;

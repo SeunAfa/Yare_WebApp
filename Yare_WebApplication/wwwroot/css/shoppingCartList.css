@@ -157,10 +157,23 @@
     width: 32px;
 }
 
+.minusBtn, .addBtn {
+    color: white; 
+}
+
+.minusBtn:hover, .addBtn:hover {
+    color: white;
+}
+
+.activeCartBtn {
+    color: red !important; 
+}
+
 .removeItemBtn {
     position: absolute;
     right: 10px;
 }
+
 /*Bottom*/
 #shoppingBag-productItems-bottom {
     overflow: hidden;
@@ -170,9 +183,7 @@
 }
 
 #checkoutBtn {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
+    width: 40%;
     color: black;
     background-color: white;
     border: 2px white solid;

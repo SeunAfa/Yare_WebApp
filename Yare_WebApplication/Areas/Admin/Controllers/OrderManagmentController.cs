@@ -97,7 +97,7 @@ public class OrderManagmentController : Controller
 
     // Post - OrderManagmentPg - Update
     [HttpPost]
-    [Authorize(Roles = SD.Role_MasterAdmin + "," + SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_MasterAdmin)]
     [ValidateAntiForgeryToken]
     public IActionResult UpdateOrderDetails()
     {
@@ -128,7 +128,7 @@ public class OrderManagmentController : Controller
 
     // Post - StartProccessing - Update
     [HttpPost]
-    [Authorize(Roles = SD.Role_MasterAdmin + "," + SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_MasterAdmin)]
     [ValidateAntiForgeryToken]
     public IActionResult StartProccessing()
     {
@@ -140,7 +140,7 @@ public class OrderManagmentController : Controller
 
     // Post - StartProccessing - Update
     [HttpPost]
-    [Authorize(Roles = SD.Role_MasterAdmin + "," + SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_MasterAdmin)]
     [ValidateAntiForgeryToken]
     public IActionResult ShipOrder()
     {
@@ -159,7 +159,7 @@ public class OrderManagmentController : Controller
 
     // Post - CancelOrder - Update
     [HttpPost]
-    [Authorize(Roles = SD.Role_MasterAdmin + "," + SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_MasterAdmin)]
     [ValidateAntiForgeryToken]
     public IActionResult CancelOrder()
     {
