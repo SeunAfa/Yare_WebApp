@@ -87,7 +87,7 @@ public class CollectionController : Controller
 
     // POST: CreatePg
     [HttpPost]
-    [Authorize(Roles = SD.Role_MasterAdmin + "," + SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_MasterAdmin)]
     [ValidateAntiForgeryToken]
     public IActionResult Create(CollectionVM collectionVM)
     {
@@ -149,7 +149,7 @@ public class CollectionController : Controller
     }
 
     // POST: EditPg
-    [Authorize(Roles = SD.Role_MasterAdmin + "," + SD.Role_Admin + "," + SD.Role_Employee)]
+    [Authorize(Roles = SD.Role_MasterAdmin + "," + SD.Role_Admin)]
     public IActionResult Edit(int? id)
     {
         if (id == null || id == 0)
@@ -177,7 +177,7 @@ public class CollectionController : Controller
 
     // POST: EditPg
     [HttpPost]
-    [Authorize(Roles = SD.Role_MasterAdmin + "," + SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_MasterAdmin)]
     [ValidateAntiForgeryToken]
     public IActionResult Edit(int id, CollectionVM collectionVM)
     {
@@ -209,7 +209,7 @@ public class CollectionController : Controller
     }
 
     // GET: DeletePg
-    [Authorize(Roles = SD.Role_MasterAdmin + "," + SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_MasterAdmin)]
     public IActionResult Delete(int? id)
     {
         if (id == 0 || id == null)
@@ -229,7 +229,7 @@ public class CollectionController : Controller
 
     // POST: DeletePg
     [HttpPost]
-    [Authorize(Roles = SD.Role_MasterAdmin + "," + SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_MasterAdmin)]
     [ValidateAntiForgeryToken]
     public IActionResult DeletePost(int? id)
     {

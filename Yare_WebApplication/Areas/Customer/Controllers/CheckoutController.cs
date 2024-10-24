@@ -136,10 +136,12 @@ public class CheckoutController : Controller
 
         var homePgVM = new HomePgVM()
         {
-            ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value,
-            includeProperties: "Product"),
+            // Move ShoppingCartList into ShoppingCartVM
             ShoppingCartVM = new ShoppingCartVM()
             {
+                ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(
+                    u => u.ApplicationUserId == claim.Value,
+                    includeProperties: "Product").ToList(), 
                 OrderHeader = new OrderHeader()
             }
         };
@@ -158,8 +160,8 @@ public class CheckoutController : Controller
             homePgVM.ShoppingCartVM.OrderHeader.PostCode = homePgVM.ShoppingCartVM.OrderHeader.ApplicationUser.PostCode;
         }
 
-        //Get product added to cart 
-        foreach (var cartItem in homePgVM.ShoppingCartList)
+        // Get product added to cart 
+        foreach (var cartItem in homePgVM.ShoppingCartVM.ShoppingCartList)
         {
             cartItem.Price = GetPrice(cartItem.Count, cartItem.Product.Price);
             homePgVM.ShoppingCartVM.OrderHeader.OrderTotal += (cartItem.Price * cartItem.Count);
@@ -173,118 +175,138 @@ public class CheckoutController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult DeliveryDetailsPOST(HomePgVM homePgVM, OrderDetail orderDetails)
     {
+        // Get the current user's identity (claims)
         var claimsIdentity = (ClaimsIdentity)User.Identity;
         var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-        HomePgVM.ShoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value,
-         includeProperties: "Product");
+        // Always reload the ShoppingCartList
+        homePgVM.ShoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(
+            u => u.ApplicationUserId == claim.Value,
+            includeProperties: "Product").ToList();
 
-        if (HomePgVM.ShoppingCartVM.ShoppingCartList == null || !HomePgVM.ShoppingCartVM.ShoppingCartList.Any())
+        // Check if the ShoppingCart is empty
+        if (homePgVM.ShoppingCartVM.ShoppingCartList == null || !homePgVM.ShoppingCartVM.ShoppingCartList.Any())
         {
-            TempData["DebugMessage"] = "ShoppingCartList is empty.";
             TempData["ErrorMessage"] = "Your shopping bag is currently empty. Please add products to proceed with your order.";
             return RedirectToAction("DeliveryDetails");
         }
 
-        HomePgVM.ShoppingCartVM.OrderHeader.OrderDate = System.DateTime.Now;
-        HomePgVM.ShoppingCartVM.OrderHeader.ApplicationUserId = claim.Value;
-        HomePgVM.ShoppingCartVM.OrderHeader.OrderTotal = 0; // Ensure OrderTotal is initialized
-
-        foreach (var CartItem in HomePgVM.ShoppingCartVM.ShoppingCartList)
+        // If the ModelState is valid, process the order
+        if (ModelState.IsValid)
         {
-            CartItem.Price = GetPrice(CartItem.Count, CartItem.Product.Price);
-            HomePgVM.ShoppingCartVM.OrderHeader.OrderTotal += (CartItem.Price * CartItem.Count);
+            // Order processing logic
+            homePgVM.ShoppingCartVM.OrderHeader.OrderDate = DateTime.Now;
+            homePgVM.ShoppingCartVM.OrderHeader.ApplicationUserId = claim.Value;
+            homePgVM.ShoppingCartVM.OrderHeader.OrderTotal = 0;
 
-            CartItem.Product.RemainigQuantity -= CartItem.Count;
-            _unitOfWork.product.Update(CartItem.Product);
-            _unitOfWork.Save();
-        }
-
-        // Debug: Check the calculated OrderTotal
-        TempData["DebugOrderTotal"] = HomePgVM.ShoppingCartVM.OrderHeader.OrderTotal.ToString();
-
-        if (HomePgVM.ShoppingCartVM.OrderHeader.OrderTotal == 0)
-        {
-            TempData["DebugMessage"] = "OrderTotal is zero after calculation.";
-            TempData["ErrorMessage"] = "Your shopping bag is currently empty. Please add products to proceed with your order.";
-            return RedirectToAction("DeliveryDetails");
-        }
-
-        // Check if the OrderTotal exceeds the limit
-        if (HomePgVM.ShoppingCartVM.OrderHeader.OrderTotal >= 999999.99)
-        {
-            TempData["DebugMessage"] = "OrderTotal exceeds the limit.";
-            TempData["ErrorMessage"] = "Your checkout total exceeds the £999,999.99 limit. Please reduce the amount and try again.";
-            return RedirectToAction("DeliveryDetails");
-        }
-
-        HomePgVM.ShoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
-        HomePgVM.ShoppingCartVM.OrderHeader.OrderStatus = SD.PaymentStatusPending;
-
-        _unitOfWork.OrderHeader.Add(HomePgVM.ShoppingCartVM.OrderHeader);
-        _unitOfWork.Save();
-
-        foreach (var CartItem in HomePgVM.ShoppingCartVM.ShoppingCartList)
-        {
-            OrderDetail orderDetail = new()
+            // Process each cart item
+            foreach (var cartItem in homePgVM.ShoppingCartVM.ShoppingCartList)
             {
-                ProductId = CartItem.ProductId,
-                OrderHeaderId = HomePgVM.ShoppingCartVM.OrderHeader.Id,
-                Price = CartItem.Price,
-                Count = CartItem.Count,
-            };
+                cartItem.Price = GetPrice(cartItem.Count, cartItem.Product.Price);
+                homePgVM.ShoppingCartVM.OrderHeader.OrderTotal += cartItem.Price * cartItem.Count;
 
-            _unitOfWork.OrderDetail.Add(orderDetail);
-            _unitOfWork.Save();
-        }
+                // Reduce product quantity
+                cartItem.Product.RemainigQuantity -= cartItem.Count;
+                _unitOfWork.product.Update(cartItem.Product);
+            }
 
-        // Stripe API Settings
-        //var domain = "https://localhost:7176/";
-        var domain = "https://seuna5-001-site1.jtempurl.com/";
+            _unitOfWork.Save(); // Save after updating product quantities
 
-        var options = new SessionCreateOptions
-        {
-            PaymentMethodTypes = new List<string> { "card" },
-            LineItems = new List<SessionLineItemOptions>(),
-            Mode = "payment",
-            SuccessUrl = domain + $"customer/checkout/OrderConfirmation?id={HomePgVM.ShoppingCartVM.OrderHeader.Id}",
-            CancelUrl = domain + $"customer/checkout/DeliveryDetails",
-        };
-
-        // Loop through shoppingCart
-        foreach (var cartItems in HomePgVM.ShoppingCartVM.ShoppingCartList)
-        {
-            var SessionLineItem = new SessionLineItemOptions
+            if (homePgVM.ShoppingCartVM.OrderHeader.OrderTotal == 0)
             {
-                PriceData = new SessionLineItemPriceDataOptions
+                TempData["ErrorMessage"] = "Your shopping bag is empty. Please add items to proceed.";
+                return RedirectToAction("DeliveryDetails");
+            }
+
+            // Check if the total exceeds the limit
+            if (homePgVM.ShoppingCartVM.OrderHeader.OrderTotal >= 999999.99)
+            {
+                TempData["ErrorMessage"] = "Your checkout total exceeds the £999,999.99 limit. Please reduce the amount.";
+                return RedirectToAction("DeliveryDetails");
+            }
+
+            homePgVM.ShoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
+            homePgVM.ShoppingCartVM.OrderHeader.OrderStatus = SD.PaymentStatusPending;
+
+            // Save the OrderHeader
+            _unitOfWork.OrderHeader.Add(homePgVM.ShoppingCartVM.OrderHeader);
+            _unitOfWork.Save();
+
+            // Add order details
+            foreach (var cartItem in homePgVM.ShoppingCartVM.ShoppingCartList)
+            {
+                OrderDetail orderDetail = new()
                 {
-                    UnitAmount = (long)(cartItems.Price * 100), // 20.00 -> 2000 * 100
-                    Currency = "gbp",
-                    ProductData = new SessionLineItemPriceDataProductDataOptions
-                    {
-                        Name = cartItems.Product.ProductName
-                    },
-                },
-                Quantity = cartItems.Count,
-            };
-            options.LineItems.Add(SessionLineItem);
-        }
+                    ProductId = cartItem.ProductId,
+                    OrderHeaderId = homePgVM.ShoppingCartVM.OrderHeader.Id,
+                    Price = cartItem.Price,
+                    Count = cartItem.Count
+                };
+                _unitOfWork.OrderDetail.Add(orderDetail);
+            }
 
-        try
-        {
-            var service = new SessionService();
-            Session session = service.Create(options);
-
-            _unitOfWork.OrderHeader.UpdateStripePaymentId(HomePgVM.ShoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
             _unitOfWork.Save();
-            Response.Headers.Add("Location", session.Url);
-            return new StatusCodeResult(303);
+
+            // Stripe payment session
+            //var domain = "https://localhost:7176/";
+            var domain = "https://seuna5-001-site1.jtempurl.com/";
+
+            var options = new SessionCreateOptions
+            {
+                PaymentMethodTypes = new List<string> { "card" },
+                LineItems = new List<SessionLineItemOptions>(),
+                Mode = "payment",
+                SuccessUrl = domain + $"customer/checkout/OrderConfirmation?id={homePgVM.ShoppingCartVM.OrderHeader.Id}",
+                CancelUrl = domain + $"customer/checkout/DeliveryDetails"
+            };
+
+            foreach (var cartItem in homePgVM.ShoppingCartVM.ShoppingCartList)
+            {
+                var sessionLineItem = new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        UnitAmount = (long)(cartItem.Price * 100),
+                        Currency = "gbp",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = cartItem.Product.ProductName
+                        }
+                    },
+                    Quantity = cartItem.Count
+                };
+                options.LineItems.Add(sessionLineItem);
+            }
+
+            try
+            {
+                var service = new SessionService();
+                Session session = service.Create(options);
+
+                _unitOfWork.OrderHeader.UpdateStripePaymentId(homePgVM.ShoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
+                _unitOfWork.Save();
+                Response.Headers.Add("Location", session.Url);
+                return new StatusCodeResult(303); // Redirect to Stripe
+            }
+            catch (StripeException ex)
+            {
+                TempData["ErrorMessage"] = "There was an error processing your payment. Please try again.";
+                return RedirectToAction("DeliveryDetails");
+            }
         }
-        catch (StripeException ex)
+        else
         {
-            TempData["DebugMessage"] = "Stripe exception occurred.";
-            TempData["ErrorMessage"] = "There was an error processing your payment. Please try again.";
-            return RedirectToAction("DeliveryDetails");
+            // If ModelState is invalid, ensure we still load and return the cart items
+            homePgVM.ShoppingCartVM.OrderHeader.OrderTotal = 0;
+
+            foreach (var cartItem in homePgVM.ShoppingCartVM.ShoppingCartList)
+            {
+                cartItem.Price = GetPrice(cartItem.Count, cartItem.Product.Price);
+                homePgVM.ShoppingCartVM.OrderHeader.OrderTotal += cartItem.Price * cartItem.Count;
+            }
+
+            // Return the view with the current cart and validation messages
+            return View(homePgVM);
         }
     }
 

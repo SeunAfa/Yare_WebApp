@@ -32,13 +32,14 @@
     <link rel="stylesheet" href="~/css/checkoutPg.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/orderConfirmation.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/responsiveLayout.css" asp-append-version="true" />
-                <link rel="stylesheet" href="~/css/animation.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/animation.css" asp-append-version="true" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
 </head>
 <body>
 
     <div id="digitalStoreFront-Container">
+
         <header>
 
             <nav id="topNavigation" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-black border-bottom box-shadow ">
@@ -94,22 +95,22 @@
                                         </svg>
 
                                     </a>
-                                   
-                                        <div class="dropdownCustomer-content-Container">
+
+                                    <div class="dropdownCustomer-content-Container">
 
 
-                                            <a asp-area="Admin" asp-controller="OrderManagment" asp-action="OrderHistory" class="navLink-Animation">My Order History</a>
+                                        <a asp-area="Admin" asp-controller="OrderManagment" asp-action="OrderHistory" class="navLink-Animation">My Order History</a>
 
-                                            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
 
-                                                <a class="navLink-Animation">
-                                                    <button type="submit" class="logoutForm-btn">Logout</button>
-                                                </a>
+                                            <a class="navLink-Animation">
+                                                <button type="submit" class="logoutForm-btn">Logout</button>
+                                            </a>
 
-                                            </form>
+                                        </form>
 
-                                        </div>
-                                    
+                                    </div>
+
                                 </div>
 
                             }
@@ -122,7 +123,7 @@
                                     </svg>
 
                                 </a>
-                            }                     
+                            }
 
                             <a class="nav-link navLinks-topNav">
 
@@ -1012,7 +1013,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-        <script src="~/js/loadingPg.js" asp-append-version="true"></script>
+    <script src="~/js/loadingPg.js" asp-append-version="true"></script>
     <script src="~/js/layoutSearchbar.js" asp-append-version="true"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

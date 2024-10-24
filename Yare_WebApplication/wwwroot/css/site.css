@@ -191,7 +191,6 @@ h1, h2, h3, h4, h5, h6, p, a {
         left: 0%;
         position: absolute;
         background: red;
-        /* transition: width 0.3s ease 0s, left 0.3s ease 0s;*/
         transition: width 250ms ease 0s, left 250ms ease 0s;
         width: 0;
     }

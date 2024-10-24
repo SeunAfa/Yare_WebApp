@@ -4,11 +4,58 @@
 @{
     ViewData["Title"] = "Delivery Details";
 }
-<form method="post" style="">
+<style>
 
-    <div class="container">
+    .open-button {
+        background-color: red;
+        color: white;
+        padding: 16px 10px;
+        border: none;
+        cursor: pointer;
+        opacity: 0.9;
+        position: fixed;
+        top: 50%;
+        right: 0;
+        overflow: hidden;
+        width: 50px;
+        height: 170px;
+        transform: translateY(-50%);
+    }
 
-        <div class="">
+    .open-buttonWrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform: rotate(180deg);
+        writing-mode: vertical-rl;
+        height: 100%;
+    }
+
+    .cardDetails-Container {
+        position: fixed;
+        top:0;
+        right: 0;
+        width: 30%;
+        height: 100%;
+        background-color: #f9f9f9;
+        padding: 20px;
+        padding-top: 60px;
+        display: none;
+        z-index: 1;
+    }
+
+    .closeBtn-cardDetails {
+        font-size: 25px;
+        cursor: pointer;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        text-decoration: none;
+    }
+ 
+
+</style>
+<form id="order-form" method="post" >
 
             <div class="checkout-header" style="">
 
@@ -79,9 +126,6 @@
                         <span asp-validation-for="ShoppingCartVM.OrderHeader.PostCode" class="text-danger"></span>
                     </div>
 
-
-
-
                 </div>
 
                 <div class="checkout-card-bodyRight">
@@ -92,29 +136,35 @@
 
                         <div class="checkout-card-bodyRight-topWrapper">
 
-                            @foreach (var checkoutItem in Model.ShoppingCartList)
-                            {
-                                string shortenedProductName = checkoutItem.Product.ProductName.Length > 35 ? $"{checkoutItem.Product.ProductName.Substring(0, 35)}..." : checkoutItem.Product.ProductName;
+                    @if (Model.ShoppingCartVM.ShoppingCartList != null && Model.ShoppingCartVM.ShoppingCartList.Any())
+                    {
+                        @foreach (var checkoutItem in Model.ShoppingCartVM.ShoppingCartList)
+                        {
+                            string shortenedProductName = checkoutItem.Product.ProductName.Length > 35 ? $"{checkoutItem.Product.ProductName.Substring(0, 35)}..." : checkoutItem.Product.ProductName;
 
-                                int countPrice = (int)(checkoutItem.Product.Price * checkoutItem.Count);
+                            int countPrice = (int)(checkoutItem.Product.Price * checkoutItem.Count);
 
-                                <div class="checkout-product-Item" data-id="@checkoutItem.Id">
-                                    <div class="checkout-productLeft-Item">
-                                        <div class="checkout-productLeft-Img">
-                                            <img class="checkout-imgItem-Wrapper" src="@checkoutItem.Product.PrimaryDisplayImageUrl" />
-                                        </div>
-                                    </div>
-                                    <div class="checkout-productRight-Item">
-                                        <a asp-area="Customer" asp-action="Details" asp-controller="Home" asp-route-productId="@checkoutItem.Product.Id" class="text-black shoppingBag-info-Text">@shortenedProductName</a>
-                                        <p class="text-black shoppingBag-info-Text">@checkoutItem.Product.ProductNumber</p>
-                                        <p class="text-black shoppingBag-info-Text">@checkoutItem.Product.Gender @checkoutItem.Product.ProductCategory</p>
-                                        <p class="text-black shoppingBag-info-Text">
-                                            <span class="item-count">@checkoutItem.Count</span> X <span class="Countprice">@countPrice.ToString("c")</span>
-                                        </p>
+                            <div class="checkout-product-Item" data-id="@checkoutItem.Id">
+                                <div class="checkout-productLeft-Item">
+                                    <div class="checkout-productLeft-Img">
+                                        <img class="checkout-imgItem-Wrapper" src="@checkoutItem.Product.PrimaryDisplayImageUrl" />
                                     </div>
                                 </div>
-                            }
-
+                                <div class="checkout-productRight-Item">
+                                    <a asp-area="Customer" asp-action="Details" asp-controller="Home" asp-route-productId="@checkoutItem.Product.Id" class="text-black shoppingBag-info-Text">@shortenedProductName</a>
+                                    <p class="text-black shoppingBag-info-Text">@checkoutItem.Product.ProductNumber</p>
+                                    <p class="text-black shoppingBag-info-Text">@checkoutItem.Product.Gender @checkoutItem.Product.ProductCategory</p>
+                                    <p class="text-black shoppingBag-info-Text">
+                                        <span class="item-count">@checkoutItem.Count</span> X <span class="Countprice">@countPrice.ToString("c")</span>
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-dark">Your shopping cart is empty.</p>
+                    }
 
                         </div>
 
@@ -145,17 +195,103 @@
 
             </div>
 
-        </div>
-
-    </div>
 </form>
-<br />
+
+<button class="open-button">
+    <div class="open-buttonWrapper">Card Details</div>
+</button>
+
+<div class="cardDetails-Container">
+    <a class="btn text-danger bi bi-x closeBtn-cardDetails"></a>
+    <div class="cardDetails-Wrapper">
+        <h3 class="text-black">Card Details:</h3>
+        <ul>
+            <li>
+                In order to place order you can use any test credit card number supported by stripe.
+                <ul>
+                    <li>A default example is 4242 4242 4242 4242, valid date , any 3 digit CVV.</li>
+                    <li class="copyIconLink" style="cursor: pointer;">Click to copy card number<span class="cardNumber" style="padding-left:4px;padding-right:4px;">4242 4242 4242 4242</span><i class="bi bi-clipboard copyIcon"></i></li>
+                </ul>
+            </li>
+            <li>Stripe testing card numbers <a class="text-black" style="text-decoration:underline;" href="https://docs.stripe.com/testing" target="_blank">https://docs.stripe.com/testing</a></li>
+        </ul>
+    </div>
+</div>
+
 @section Scripts {
     <script>
         ///////////////////////////////////
         // _Layout Searchbar Component
         const filterUrl = '@Url.Action("Filter", "Checkout")';
 
+        ////////////////////////////////////////
+        //Hide & Show card details Component
+        const openButton = document.querySelector(".open-button");
+        const closeBtn_cardDetails = document.querySelector(".closeBtn-cardDetails");
+        const cardDetails_Container = document.querySelector(".cardDetails-Container");
+
+        //Show Shopping Cart
+        openButton.addEventListener("click", () => {
+
+            cardDetails_Container.style.display = "block";
+            cardDetails_Container.style.transition = "al; 0.3s ease-in-out";
+
+        });
+
+        //Hide Shopping Cart
+        closeBtn_cardDetails.addEventListener("click", () => {
+
+            cardDetails_Container.style.display = "none";
+            cardDetails_Container.style.transition = "al; 0.3s ease-in-out";
+
+        });
+
+
+        ////////////////////////////////////////
+        //Copy Card Details Component
+        document.addEventListener("DOMContentLoaded", function () {
+            var copyIconLink = document.querySelector('.copyIconLink');
+
+            copyIconLink.addEventListener('click', function () {
+                // Find the clipboard icon within the li element
+                var iconElement = this.querySelector('.copyIcon');
+
+                // Call the function to copy the card number and change the icon
+                copyCardNumber(iconElement);
+            });
+        });
+
+        function copyCardNumber(iconElement) {
+            // Select the card number text
+            var cardNumber = document.querySelector('.cardNumber').innerText;
+
+            // Create a temporary input element to hold the text
+            var tempInput = document.createElement('input');
+            tempInput.value = cardNumber;
+
+            // Append the input to the body temporarily
+            document.body.appendChild(tempInput);
+
+            // Select the content of the input
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999); 
+
+            // Copy the text to clipboard
+            document.execCommand("copy");
+
+            // Remove the temporary input element
+            document.body.removeChild(tempInput);
+
+            // Change the icon to 'bi-clipboard-check'
+            iconElement.classList.remove('bi-clipboard');
+            iconElement.classList.add('bi-clipboard-check');
+
+            // Revert the icon back to 'bi-clipboard' after 2 seconds
+            setTimeout(function () {
+                iconElement.classList.remove('bi-clipboard-check');
+                iconElement.classList.add('bi-clipboard');
+            }, 2000); // Change back after 2 seconds
+        }
 
 
     </script>

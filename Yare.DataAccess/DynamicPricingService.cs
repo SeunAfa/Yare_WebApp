@@ -23,7 +23,7 @@ public class DynamicPricingService : BackgroundService
     {
         _logger.LogInformation("Dynamic Pricing Service is starting.");
 
-        var nonBestSellingDelay = TimeSpan.FromDays(7); // 14 days (2 weeks)
+        var nonBestSellingDelay = TimeSpan.FromDays(25); // 25 days for non-best-selling products
         var nextNonBestSellingRun = DateTime.UtcNow.Add(nonBestSellingDelay);
 
         while (!stoppingToken.IsCancellationRequested)
@@ -34,7 +34,7 @@ public class DynamicPricingService : BackgroundService
                 {
                     var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
-                    // Update prices for best-selling products every 10 minutes
+                    // Update prices for best-selling products every hour
                     UpdateBestSellingProductPrices(unitOfWork);
 
                     // Check if it's time to update non-best-selling products
@@ -45,8 +45,8 @@ public class DynamicPricingService : BackgroundService
                     }
                 }
 
-                // Wait for 10 minutes before the next iteration
-                await Task.Delay(TimeSpan.FromMinutes(10), stoppingToken);
+                // Wait for 6 hour before the next iteration for best-selling products
+                await Task.Delay(TimeSpan.FromHours(6), stoppingToken);
             }
             catch (Exception ex)
             {
@@ -95,14 +95,20 @@ public class DynamicPricingService : BackgroundService
         foreach (var bestSeller in bestSellersList)
         {
             var product = bestSeller.Product;
-            var originalPrice = product.Price;
 
-            var newPrice = Math.Round(originalPrice * 1.10, 2);
-            product.PriceWas = Math.Round(originalPrice, 2);
-            product.Price = newPrice;           
-            product.TargetPrice01 = Math.Round(newPrice - (newPrice * 0.05), 2);
-            product.TargetPrice02 = Math.Round(newPrice - (newPrice * 0.10), 2);
-            product.TargetPrice03 = Math.Round(newPrice - (newPrice * 0.25), 2);
+            // Directly use the pre-calculated TargetPrice01, TargetPrice02, TargetPrice03
+            if (product.RemainigQuantity <= 50)
+            {
+                product.Price = product.TargetPrice03; // Lowest price for low stock
+            }
+            else if (product.RemainigQuantity <= 100)
+            {
+                product.Price = product.TargetPrice02; // Medium price for medium stock
+            }
+            else
+            {
+                product.Price = product.TargetPrice01; // Highest price for higher stock
+            }
 
             unitOfWork.product.Update(product);
         }
@@ -131,27 +137,26 @@ public class DynamicPricingService : BackgroundService
 
         foreach (var product in nonBestSellersList)
         {
-            var originalPrice = product.Price;
-
-            // Adjust price based on the target prices
+            // Assign prices based on remaining quantity without recalculating the target prices
             if (product.RemainigQuantity <= 50)
             {
-                product.Price = Math.Round(product.TargetPrice03, 2);
+                product.Price = product.TargetPrice03; // Lowest price
             }
             else if (product.RemainigQuantity <= 100)
             {
-                product.Price = Math.Round(product.TargetPrice02, 2);
+                product.Price = product.TargetPrice02; // Medium price
             }
             else
             {
-                product.Price = Math.Round(product.TargetPrice01, 2);
+                product.Price = product.TargetPrice01; // Highest price
             }
 
-            product.PriceWas = Math.Round(originalPrice, 2); // Save the original price rounded to two decimal places
+            product.PriceWas = product.Price; // Keep track of the previous price if needed
             unitOfWork.product.Update(product);
         }
 
         unitOfWork.Save();
     }
+
 }
 

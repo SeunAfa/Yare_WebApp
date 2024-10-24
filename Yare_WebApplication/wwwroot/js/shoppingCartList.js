@@ -222,19 +222,37 @@ document.addEventListener('DOMContentLoaded', function () {
     updateCartCounter(document.querySelectorAll('.shoppingBag-Item').length);
 });
 
-//Increment Btn 
+// Increment Btn
 document.querySelectorAll('.addBtn').forEach(function (button) {
     button.addEventListener('click', function (e) {
         e.preventDefault();
+
+        // Add the active class to show red
+        button.classList.add('activeCartBtn');
+
+        // Remove the active class after 500ms (0.5 seconds) to return to the original color
+        setTimeout(function () {
+            button.classList.remove('activeCartBtn');
+        }, 500); 
+
         var cartItemId = this.getAttribute('data-id');
         sendAjaxRequest(urls.increment, cartItemId);
     });
 });
 
-//Decrement Btn
+// Decrement Btn
 document.querySelectorAll('.minusBtn').forEach(function (button) {
     button.addEventListener('click', function (e) {
         e.preventDefault();
+
+        // Add the active class to show red
+        button.classList.add('activeCartBtn');
+
+        // Remove the active class after 500ms (0.5 seconds) to return to the original color
+        setTimeout(function () {
+            button.classList.remove('activeCartBtn');
+        }, 500);
+
         var cartItemId = this.getAttribute('data-id');
         sendAjaxRequest(urls.decrement, cartItemId);
     });

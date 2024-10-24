@@ -153,7 +153,7 @@ public class AccessoryController : Controller
 
     // Post: CreatePg
     [HttpPost]
-    [Authorize(Roles = SD.Role_MasterAdmin + "," + SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_MasterAdmin)]
     [ValidateAntiForgeryToken]
     public IActionResult Create(ProductVM productVM)
     {
@@ -369,7 +369,7 @@ public class AccessoryController : Controller
     }
 
     // Get: EditPg
-    [Authorize(Roles = SD.Role_MasterAdmin + "," + SD.Role_Admin + "," + SD.Role_Employee)]
+    [Authorize(Roles = SD.Role_MasterAdmin + "," + SD.Role_Admin)]
     public IActionResult Edit(int? id)
     {
         if (id == null || id == 0)
@@ -440,7 +440,7 @@ public class AccessoryController : Controller
 
     // Post: EditPg
     [HttpPost]
-    [Authorize(Roles = SD.Role_MasterAdmin + "," + SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_MasterAdmin)]
     [ValidateAntiForgeryToken]
     public IActionResult Edit(int id, ProductVM productVM)
     {
@@ -573,7 +573,7 @@ public class AccessoryController : Controller
     }
 
     // Get: DeletePg
-    [Authorize(Roles = SD.Role_MasterAdmin + "," + SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_MasterAdmin)]
     public IActionResult Delete(int? id)
     {
         if (id == null || id == 0)
@@ -594,7 +594,7 @@ public class AccessoryController : Controller
 
     // Post: DeletePg
     [HttpPost]
-    [Authorize(Roles = SD.Role_MasterAdmin + "," + SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_MasterAdmin)]
     [ValidateAntiForgeryToken]
     public IActionResult DeletePost(int? id)
     {

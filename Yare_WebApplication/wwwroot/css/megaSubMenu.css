@@ -2,7 +2,6 @@
 -----------------------*/
 /*Start of TopNav*/
 #headerNav-Wrapper {
-/*    overflow: hidden;*/
     width: 100%;
     height: fit-content;
     display: flex;
@@ -61,7 +60,7 @@
 }
 .cartCounter {
     display: inline-block;
-    font-size: 75%;
+    font-size: 85%;
     font-weight: 700;
     line-height: 1;
     text-align: center;
@@ -72,7 +71,9 @@
     right: 5px;
     padding-right: 0.1em;
     padding-left: 0.1em;
-    color: #fff;
+    color: red;
+    background-color: rgba(223, 223, 223, 0.05);
+    backdrop-filter: blur(2px);
     border: none;
 }
 

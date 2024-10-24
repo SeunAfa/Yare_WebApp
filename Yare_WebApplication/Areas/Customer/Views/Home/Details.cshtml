@@ -70,10 +70,12 @@
     var maxLength = 100;
 }
 
-<div class="productList-breadcrumbLeft-Wrapper">
+<div class="details-breadcrumb-Container">
+    <div class="productList-breadcrumbLeft-Wrapper">
     <a asp-area="Customer" asp-controller="Home" asp-action="Index" class="text-black">Home</a>
     <span>/</span>
     <a asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-productId="@Model.ShoppingCartVM.Product.Id" class="text-black">@Model.ShoppingCartVM.Product.ProductName</a>
+</div>
 </div>
 
 <form method="post">
