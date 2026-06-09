@@ -1,0 +1,105 @@
+@page "/cart"
+@inject ICartService CartService
+@inject NavigationManager Nav
+@implements IDisposable
+
+<PageTitle>Shopping Bag — Yare</PageTitle>
+
+<section class="cart-page section-pad">
+    <div class="container">
+        <h1 class="page-title">Shopping Bag</h1>
+
+        @if (loading)
+        {
+            <div class="cart-skeleton"></div>
+        }
+        else if (!cart.Any())
+        {
+            <div class="empty-cart">
+                <i class="bi bi-bag-x"></i>
+                <h3>Your bag is empty</h3>
+                <p>Add some luxury to your life.</p>
+                <a href="watches" class="btn-yare">Start Shopping</a>
+            </div>
+        }
+        else
+        {
+            <div class="cart-layout">
+                <div class="cart-items">
+                    @foreach (var item in cart)
+                    {
+                        <div class="cart-item">
+                            <img src="@(item.ImageUrl ?? "https://picsum.photos/seed/cart/120/120")"
+                                 alt="@item.ProductName" class="cart-item-img" />
+                            <div class="cart-item-info">
+                                <p class="cart-item-cat">@item.ProductCategory</p>
+                                <h4 class="cart-item-name">@item.ProductName</h4>
+                                <p class="cart-item-price">@item.Price.ToString("C")</p>
+                            </div>
+                            <div class="cart-item-qty">
+                                <button @onclick="() => Decrement(item.ProductId)">−</button>
+                                <span>@item.Count</span>
+                                <button @onclick="() => Increment(item.ProductId)">+</button>
+                            </div>
+                            <div class="cart-item-subtotal">
+                                @((item.Price * item.Count).ToString("C"))
+                            </div>
+                            <button class="cart-item-remove" @onclick="() => Remove(item.ProductId)">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </div>
+                    }
+                </div>
+
+                <div class="cart-summary">
+                    <h3>Order Summary</h3>
+                    <div class="summary-row">
+                        <span>Subtotal (@cart.Sum(c => c.Count) item@(cart.Sum(c => c.Count) != 1 ? "s" : ""))</span>
+                        <span>@total.ToString("C")</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <span>@(total >= 500 ? "Free" : "£9.99")</span>
+                    </div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span>@((total + (total >= 500 ? 0 : 9.99)).ToString("C"))</span>
+                    </div>
+                    <button class="btn-yare btn-full" @onclick="GoCheckout">
+                        Proceed to Checkout
+                    </button>
+                    <a href="watches" class="btn-outline-full">Continue Shopping</a>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    private List<CartItem> cart = new();
+    private double total;
+    private bool loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        CartService.OnChange += RefreshCart;
+        await LoadCart();
+        loading = false;
+    }
+
+    private async Task LoadCart()
+    {
+        cart = await CartService.GetCartAsync();
+        total = await CartService.GetCartTotalAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async void RefreshCart() => await LoadCart();
+    private async Task Increment(int pid) => await CartService.IncrementAsync(pid);
+    private async Task Decrement(int pid) => await CartService.DecrementAsync(pid);
+    private async Task Remove(int pid) => await CartService.RemoveAsync(pid);
+    private void GoCheckout() => Nav.NavigateTo("checkout");
+
+    public void Dispose() => CartService.OnChange -= RefreshCart;
+}

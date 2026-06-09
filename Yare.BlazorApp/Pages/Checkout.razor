@@ -1,0 +1,157 @@
+@page "/checkout"
+@inject ICartService CartService
+@inject IAuthService AuthService
+@inject IOrderService OrderService
+@inject NavigationManager Nav
+
+<PageTitle>Checkout — Yare</PageTitle>
+
+<section class="checkout-page section-pad">
+    <div class="container">
+        <h1 class="page-title">Checkout</h1>
+
+        @if (cart.Count == 0 && !orderPlaced)
+        {
+            <div class="empty-cart">
+                <i class="bi bi-bag-x"></i>
+                <p>Your bag is empty.</p>
+                <a href="watches" class="btn-yare">Start Shopping</a>
+            </div>
+        }
+        else if (orderPlaced)
+        {
+            <div class="order-confirmed">
+                <i class="bi bi-check-circle"></i>
+                <h2>Order Confirmed!</h2>
+                <p>Thank you, @order.FirstName! Your order #@order.Id has been placed.</p>
+                <p class="order-total">Total: @order.OrderTotal.ToString("C")</p>
+                <a href="" class="btn-yare">Continue Shopping</a>
+            </div>
+        }
+        else
+        {
+            <div class="checkout-layout">
+                <!-- Delivery Form -->
+                <div class="checkout-form-section">
+                    <h2>Delivery Details</h2>
+                    <EditForm Model="@order" OnValidSubmit="PlaceOrder">
+                        <DataAnnotationsValidator />
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <InputText @bind-Value="order.FirstName" class="form-control" placeholder="First name" />
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <InputText @bind-Value="order.LastName" class="form-control" placeholder="Last name" />
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Email</label>
+                                <input type="email" class="form-control" placeholder="Email address" @bind="email" />
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Phone</label>
+                                <InputText @bind-Value="order.PhoneNumber" class="form-control" placeholder="Phone number" />
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Street Address</label>
+                                <InputText @bind-Value="order.StreetAdress" class="form-control" placeholder="Street address" />
+                            </div>
+                            <div class="form-group">
+                                <label>City</label>
+                                <InputText @bind-Value="order.City" class="form-control" placeholder="City" />
+                            </div>
+                            <div class="form-group">
+                                <label>Borough / County</label>
+                                <InputText @bind-Value="order.Borough" class="form-control" placeholder="Borough" />
+                            </div>
+                            <div class="form-group">
+                                <label>Post Code</label>
+                                <InputText @bind-Value="order.PostCode" class="form-control" placeholder="Post code" />
+                            </div>
+                        </div>
+
+                        <h2 class="mt-4">Payment</h2>
+                        <div class="payment-demo-notice">
+                            <i class="bi bi-info-circle"></i>
+                            This is a demo. No real payment is taken. Click "Place Order" to simulate.
+                        </div>
+
+                        <div class="checkout-actions">
+                            <button type="submit" class="btn-yare btn-full" disabled="@placing">
+                                @if (placing) { <span>Placing Order...</span> } else { <span>Place Order — @orderTotal.ToString("C")</span> }
+                            </button>
+                        </div>
+                        <ValidationSummary />
+                    </EditForm>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="checkout-summary">
+                    <h2>Your Bag (@cart.Sum(c => c.Count) items)</h2>
+                    @foreach (var item in cart)
+                    {
+                        <div class="checkout-item">
+                            <img src="@(item.ImageUrl ?? "https://picsum.photos/seed/item/80/80")" alt="@item.ProductName" />
+                            <div>
+                                <p>@item.ProductName</p>
+                                <small>Qty: @item.Count</small>
+                            </div>
+                            <span>@((item.Price * item.Count).ToString("C"))</span>
+                        </div>
+                    }
+                    <div class="summary-divider"></div>
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span>@orderTotal.ToString("C")</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <span>@(orderTotal >= 500 ? "Free" : "£9.99")</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span>@((orderTotal + (orderTotal >= 500 ? 0 : 9.99)).ToString("C"))</span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    private List<CartItem> cart = new();
+    private OrderHeader order = new();
+    private string email = "";
+    private double orderTotal;
+    private bool placing, orderPlaced;
+
+    protected override async Task OnInitializedAsync()
+    {
+        cart = await CartService.GetCartAsync();
+        orderTotal = await CartService.GetCartTotalAsync();
+        var user = await AuthService.GetCurrentUserAsync();
+        if (user != null)
+        {
+            order.FirstName = user.FirstName;
+            order.LastName = user.LastName;
+            order.PhoneNumber = user.PhoneNumber;
+            order.StreetAdress = user.StreetAdress;
+            order.City = user.City;
+            order.Borough = user.Borough;
+            order.PostCode = user.PostCode;
+            order.ApplicationUserId = user.Id;
+            email = user.Email ?? "";
+        }
+    }
+
+    private async Task PlaceOrder()
+    {
+        placing = true;
+        order.OrderTotal = orderTotal + (orderTotal >= 500 ? 0 : 9.99);
+        var orderId = await OrderService.PlaceOrderAsync(order, cart);
+        await CartService.ClearCartAsync();
+        orderPlaced = true;
+        placing = false;
+    }
+}

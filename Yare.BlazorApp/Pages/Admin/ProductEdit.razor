@@ -1,0 +1,171 @@
+@page "/admin/products/edit/{Id:int}"
+@layout AdminLayout
+@inject IProductService ProductService
+@inject NavigationManager Nav
+
+<PageTitle>@(Id == 0 ? "Add" : "Edit") Product — Yare Admin</PageTitle>
+
+<div class="admin-page-header">
+    <h1>@(Id == 0 ? "Add New Product" : "Edit Product")</h1>
+    <a href="admin/products" class="btn-outline-sm"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
+
+@if (loading)
+{
+    <div class="admin-card"><div class="table-skeleton"></div></div>
+}
+else
+{
+    <div class="admin-card">
+        <EditForm Model="@product" OnValidSubmit="Save">
+            <DataAnnotationsValidator />
+            <div class="form-section">
+                <h3>Product Type</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <InputSelect @bind-Value="product.ProductCategory" class="form-control">
+                            @foreach (var cat in Enum.GetValues<ProductCategory>())
+                            {
+                                <option value="@cat">@cat</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Basic Information</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <InputText @bind-Value="product.ProductName" class="form-control" placeholder="Product name" />
+                    </div>
+                    <div class="form-group">
+                        <label>Product Number</label>
+                        <InputText @bind-Value="product.ProductNumber" class="form-control" placeholder="e.g. YW-001" />
+                    </div>
+                    <div class="form-group">
+                        <label>Model Number</label>
+                        <InputText @bind-Value="product.ModelNumber" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Supplier</label>
+                        <InputText @bind-Value="product.Supplier" class="form-control" />
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Description</label>
+                        <InputTextArea @bind-Value="product.ProductDescription" class="form-control" rows="3" />
+                    </div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <InputSelect @bind-Value="product.Gender" class="form-control">
+                            @foreach (var g in Enum.GetValues<Gender>())
+                            {
+                                <option value="@g">@g</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div class="form-group">
+                        <label>Warranty</label>
+                        <InputSelect @bind-Value="product.WarrantyYears" class="form-control">
+                            @foreach (var w in Enum.GetValues<WarrantyYears>())
+                            {
+                                <option value="@w">@w</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Pricing &amp; Stock</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Price (£)</label>
+                        <InputNumber @bind-Value="product.Price" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Was Price (£)</label>
+                        <InputNumber @bind-Value="product.PriceWas" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Cost (£)</label>
+                        <InputNumber @bind-Value="product.CostOfProduct" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <InputNumber @bind-Value="product.Quantity" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Remaining Qty</label>
+                        <InputNumber @bind-Value="product.RemainigQuantity" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Stock Status</label>
+                        <InputSelect @bind-Value="product.StockStatus" class="form-control">
+                            <option value="@SD.InStock">In Stock</option>
+                            <option value="@SD.RunningLow">Running Low</option>
+                            <option value="@SD.OutOfStock">Out of Stock</option>
+                        </InputSelect>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Images (URLs)</h3>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Primary Image URL</label>
+                        <InputText @bind-Value="product.PrimaryDisplayImageUrl" class="form-control" placeholder="https://..." />
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Secondary Image URL</label>
+                        <InputText @bind-Value="product.SecondaryDisplayImageUrl" class="form-control" placeholder="https://..." />
+                    </div>
+                    <div class="form-group"><label>Slider 1</label><InputText @bind-Value="product.SliderImageUrlOne" class="form-control" /></div>
+                    <div class="form-group"><label>Slider 2</label><InputText @bind-Value="product.SliderImageUrlTwo" class="form-control" /></div>
+                    <div class="form-group"><label>Slider 3</label><InputText @bind-Value="product.SliderImageUrlThree" class="form-control" /></div>
+                    <div class="form-group"><label>Slider 4</label><InputText @bind-Value="product.SliderImageUrlFour" class="form-control" /></div>
+                </div>
+            </div>
+
+            @if (saved)
+            {
+                <div class="alert-success"><i class="bi bi-check-circle"></i> Product saved successfully!</div>
+            }
+            <ValidationSummary />
+            <div class="form-actions">
+                <a href="admin/products" class="btn-outline-sm">Cancel</a>
+                <button type="submit" class="btn-yare" disabled="@saving">
+                    @(saving ? "Saving..." : (Id == 0 ? "Create Product" : "Save Changes"))
+                </button>
+            </div>
+        </EditForm>
+    </div>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private Product product = new() { StockStatus = SD.InStock, ProductCategory = ProductCategory.Watch };
+    private bool loading = true, saving, saved;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id != 0)
+        {
+            product = await ProductService.GetByIdAsync(Id) ?? product;
+        }
+        loading = false;
+    }
+
+    private async Task Save()
+    {
+        saving = true;
+        await ProductService.SaveProductAsync(product);
+        saved = true;
+        saving = false;
+        await Task.Delay(2000);
+        Nav.NavigateTo("admin/products");
+    }
+}

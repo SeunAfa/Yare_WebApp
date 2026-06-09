@@ -1,0 +1,120 @@
+@page "/login"
+@inject IAuthService AuthService
+@inject NavigationManager Nav
+
+<PageTitle>Sign In — Yare</PageTitle>
+
+<section class="auth-page">
+    <div class="auth-card">
+        <a href="" class="auth-logo">YARE</a>
+        <h1>Welcome Back</h1>
+        <p class="auth-sub">Sign in to your account</p>
+
+        <!-- Demo role quick-login buttons -->
+        <div class="demo-roles">
+            <p class="demo-label">Quick demo access:</p>
+            <div class="role-buttons">
+                @foreach (var u in demoUsers)
+                {
+                    <button class="role-btn @GetRoleClass(u.Role)" @onclick="() => PrefillUser(u)">
+                        <i class="bi @GetRoleIcon(u.Role)"></i>
+                        <span>@u.Role</span>
+                    </button>
+                }
+            </div>
+        </div>
+
+        <div class="auth-divider"><span>or enter credentials</span></div>
+
+        <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+            <div class="form-group">
+                <label>Email</label>
+                <InputText @bind-Value="loginModel.Email" class="form-control" type="email" placeholder="email@example.com" />
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <div class="password-wrap">
+                    <InputText @bind-Value="loginModel.Password" class="form-control"
+                               type="@(showPassword ? "text" : "password")" placeholder="Password" />
+                    <button type="button" class="pwd-toggle" @onclick="() => showPassword = !showPassword">
+                        <i class="bi @(showPassword ? "bi-eye-slash" : "bi-eye")"></i>
+                    </button>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(error))
+            {
+                <div class="auth-error">
+                    <i class="bi bi-exclamation-circle"></i> @error
+                </div>
+            }
+
+            <button type="submit" class="btn-yare btn-full" disabled="@loading">
+                @(loading ? "Signing in..." : "Sign In")
+            </button>
+        </EditForm>
+
+        <p class="auth-footer">
+            Don't have an account? <a href="register">Register here</a>
+        </p>
+    </div>
+</section>
+
+@code {
+    private LoginModel loginModel = new();
+    private List<AppUser> demoUsers = new();
+    private string error = "";
+    private bool loading, showPassword;
+
+    protected override void OnInitialized()
+    {
+        demoUsers = AuthService.GetDemoUsers();
+    }
+
+    private void PrefillUser(AppUser user)
+    {
+        loginModel.Email = user.Email ?? "";
+        loginModel.Password = user.Password ?? "";
+        error = "";
+    }
+
+    private async Task HandleLogin()
+    {
+        loading = true;
+        error = "";
+        var success = await AuthService.LoginAsync(loginModel.Email, loginModel.Password);
+        if (success)
+        {
+            var user = await AuthService.GetCurrentUserAsync();
+            if (user?.Role is SD.Role_MasterAdmin or SD.Role_Admin or SD.Role_Employee)
+                Nav.NavigateTo("admin");
+            else
+                Nav.NavigateTo("");
+        }
+        else
+        {
+            error = "Invalid email or password.";
+        }
+        loading = false;
+    }
+
+    private string GetRoleClass(string? role) => role switch
+    {
+        SD.Role_MasterAdmin or SD.Role_Admin => "role-admin",
+        SD.Role_Employee => "role-employee",
+        _ => "role-customer"
+    };
+
+    private string GetRoleIcon(string? role) => role switch
+    {
+        SD.Role_MasterAdmin or SD.Role_Admin => "bi-shield-fill",
+        SD.Role_Employee => "bi-person-badge",
+        _ => "bi-person"
+    };
+
+    public class LoginModel
+    {
+        public string Email { get; set; } = "";
+        public string Password { get; set; } = "";
+    }
+}

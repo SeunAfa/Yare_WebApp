@@ -1,0 +1,52 @@
+@page "/collections"
+@inject IProductService ProductService
+
+<PageTitle>Collections — Yare</PageTitle>
+
+<div class="page-hero page-hero-collections">
+    <div class="page-hero-content">
+        <p class="section-label">Curated</p>
+        <h1>Collections</h1>
+        <p>Discover handpicked selections crafted around themes, occasions and styles.</p>
+    </div>
+</div>
+
+<section class="section-pad">
+    <div class="container">
+        @if (loading)
+        {
+            <div class="collections-grid">
+                @for (int i = 0; i < 6; i++) { <div class="skeleton-card tall"></div> }
+            </div>
+        }
+        else
+        {
+            <div class="collections-grid">
+                @foreach (var col in collections)
+                {
+                    <a href="@($"collections/{col.Id}")" class="collection-card">
+                        <div class="collection-card-img">
+                            <img src="@(col.ImageUrl ?? $"https://picsum.photos/seed/col{col.Id}/600/400")" alt="@col.CollectionName" loading="lazy" />
+                        </div>
+                        <div class="collection-card-body">
+                            <h3>@col.CollectionName</h3>
+                            <p>@col.Description</p>
+                            <span class="link-arrow">Explore <i class="bi bi-arrow-right"></i></span>
+                        </div>
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    private List<Collection> collections = new();
+    private bool loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        collections = await ProductService.GetCollectionsAsync();
+        loading = false;
+    }
+}

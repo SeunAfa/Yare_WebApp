@@ -1,0 +1,205 @@
+@page "/product/{Id:int}"
+@inject IProductService ProductService
+@inject ICartService CartService
+@inject NavigationManager Nav
+
+<PageTitle>@(product?.ProductName ?? "Product") — Yare</PageTitle>
+
+@if (loading)
+{
+    <div class="product-detail-skeleton section-pad">
+        <div class="container"><div class="skeleton-detail"></div></div>
+    </div>
+}
+else if (product == null)
+{
+    <div class="empty-state section-pad">
+        <h2>Product not found</h2>
+        <a href="watches" class="btn-yare">Back to Shop</a>
+    </div>
+}
+else
+{
+    <section class="product-detail section-pad">
+        <div class="container">
+            <nav class="breadcrumb-nav">
+                <a href="">Home</a> /
+                <a href="@product.ProductCategory?.ToString().ToLower()">@product.ProductCategory</a> /
+                <span>@product.ProductName</span>
+            </nav>
+
+            <div class="product-detail-layout">
+                <!-- Images -->
+                <div class="product-images">
+                    <div class="main-image">
+                        <img src="@activeImage" alt="@product.ProductName" />
+                    </div>
+                    <div class="image-thumbs">
+                        @foreach (var img in GetImages())
+                        {
+                            <button class="thumb @(activeImage == img ? "active" : "")" @onclick="() => activeImage = img">
+                                <img src="@img" alt="@product.ProductName" loading="lazy" />
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <!-- Info -->
+                <div class="product-info">
+                    <p class="product-detail-cat">@product.ProductCategory</p>
+                    <h1 class="product-detail-name">@product.ProductName</h1>
+                    <p class="product-detail-number">Ref. @product.ProductNumber</p>
+
+                    <div class="product-detail-price">
+                        @if (product.PriceWas > product.Price)
+                        {
+                            <span class="price-was">@product.PriceWas.ToString("C")</span>
+                        }
+                        <span class="price-now-lg">@product.Price.ToString("C")</span>
+                    </div>
+
+                    <div class="stock-status @GetStockClass()">
+                        <i class="bi @GetStockIcon()"></i> @product.StockStatus
+                    </div>
+
+                    <p class="product-detail-desc">@product.ProductDescription</p>
+
+                    <!-- Specs -->
+                    <div class="product-specs">
+                        @if (product.ProductCategory == ProductCategory.Watch)
+                        {
+                            <SpecRow Label="Brand" Value="@product.WatchBrand?.ToString()" />
+                            <SpecRow Label="Movement" Value="@product.WatchMovement?.ToString()" />
+                            <SpecRow Label="Strap" Value="@product.WatchStrapType?.ToString()" />
+                            <SpecRow Label="Diameter" Value="@product.WatchDiameter?.ToString()" />
+                            <SpecRow Label="Water Resistant" Value="@product.WaterResistant?.ToString()" />
+                            @if (!string.IsNullOrEmpty(product.DialColor)) { <SpecRow Label="Dial Color" Value="@product.DialColor" /> }
+                            @if (product.ByGemstone.HasValue) { <SpecRow Label="Gemstone" Value="@product.ByGemstone?.ToString()" /> }
+                        }
+                        else if (product.ProductCategory == ProductCategory.Jewellery)
+                        {
+                            @if (product.JewelleryCategory.HasValue) { <SpecRow Label="Category" Value="@product.JewelleryCategory?.ToString()" /> }
+                            @if (product.ByMetal.HasValue) { <SpecRow Label="Metal" Value="@product.ByMetal?.ToString()" /> }
+                            @if (product.ByGemstone.HasValue) { <SpecRow Label="Gemstone" Value="@product.ByGemstone?.ToString()" /> }
+                        }
+                        else if (product.ProductCategory == ProductCategory.Accessory)
+                        {
+                            @if (product.AccessoryCategory.HasValue) { <SpecRow Label="Category" Value="@product.AccessoryCategory?.ToString()" /> }
+                        }
+                        @if (product.Gender.HasValue) { <SpecRow Label="Gender" Value="@product.Gender?.ToString()" /> }
+                        @if (product.WarrantyYears.HasValue) { <SpecRow Label="Warranty" Value="@product.WarrantyYears?.ToString()" /> }
+                        @if (product.ByMetal.HasValue && product.ProductCategory != ProductCategory.Watch) { <SpecRow Label="Metal" Value="@product.ByMetal?.ToString()" /> }
+                    </div>
+
+                    <div class="quantity-add">
+                        <div class="qty-control">
+                            <button @onclick="DecrQty">−</button>
+                            <span>@qty</span>
+                            <button @onclick="IncrQty">+</button>
+                        </div>
+                        <button class="btn-yare btn-add-lg" @onclick="AddToCart"
+                                disabled="@(product.StockStatus == SD.OutOfStock || added)">
+                            @if (added)
+                            {
+                                <i class="bi bi-check2"></i> <span>Added!</span>
+                            }
+                            else
+                            {
+                                <i class="bi bi-bag-plus"></i> <span>Add to Bag</span>
+                            }
+                        </button>
+                    </div>
+
+                    <div class="product-trust">
+                        <span><i class="bi bi-shield-check"></i> Authentic</span>
+                        <span><i class="bi bi-truck"></i> Free Delivery</span>
+                        <span><i class="bi bi-arrow-return-left"></i> 30-Day Returns</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Related Products -->
+    @if (related.Any())
+    {
+        <section class="section-pad bg-light-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>You May Also Like</h2>
+                </div>
+                <div class="products-grid">
+                    @foreach (var p in related)
+                    {
+                        <ProductCard Product="p" OnAddToCart="@(async (prod) => await CartService.AddToCartAsync(prod))" />
+                    }
+                </div>
+            </div>
+        </section>
+    }
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private Product? product;
+    private List<Product> related = new();
+    private string? activeImage;
+    private bool loading = true, added;
+    private int qty = 1;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        loading = true;
+        product = await ProductService.GetByIdAsync(Id);
+        if (product != null)
+        {
+            activeImage = product.PrimaryDisplayImageUrl;
+            var all = await ProductService.GetByCategoryAsync(product.ProductCategory ?? ProductCategory.Watch);
+            related = all.Where(p => p.Id != Id).Take(4).ToList();
+        }
+        loading = false;
+    }
+
+    private List<string> GetImages()
+    {
+        var imgs = new List<string?> {
+            product?.PrimaryDisplayImageUrl,
+            product?.SecondaryDisplayImageUrl,
+            product?.SliderImageUrlOne,
+            product?.SliderImageUrlTwo,
+            product?.SliderImageUrlThree,
+            product?.SliderImageUrlFour
+        };
+        return imgs.Where(i => !string.IsNullOrEmpty(i)).Cast<string>().Distinct().ToList();
+    }
+
+    private void IncrQty() { if (qty < 10) qty++; }
+    private void DecrQty() { if (qty > 1) qty--; }
+
+    private async Task AddToCart()
+    {
+        if (product == null) return;
+        await CartService.AddToCartAsync(product, qty);
+        added = true;
+        await Task.Delay(2000);
+        added = false;
+        StateHasChanged();
+    }
+
+    private string GetStockClass() => product?.StockStatus switch
+    {
+        "In stock" => "stock-in",
+        "Running low" => "stock-low",
+        _ => "stock-out"
+    };
+
+    private string GetStockIcon() => product?.StockStatus switch
+    {
+        "In stock" => "bi-check-circle",
+        "Running low" => "bi-exclamation-circle",
+        _ => "bi-x-circle"
+    };
+}
+
+@* Inline helper component *@
+@* SpecRow is defined below as a local component *@

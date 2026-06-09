@@ -1,0 +1,65 @@
+@inherits LayoutComponentBase
+@inject IAuthService AuthService
+@inject NavigationManager Nav
+
+<div class="admin-app">
+    <nav class="admin-sidebar @(sidebarOpen ? "open" : "")">
+        <div class="sidebar-header">
+            <a href="" class="sidebar-logo">YARE</a>
+            <button class="sidebar-close" @onclick="() => sidebarOpen = false">&times;</button>
+        </div>
+        <div class="sidebar-user">
+            <i class="bi bi-person-circle"></i>
+            <div>
+                <span>@(currentUser?.FullName ?? "Admin")</span>
+                <small>@currentUser?.Role</small>
+            </div>
+        </div>
+        <ul class="sidebar-nav">
+            <li><NavLink href="admin" Match="NavLinkMatch.All"><i class="bi bi-speedometer2"></i> Dashboard</NavLink></li>
+            <li><NavLink href="admin/products"><i class="bi bi-box-seam"></i> Products</NavLink></li>
+            <li><NavLink href="admin/watches"><i class="bi bi-watch"></i> Watches</NavLink></li>
+            <li><NavLink href="admin/jewellery"><i class="bi bi-gem"></i> Jewellery</NavLink></li>
+            <li><NavLink href="admin/accessories"><i class="bi bi-bag-dash"></i> Accessories</NavLink></li>
+            <li><NavLink href="admin/collections"><i class="bi bi-collection"></i> Collections</NavLink></li>
+            <li><NavLink href="admin/orders"><i class="bi bi-receipt"></i> Orders</NavLink></li>
+        </ul>
+        <div class="sidebar-footer">
+            <a href="" class="sidebar-storefront"><i class="bi bi-shop"></i> View Store</a>
+            <button @onclick="Logout" class="sidebar-logout"><i class="bi bi-box-arrow-left"></i> Sign Out</button>
+        </div>
+    </nav>
+
+    <div class="admin-content">
+        <header class="admin-topbar">
+            <button class="sidebar-toggle" @onclick="() => sidebarOpen = !sidebarOpen">
+                <i class="bi bi-list"></i>
+            </button>
+            <div class="topbar-title">Admin Panel</div>
+            <div class="topbar-actions">
+                <a href="" class="btn-outline-sm"><i class="bi bi-shop"></i> Store</a>
+            </div>
+        </header>
+        <main class="admin-main">
+            @Body
+        </main>
+    </div>
+</div>
+
+@code {
+    private AppUser? currentUser;
+    private bool sidebarOpen;
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentUser = await AuthService.GetCurrentUserAsync();
+        if (currentUser == null || (currentUser.Role != SD.Role_MasterAdmin && currentUser.Role != SD.Role_Admin && currentUser.Role != SD.Role_Employee))
+            Nav.NavigateTo("login");
+    }
+
+    private async Task Logout()
+    {
+        await AuthService.LogoutAsync();
+        Nav.NavigateTo("");
+    }
+}

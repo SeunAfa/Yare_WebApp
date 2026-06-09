@@ -1,0 +1,52 @@
+@page "/search"
+@inject IProductService ProductService
+@inject ICartService CartService
+
+<PageTitle>Search — Yare</PageTitle>
+
+<section class="section-pad">
+    <div class="container">
+        <h1 class="page-title">Search Results</h1>
+        @if (!string.IsNullOrEmpty(query))
+        {
+            <p class="search-meta">Results for "<strong>@query</strong>" — @results.Count item@(results.Count != 1 ? "s" : "")</p>
+        }
+
+        @if (loading)
+        {
+            <div class="products-grid">
+                @for (int i = 0; i < 4; i++) { <div class="skeleton-card"></div> }
+            </div>
+        }
+        else if (!results.Any())
+        {
+            <div class="empty-state">
+                <i class="bi bi-search"></i>
+                <p>No results found for "@query"</p>
+                <a href="watches" class="btn-yare">Browse All Products</a>
+            </div>
+        }
+        else
+        {
+            <div class="products-grid">
+                @foreach (var p in results)
+                {
+                    <ProductCard Product="p" OnAddToCart="@(async (prod) => await CartService.AddToCartAsync(prod))" />
+                }
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    [SupplyParameterFromQuery(Name = "q")] public string? query { get; set; }
+    private List<Product> results = new();
+    private bool loading = true;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        loading = true;
+        results = await ProductService.SearchAsync(query ?? "");
+        loading = false;
+    }
+}

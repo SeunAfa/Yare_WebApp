@@ -1,0 +1,22 @@
+{
+  "orders": [
+    { "id": 101, "applicationUserId": "cust-001", "orderDate": "2025-05-01T14:30:00", "shippingDate": "2025-05-03T09:00:00", "orderTotal": 14995, "orderStatus": "Shipped", "paymentStatus": "Approved", "trackingNumber": "YR12345678", "carrier": "DHL", "paymentDate": "2025-05-01T14:32:00", "firstName": "Jane", "lastName": "Doe", "phoneNumber": "07700900003", "streetAdress": "45 High Street", "city": "London", "borough": "Southwark", "postCode": "SE1 7PB" },
+    { "id": 102, "applicationUserId": "cust-001", "orderDate": "2025-05-10T11:15:00", "shippingDate": "2025-05-13T09:00:00", "orderTotal": 5200, "orderStatus": "Shipped", "paymentStatus": "Approved", "trackingNumber": "YR12345679", "carrier": "FedEx", "paymentDate": "2025-05-10T11:17:00", "firstName": "Jane", "lastName": "Doe", "phoneNumber": "07700900003", "streetAdress": "45 High Street", "city": "London", "borough": "Southwark", "postCode": "SE1 7PB" },
+    { "id": 103, "applicationUserId": "admin-001", "orderDate": "2025-05-15T09:00:00", "shippingDate": "2025-05-17T09:00:00", "orderTotal": 7495, "orderStatus": "Approved", "paymentStatus": "Approved", "trackingNumber": "", "carrier": "", "paymentDate": "2025-05-15T09:02:00", "firstName": "Alex", "lastName": "Yare", "phoneNumber": "07700900001", "streetAdress": "1 Luxury Lane", "city": "London", "borough": "Westminster", "postCode": "SW1A 1AA" },
+    { "id": 104, "applicationUserId": "cust-001", "orderDate": "2025-05-20T16:45:00", "shippingDate": "0001-01-01T00:00:00", "orderTotal": 4295, "orderStatus": "Pending", "paymentStatus": "Approved", "trackingNumber": "", "carrier": "", "paymentDate": "2025-05-20T16:47:00", "firstName": "Jane", "lastName": "Doe", "phoneNumber": "07700900003", "streetAdress": "45 High Street", "city": "London", "borough": "Southwark", "postCode": "SE1 7PB" },
+    { "id": 105, "applicationUserId": "admin-001", "orderDate": "2025-05-22T10:00:00", "shippingDate": "0001-01-01T00:00:00", "orderTotal": 12495, "orderStatus": "Processing", "paymentStatus": "Approved", "trackingNumber": "", "carrier": "", "paymentDate": "2025-05-22T10:02:00", "firstName": "David", "lastName": "Chen", "phoneNumber": "07700900005", "streetAdress": "10 Park Avenue", "city": "Manchester", "borough": "Didsbury", "postCode": "M20 2GH" },
+    { "id": 106, "applicationUserId": "cust-001", "orderDate": "2025-05-25T13:20:00", "shippingDate": "2025-05-28T09:00:00", "orderTotal": 3795, "orderStatus": "Shipped", "paymentStatus": "Approved", "trackingNumber": "YR12345680", "carrier": "Royal Mail", "paymentDate": "2025-05-25T13:22:00", "firstName": "Sarah", "lastName": "Williams", "phoneNumber": "07700900006", "streetAdress": "88 Church Road", "city": "Bristol", "borough": "Clifton", "postCode": "BS8 4PA" },
+    { "id": 107, "applicationUserId": "admin-001", "orderDate": "2025-05-28T08:30:00", "shippingDate": "0001-01-01T00:00:00", "orderTotal": 9295, "orderStatus": "Pending", "paymentStatus": "Approved", "trackingNumber": "", "carrier": "", "paymentDate": "2025-05-28T08:32:00", "firstName": "Michael", "lastName": "Brown", "phoneNumber": "07700900007", "streetAdress": "3 Victoria Street", "city": "Edinburgh", "borough": "New Town", "postCode": "EH1 2JL" },
+    { "id": 108, "applicationUserId": "cust-001", "orderDate": "2025-06-01T15:10:00", "shippingDate": "0001-01-01T00:00:00", "orderTotal": 1495, "orderStatus": "Cancelled", "paymentStatus": "Rejected", "trackingNumber": "", "carrier": "", "paymentDate": "0001-01-01T00:00:00", "firstName": "Emily", "lastName": "Taylor", "phoneNumber": "07700900008", "streetAdress": "52 Queen Street", "city": "Birmingham", "borough": "Jewellery Quarter", "postCode": "B1 3ER" }
+  ],
+  "details": [
+    { "id": 1, "orderHeaderId": 101, "productId": 1, "count": 1, "price": 14995 },
+    { "id": 2, "orderHeaderId": 102, "productId": 2, "count": 1, "price": 5200 },
+    { "id": 3, "orderHeaderId": 103, "productId": 11, "count": 1, "price": 7495 },
+    { "id": 4, "orderHeaderId": 104, "productId": 3, "count": 1, "price": 4295 },
+    { "id": 5, "orderHeaderId": 105, "productId": 9, "count": 1, "price": 12495 },
+    { "id": 6, "orderHeaderId": 106, "productId": 13, "count": 1, "price": 3795 },
+    { "id": 7, "orderHeaderId": 107, "productId": 10, "count": 1, "price": 9295 },
+    { "id": 8, "orderHeaderId": 108, "productId": 5, "count": 1, "price": 1495 }
+  ]
+}

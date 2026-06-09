@@ -1,0 +1,44 @@
+@page "/store-locator"
+
+<PageTitle>Store Locator — Yare</PageTitle>
+
+<div class="page-hero">
+    <p class="section-eyebrow">Visit Us</p>
+    <h1>Store Locator</h1>
+    <p>Experience the Yare collection in person at one of our boutiques.</p>
+</div>
+
+<section class="section-pad" style="max-width:var(--maxw);margin:0 auto;padding:clamp(2rem,5vw,4rem) clamp(1rem,4vw,2rem);">
+    <div class="store-grid">
+        @foreach (var s in stores)
+        {
+            <div class="store-card">
+                <h3>@s.City</h3>
+                <p class="store-addr">@s.Address</p>
+                <p class="store-meta"><i class="bi bi-telephone"></i> @s.Phone</p>
+                <p class="store-meta"><i class="bi bi-clock"></i> @s.Hours</p>
+            </div>
+        }
+    </div>
+</section>
+
+<style>
+    .store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .store-card { background: var(--c-cream); padding: 28px; border: 1px solid var(--c-line-soft); transition: box-shadow .4s, transform .4s; }
+    .store-card:hover { box-shadow: var(--shadow-md); transform: translateY(-4px); }
+    .store-card h3 { font-family: var(--font-display); font-size: 1.6rem; margin-bottom: 10px; }
+    .store-addr { font-size: 13.5px; color: var(--c-muted); line-height: 1.6; margin-bottom: 14px; }
+    .store-meta { font-size: 12.5px; color: var(--c-text); display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .store-meta i { color: var(--c-gold-deep); }
+</style>
+
+@code {
+    private record Store(string City, string Address, string Phone, string Hours);
+    private readonly List<Store> stores = new()
+    {
+        new("London — Mayfair", "12 New Bond Street, London W1S 3ST", "+44 20 7123 4567", "Mon–Sat 10:00–19:00"),
+        new("Manchester", "8 King Street, Manchester M2 6AG", "+44 161 234 5678", "Mon–Sat 10:00–18:00"),
+        new("Edinburgh", "45 George Street, Edinburgh EH2 2HT", "+44 131 345 6789", "Mon–Sat 10:00–18:00"),
+        new("Birmingham", "3 The Jewellery Quarter, Birmingham B1 3ER", "+44 121 456 7890", "Tue–Sat 10:00–17:30"),
+    };
+}

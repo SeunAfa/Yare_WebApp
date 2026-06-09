@@ -1,0 +1,192 @@
+@page "/admin"
+@layout AdminLayout
+@inject IProductService ProductService
+@inject IOrderService OrderService
+@inject IAuthService AuthService
+
+<PageTitle>Dashboard — Yare Admin</PageTitle>
+
+<div class="admin-page-header">
+    <h1>Dashboard</h1>
+    <p>Overview of your store performance</p>
+</div>
+
+@if (loading)
+{
+    <div class="kpi-grid">
+        @for (int i = 0; i < 6; i++) { <div class="kpi-skeleton"></div> }
+    </div>
+}
+else
+{
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-icon kpi-revenue"><i class="bi bi-currency-pound"></i></div>
+            <div class="kpi-body">
+                <p class="kpi-label">Total Revenue</p>
+                <h3 class="kpi-value">@revenue.ToString("C0")</h3>
+                <p class="kpi-change @(revenueChange >= 0 ? "positive" : "negative")">
+                    <i class="bi @(revenueChange >= 0 ? "bi-arrow-up" : "bi-arrow-down")"></i>
+                    @Math.Abs(revenueChange).ToString("F1")% vs last 15 days
+                </p>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon kpi-orders"><i class="bi bi-receipt"></i></div>
+            <div class="kpi-body">
+                <p class="kpi-label">Total Orders</p>
+                <h3 class="kpi-value">@totalOrders</h3>
+                <p class="kpi-change neutral"><i class="bi bi-dash"></i> All time</p>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon kpi-products"><i class="bi bi-box-seam"></i></div>
+            <div class="kpi-body">
+                <p class="kpi-label">Total Products</p>
+                <h3 class="kpi-value">@totalProducts</h3>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon kpi-pending"><i class="bi bi-clock-history"></i></div>
+            <div class="kpi-body">
+                <p class="kpi-label">Pending Orders</p>
+                <h3 class="kpi-value">@pendingOrders</h3>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon kpi-processing"><i class="bi bi-gear"></i></div>
+            <div class="kpi-body">
+                <p class="kpi-label">Processing</p>
+                <h3 class="kpi-value">@processingOrders</h3>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon kpi-shipped"><i class="bi bi-truck"></i></div>
+            <div class="kpi-body">
+                <p class="kpi-label">Shipped</p>
+                <h3 class="kpi-value">@shippedOrders</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product breakdown -->
+    <div class="admin-grid-2 mt-4">
+        <div class="admin-card">
+            <h3 class="admin-card-title">Products by Category</h3>
+            <div class="simple-bar-chart">
+                @foreach (var (label, count, color) in productsByCategory)
+                {
+                    <div class="bar-row">
+                        <span class="bar-label">@label</span>
+                        <div class="bar-track">
+                            <div class="bar-fill" style="width: @(totalProducts > 0 ? (count * 100 / totalProducts) : 0)%; background: @color"></div>
+                        </div>
+                        <span class="bar-count">@count</span>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="admin-card">
+            <h3 class="admin-card-title">Order Status Breakdown</h3>
+            <div class="status-grid">
+                @foreach (var (status, count, cls) in orderStatuses)
+                {
+                    <div class="status-pill-box @cls">
+                        <span class="status-count">@count</span>
+                        <span class="status-name">@status</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="admin-card mt-4">
+        <div class="admin-card-header">
+            <h3 class="admin-card-title">Recent Orders</h3>
+            <a href="admin/orders" class="link-sm">View All</a>
+        </div>
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>#</th><th>Customer</th><th>Date</th><th>Total</th><th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var o in recentOrders)
+                    {
+                        <tr>
+                            <td>@o.Id</td>
+                            <td>@o.FirstName @o.LastName</td>
+                            <td>@o.OrderDate.ToString("dd MMM yyyy")</td>
+                            <td>@o.OrderTotal.ToString("C")</td>
+                            <td><span class="status-badge @GetStatusClass(o.OrderStatus)">@o.OrderStatus</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@code {
+    private bool loading = true;
+    private double revenue, revenueChange;
+    private int totalOrders, totalProducts, pendingOrders, processingOrders, shippedOrders;
+    private List<Product> allProducts = new();
+    private List<OrderHeader> allOrders = new();
+    private List<OrderHeader> recentOrders = new();
+    private List<(string, int, string)> productsByCategory = new();
+    private List<(string, int, string)> orderStatuses = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        allProducts = await ProductService.GetAllAsync();
+        allOrders = await OrderService.GetAllOrdersAsync();
+
+        totalProducts = allProducts.Count;
+        totalOrders = allOrders.Count;
+        pendingOrders = allOrders.Count(o => o.OrderStatus == SD.StatusPending);
+        processingOrders = allOrders.Count(o => o.OrderStatus == SD.StatusInProcess);
+        shippedOrders = allOrders.Count(o => o.OrderStatus == SD.StatusShipped);
+
+        var cutoff = DateTime.Now.AddDays(-15);
+        var prev = allOrders.Where(o => o.OrderStatus == SD.StatusShipped && o.OrderDate < cutoff).Sum(o => o.OrderTotal);
+        var curr = allOrders.Where(o => o.OrderStatus == SD.StatusShipped && o.OrderDate >= cutoff).Sum(o => o.OrderTotal);
+        revenue = allOrders.Where(o => o.OrderStatus == SD.StatusShipped).Sum(o => o.OrderTotal);
+        revenueChange = prev == 0 ? 100 : Math.Round(((curr - prev) / Math.Abs(prev)) * 100, 2);
+
+        productsByCategory = new()
+        {
+            ("Watches", allProducts.Count(p => p.ProductCategory == ProductCategory.Watch), "#2d53de"),
+            ("Jewellery", allProducts.Count(p => p.ProductCategory == ProductCategory.Jewellery), "#553772"),
+            ("Accessories", allProducts.Count(p => p.ProductCategory == ProductCategory.Accessory), "#8f3b76"),
+        };
+
+        orderStatuses = new()
+        {
+            (SD.StatusPending, pendingOrders, "status-pending"),
+            (SD.StatusApproved, allOrders.Count(o => o.OrderStatus == SD.StatusApproved), "status-approved"),
+            (SD.StatusInProcess, processingOrders, "status-processing"),
+            (SD.StatusShipped, shippedOrders, "status-shipped"),
+            (SD.StatusCancelled, allOrders.Count(o => o.OrderStatus == SD.StatusCancelled), "status-cancelled"),
+            (SD.StatusRefunded, allOrders.Count(o => o.OrderStatus == SD.StatusRefunded), "status-refunded"),
+        };
+
+        recentOrders = allOrders.Take(8).ToList();
+        loading = false;
+    }
+
+    private string GetStatusClass(string? status) => status switch
+    {
+        SD.StatusApproved => "badge-approved",
+        SD.StatusPending => "badge-pending",
+        SD.StatusInProcess => "badge-processing",
+        SD.StatusShipped => "badge-shipped",
+        SD.StatusCancelled => "badge-cancelled",
+        SD.StatusRefunded => "badge-refunded",
+        _ => ""
+    };
+}

@@ -1,0 +1,58 @@
+@inject NavigationManager Nav
+
+<div class="productCard-Container"
+     @onmouseenter="() => hover = true"
+     @onmouseleave="() => hover = false"
+     @onclick="GoToDetails">
+    <div class="productCard-imgs-Container">
+        @if (!string.IsNullOrEmpty(Product?.SecondaryDisplayImageUrl) && hover)
+        {
+            <img class="productCard-imgs @(hover ? "productCard-imgs_hover" : "")"
+                 src="@Product.SecondaryDisplayImageUrl" alt="@Product?.ProductName" loading="lazy" />
+        }
+        else
+        {
+            <img class="productCard-imgs"
+                 src="@(Product?.PrimaryDisplayImageUrl ?? "https://picsum.photos/seed/@Product?.Id/400/400")"
+                 alt="@Product?.ProductName" loading="lazy" />
+        }
+    </div>
+    <div class="productCard-info-Container">
+        <div class="productCard-info-Top">
+            <p class="text-black text-uppercase text-center productCard-info-productName">
+                @ShortenedName
+            </p>
+        </div>
+        <div class="productCard-info-Bottom">
+            @if (Product?.PriceWas > Product?.Price)
+            {
+                <p class="text-center productCard-info-PriceWas">@Product.PriceWas.ToString("C")</p>
+            }
+            <p class="text-black text-center productCard-info-Price">@Product?.Price.ToString("C")</p>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public Product? Product { get; set; }
+    [Parameter] public EventCallback<Product> OnAddToCart { get; set; }
+
+    private bool hover;
+
+    private string ShortenedName
+    {
+        get
+        {
+            if (Product?.ProductName == null) return "";
+            return Product.ProductName.Length > 21
+                ? Product.ProductName[..21] + "..."
+                : Product.ProductName;
+        }
+    }
+
+    private void GoToDetails()
+    {
+        if (Product != null)
+            Nav.NavigateTo($"product/{Product.Id}");
+    }
+}

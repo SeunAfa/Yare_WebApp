@@ -1,0 +1,122 @@
+@page "/admin/products"
+@layout AdminLayout
+@inject IProductService ProductService
+@inject NavigationManager Nav
+
+<PageTitle>Products — Yare Admin</PageTitle>
+
+<div class="admin-page-header">
+    <div>
+        <h1>Products</h1>
+        <p>Manage all products in your store</p>
+    </div>
+    <div class="header-actions">
+        <a href="admin/products/edit/0" class="btn-yare"><i class="bi bi-plus-lg"></i> Add Product</a>
+    </div>
+</div>
+
+<div class="admin-card">
+    <div class="table-toolbar">
+        <input type="text" placeholder="Search products..." @bind="searchTerm" @bind:event="oninput" class="search-input" />
+        <select @onchange="e => filterCategory = e.Value?.ToString()" class="sort-select">
+            <option value="">All Categories</option>
+            <option value="Watch">Watches</option>
+            <option value="Jewellery">Jewellery</option>
+            <option value="Accessory">Accessories</option>
+        </select>
+    </div>
+
+    @if (loading)
+    {
+        <div class="table-skeleton"></div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in Filtered)
+                    {
+                        <tr>
+                            <td><img src="@(p.PrimaryDisplayImageUrl ?? "https://picsum.photos/seed/p/60/60")" class="table-thumb" alt="@p.ProductName" /></td>
+                            <td>
+                                <div class="table-product-name">@p.ProductName</div>
+                                <small>@p.ProductNumber</small>
+                            </td>
+                            <td><span class="cat-badge">@p.ProductCategory</span></td>
+                            <td>@p.Price.ToString("C")</td>
+                            <td><span class="status-badge @GetStockClass(p.StockStatus)">@p.StockStatus</span></td>
+                            <td>
+                                <div class="table-actions">
+                                    <a href="@($"admin/products/edit/{p.Id}")" class="btn-icon" title="Edit"><i class="bi bi-pencil"></i></a>
+                                    <a href="@($"product/{p.Id}")" class="btn-icon" title="View" target="_blank"><i class="bi bi-eye"></i></a>
+                                    <button class="btn-icon danger" @onclick="() => ConfirmDelete(p.Id)" title="Delete"><i class="bi bi-trash3"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="table-footer">
+            <p>@Filtered.Count() of @products.Count products</p>
+        </div>
+    }
+</div>
+
+@if (deleteId > 0)
+{
+    <div class="modal-overlay">
+        <div class="modal-card">
+            <h3>Delete Product?</h3>
+            <p>This action cannot be undone in this session.</p>
+            <div class="modal-actions">
+                <button class="btn-outline-sm" @onclick="() => deleteId = 0">Cancel</button>
+                <button class="btn-danger" @onclick="DoDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<Product> products = new();
+    private string searchTerm = "", filterCategory = "";
+    private bool loading = true;
+    private int deleteId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await ProductService.GetAllAsync();
+        loading = false;
+    }
+
+    private IEnumerable<Product> Filtered => products.Where(p =>
+        (string.IsNullOrEmpty(searchTerm) || (p.ProductName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)) &&
+        (string.IsNullOrEmpty(filterCategory) || p.ProductCategory?.ToString() == filterCategory));
+
+    private void ConfirmDelete(int id) => deleteId = id;
+
+    private async Task DoDelete()
+    {
+        await ProductService.DeleteProductAsync(deleteId);
+        products.RemoveAll(p => p.Id == deleteId);
+        deleteId = 0;
+    }
+
+    private string GetStockClass(string? s) => s switch
+    {
+        SD.InStock => "badge-shipped",
+        SD.RunningLow => "badge-pending",
+        _ => "badge-cancelled"
+    };
+}

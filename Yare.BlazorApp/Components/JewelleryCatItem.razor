@@ -1,0 +1,17 @@
+<div class="jewelleryCategory-eachItem-Container"
+     @onmouseenter="() => hover = true"
+     @onmouseleave="() => hover = false">
+    <div class="jewelleryCategory-eachItem-ImgContainer @CssClass @(hover ? "jewelleryCategory-eachItem-ImgContainerActive" : "")"></div>
+    <div class="jewelleryCategory-eachItem-InfoContainer">
+        <h5 class="jewelleryCategory-Title @(hover ? "jewelleryCategory-titleActive" : "")">@Title</h5>
+        <a href="jewellery" class="navLink-jewelleryCategoryAnimation @(hover ? "jewelleryCategory-linksActive" : "jewelleryCategory-eachItem-Links")">
+            Explore All
+        </a>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? CssClass { get; set; }
+    [Parameter] public string? Title { get; set; }
+    private bool hover;
+}

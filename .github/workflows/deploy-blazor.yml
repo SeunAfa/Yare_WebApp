@@ -1,0 +1,45 @@
+name: Deploy Blazor to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore Yare.BlazorApp/Yare.BlazorApp.csproj
+        working-directory: Yare_WebApplication
+
+      - name: Publish Blazor WASM
+        run: dotnet publish Yare.BlazorApp/Yare.BlazorApp.csproj -c Release -o release --nologo
+        working-directory: Yare_WebApplication
+
+      - name: Fix base href for GitHub Pages
+        run: |
+          sed -i 's|<base href="/" />|<base href="/Yare_WebApp/" />|g' release/wwwroot/index.html || true
+
+      - name: Add .nojekyll
+        run: touch release/wwwroot/.nojekyll
+
+      - name: Copy 404.html
+        run: cp release/wwwroot/index.html release/wwwroot/404.html
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: release/wwwroot
+          branch: gh-pages
+          clean: true

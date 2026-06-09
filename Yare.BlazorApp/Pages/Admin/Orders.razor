@@ -1,0 +1,110 @@
+@page "/admin/orders"
+@layout AdminLayout
+@inject IOrderService OrderService
+
+<PageTitle>Orders — Yare Admin</PageTitle>
+
+<div class="admin-page-header">
+    <div>
+        <h1>Orders</h1>
+        <p>Manage and update customer orders</p>
+    </div>
+</div>
+
+<div class="admin-card">
+    <div class="table-toolbar">
+        <input type="text" placeholder="Search orders..." @bind="search" @bind:event="oninput" class="search-input" />
+        <select @onchange="e => statusFilter = e.Value?.ToString()" class="sort-select">
+            <option value="">All Statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="Approved">Approved</option>
+            <option value="Processing">Processing</option>
+            <option value="Shipped">Shipped</option>
+            <option value="Cancelled">Cancelled</option>
+            <option value="Refunded">Refunded</option>
+        </select>
+    </div>
+
+    @if (loading)
+    {
+        <div class="table-skeleton"></div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>#</th><th>Customer</th><th>Date</th><th>Total</th><th>Status</th><th>Payment</th><th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var o in Filtered)
+                    {
+                        <tr>
+                            <td>#@o.Id</td>
+                            <td>
+                                <div>@o.FirstName @o.LastName</div>
+                                <small>@o.PhoneNumber</small>
+                            </td>
+                            <td>@o.OrderDate.ToString("dd MMM yy")</td>
+                            <td>@o.OrderTotal.ToString("C")</td>
+                            <td><span class="status-badge @GetStatusClass(o.OrderStatus)">@o.OrderStatus</span></td>
+                            <td><span class="status-badge @(o.PaymentStatus == SD.PaymentStatusApproved ? "badge-shipped" : "badge-pending")">@o.PaymentStatus</span></td>
+                            <td>
+                                <div class="table-actions">
+                                    <select class="status-select" @onchange="@(e => UpdateStatus(o.Id, e.Value?.ToString() ?? string.Empty))">
+                                        <option value="">Update Status</option>
+                                        <option value="@SD.StatusApproved">Approve</option>
+                                        <option value="@SD.StatusInProcess">Processing</option>
+                                        <option value="@SD.StatusShipped">Shipped</option>
+                                        <option value="@SD.StatusCancelled">Cancel</option>
+                                        <option value="@SD.StatusRefunded">Refund</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="table-footer">
+            <p>@Filtered.Count() of @orders.Count orders</p>
+        </div>
+    }
+</div>
+
+@code {
+    private List<OrderHeader> orders = new();
+    private string search = "", statusFilter = "";
+    private bool loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        orders = await OrderService.GetAllOrdersAsync();
+        loading = false;
+    }
+
+    private IEnumerable<OrderHeader> Filtered => orders.Where(o =>
+        (string.IsNullOrEmpty(search) || $"{o.FirstName} {o.LastName} {o.Id}".Contains(search, StringComparison.OrdinalIgnoreCase)) &&
+        (string.IsNullOrEmpty(statusFilter) || o.OrderStatus == statusFilter));
+
+    private async Task UpdateStatus(int id, string status)
+    {
+        if (string.IsNullOrEmpty(status)) return;
+        await OrderService.UpdateOrderStatusAsync(id, status);
+        var order = orders.FirstOrDefault(o => o.Id == id);
+        if (order != null) order.OrderStatus = status;
+    }
+
+    private string GetStatusClass(string? s) => s switch
+    {
+        SD.StatusApproved => "badge-approved",
+        SD.StatusPending => "badge-pending",
+        SD.StatusInProcess => "badge-processing",
+        SD.StatusShipped => "badge-shipped",
+        SD.StatusCancelled => "badge-cancelled",
+        SD.StatusRefunded => "badge-refunded",
+        _ => ""
+    };
+}
