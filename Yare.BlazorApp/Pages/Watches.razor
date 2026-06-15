@@ -1,152 +1,61 @@
 @page "/watches"
 @inject IProductService ProductService
-@inject ICartService CartService
 
-<PageTitle>Watches — Yare</PageTitle>
+<PageTitle>@title — Yare</PageTitle>
 
-<div class="page-hero page-hero-watches">
-    <div class="page-hero-content">
-        <p class="section-label">Collection</p>
-        <h1>Watches</h1>
-        <p>Swiss precision, masterful design. Explore our curated selection.</p>
-    </div>
-</div>
-
-<section class="product-list-page section-pad">
-    <div class="container">
-        <div class="product-list-layout">
-            <!-- Filters Sidebar -->
-            <aside class="filters-sidebar @(filtersOpen ? "open" : "")">
-                <div class="filters-header">
-                    <h3>Filter</h3>
-                    <button class="btn-yare-sm" @onclick="ClearFilters">Clear Filters</button>
-                    <button class="filters-close" @onclick="() => filtersOpen = false">&times;</button>
-                </div>
-                <div class="filter-group">
-                    <h4>Gender</h4>
-                    @foreach (var g in Enum.GetValues<Gender>())
-                    {
-                        <label class="filter-checkbox">
-                            <input type="checkbox"
-                                   checked="@selectedGenders.Contains(g)"
-                                   @onchange="e => ToggleGender(g, (bool)e.Value!)" />
-                            @g.ToString()
-                        </label>
-                    }
-                </div>
-                <div class="filter-group">
-                    <h4>Price Range</h4>
-                    <div class="price-range">
-                        <input type="number" placeholder="Min"
-                               value="@(minPrice > 0 ? minPrice.ToString() : "")"
-                               @oninput="e => { minPrice = double.TryParse(e.Value?.ToString(), out var v) ? v : 0; ApplyFilters(); }" />
-                        <span>–</span>
-                        <input type="number" placeholder="Max"
-                               value="@(maxPrice > 0 ? maxPrice.ToString() : "")"
-                               @oninput="e => { maxPrice = double.TryParse(e.Value?.ToString(), out var v) ? v : 0; ApplyFilters(); }" />
-                    </div>
-                </div>
-                <div class="filter-group">
-                    <h4>Movement</h4>
-                    @foreach (var m in Enum.GetValues<WatchMovement>())
-                    {
-                        <label class="filter-checkbox">
-                            <input type="checkbox"
-                                   checked="@selectedMovements.Contains(m)"
-                                   @onchange="e => ToggleMovement(m, (bool)e.Value!)" />
-                            @m.ToString()
-                        </label>
-                    }
-                </div>
-            </aside>
-
-            <!-- Main Content -->
-            <div class="product-list-main">
-                <div class="product-list-toolbar">
-                    <button class="filter-toggle" @onclick="() => filtersOpen = !filtersOpen">
-                        <i class="bi bi-funnel"></i> Filters
-                    </button>
-                    <p class="result-count">@filtered.Count product@(filtered.Count != 1 ? "s" : "")</p>
-                    <div class="grid-toggle">
-                        <button class="@(gridCols == 2 ? "active" : "")" title="Large grid"
-                                @onclick="() => gridCols = 2"><span class="gi gi-2"></span></button>
-                        <button class="@(gridCols == 4 ? "active" : "")" title="Compact grid"
-                                @onclick="() => gridCols = 4"><span class="gi gi-4"></span></button>
-                    </div>
-                    <select value="@sortOrder" @onchange="SortChanged" class="sort-select">
-                        <option value="default">Sort: Featured</option>
-                        <option value="price-asc">Price: Low to High</option>
-                        <option value="price-desc">Price: High to Low</option>
-                        <option value="newest">Newest</option>
-                    </select>
-                </div>
-
-                @if (loading)
-                {
-                    <div class="products-grid">
-                        @for (int i = 0; i < 8; i++) { <div class="skeleton-card"></div> }
-                    </div>
-                }
-                else if (!filtered.Any())
-                {
-                    <div class="empty-state">
-                        <i class="bi bi-watch"></i>
-                        <p>No watches match your filters.</p>
-                        <button class="btn-yare-sm" @onclick="ClearFilters">Clear Filters</button>
-                    </div>
-                }
-                else
-                {
-                    <div class="products-grid @(gridCols == 2 ? "cols-2" : "")">
-                        @foreach (var p in filtered)
-                        {
-                            <ProductCard Product="p" OnAddToCart="AddToCart" />
-                        }
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-</section>
+<ProductListView Title="@title" Label="Watches" Subtitle="@subtitle"
+                 HeroClass="page-hero-watches"
+                 Products="filtered" Loading="loading"
+                 EmptyMessage="No watches match this selection." />
 
 @code {
-    private List<Product> all = new(), filtered = new();
-    private bool loading = true, filtersOpen;
-    private int gridCols = 4;
-    private HashSet<Gender> selectedGenders = new();
-    private HashSet<WatchMovement> selectedMovements = new();
-    private double minPrice, maxPrice;
-    private string sortOrder = "default";
+    [Parameter, SupplyParameterFromQuery(Name = "view")] public string? View { get; set; }
+
+    private List<Product> allWatches = new();
+    private List<Product> filtered = new();
+    private bool loading = true;
+    private string title = "Watches";
+    private string subtitle = "Swiss precision, masterful design. Explore our curated selection.";
 
     protected override async Task OnInitializedAsync()
     {
-        all = await ProductService.GetByCategoryAsync(ProductCategory.Watch);
-        ApplyFilters();
+        allWatches = await ProductService.GetByCategoryAsync(ProductCategory.Watch);
         loading = false;
+        ApplyView();
     }
 
-    private void ToggleGender(Gender g, bool add) { if (add) selectedGenders.Add(g); else selectedGenders.Remove(g); ApplyFilters(); }
-    private void ToggleMovement(WatchMovement m, bool add) { if (add) selectedMovements.Add(m); else selectedMovements.Remove(m); ApplyFilters(); }
-
-    private void ApplyFilters()
+    protected override void OnParametersSet()
     {
-        var q = all.AsEnumerable();
-        if (selectedGenders.Any()) q = q.Where(p => p.Gender.HasValue && selectedGenders.Contains(p.Gender.Value));
-        if (selectedMovements.Any()) q = q.Where(p => p.WatchMovement.HasValue && selectedMovements.Contains(p.WatchMovement.Value));
-        if (minPrice > 0) q = q.Where(p => p.Price >= minPrice);
-        if (maxPrice > 0) q = q.Where(p => p.Price <= maxPrice);
-        filtered = Sort(q.ToList());
+        if (!loading) ApplyView();
     }
 
-    private List<Product> Sort(List<Product> list) => sortOrder switch
+    private void ApplyView()
     {
-        "price-asc" => list.OrderBy(p => p.Price).ToList(),
-        "price-desc" => list.OrderByDescending(p => p.Price).ToList(),
-        "newest" => list.OrderByDescending(p => p.CreatedDateTime).ToList(),
-        _ => list
-    };
-
-    private void SortChanged(ChangeEventArgs e) { sortOrder = e.Value?.ToString() ?? "default"; ApplyFilters(); }
-    private void ClearFilters() { selectedGenders.Clear(); selectedMovements.Clear(); minPrice = maxPrice = 0; sortOrder = "default"; ApplyFilters(); }
-    private async Task AddToCart(Product p) => await CartService.AddToCartAsync(p);
+        Func<Product, bool>? predicate = null;
+        switch ((View ?? "").ToLowerInvariant())
+        {
+            case "new-in": title = "New In Watches"; break;
+            case "exclusive": title = "Exclusive Watches"; break;
+            case "limited-edition": title = "Limited Edition Watches"; break;
+            case "mens": title = "Mens Watches"; predicate = p => p.Gender == Gender.Male; break;
+            case "ladies": title = "Ladies Watches"; predicate = p => p.Gender == Gender.Female; break;
+            case "unisex": title = "Unisex Watches"; predicate = p => p.Gender == Gender.Unisex; break;
+            case "best-sellers": title = "Best Sellers"; break;
+            case "luxury": title = "Luxury Watches"; break;
+            case "diamond": title = "Diamond Watches"; predicate = p => p.ByGemstone == ByGemstone.Diamond; break;
+            case "swiss": title = "Swiss Watches"; break;
+            case "leather": title = "Leather Watches"; predicate = p => p.WatchStrapType == WatchStrapType.Leather; break;
+            case "heritage": title = "Heritage Watches"; break;
+            case "pocket": title = "Pocket Watches"; break;
+            case "sport": title = "Sport Watches"; break;
+            case "dive": title = "Dive Watches"; break;
+            case "mechanical": title = "Mechanical Watches"; predicate = p => p.WatchMovement == WatchMovement.Mechanical; break;
+            case "automatic": title = "Automatic Watches"; predicate = p => p.WatchMovement == WatchMovement.Automatic; break;
+            case "quartz": title = "Quartz Watches"; predicate = p => p.WatchMovement == WatchMovement.Quartz; break;
+            case "kinetic": title = "Kinetic Watches"; predicate = p => p.WatchMovement == WatchMovement.Kinetic; break;
+            case "eco-drive": title = "Eco-Drive Watches"; predicate = p => p.WatchMovement == WatchMovement.EcoDrive; break;
+            default: title = "Watches"; break;
+        }
+        filtered = predicate == null ? allWatches : allWatches.Where(predicate).ToList();
+    }
 }

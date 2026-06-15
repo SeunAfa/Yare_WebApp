@@ -1,0 +1,64 @@
+@typeparam TItem
+
+@if (Visible)
+{
+    <div class="filter-group">
+        <h4>@Title</h4>
+        @if (IsLarge)
+        {
+            <input class="filter-search" type="text" placeholder="Search @Title.ToLowerInvariant()…"
+                   value="@search" @oninput="e => search = e.Value?.ToString() ?? string.Empty" />
+        }
+        <div class="filter-options">
+            @foreach (var opt in VisibleOptions)
+            {
+                <label class="filter-checkbox">
+                    <input type="checkbox" checked="@Selected.Contains(opt)"
+                           @onchange="e => Toggle(opt, (bool)e.Value!)" />
+                    @Label(opt)
+                </label>
+            }
+            @if (!Matched.Any())
+            {
+                <p class="filter-empty">No matches</p>
+            }
+        </div>
+        @if (IsLarge && CanToggleExpand)
+        {
+            <button type="button" class="filter-more-btn" @onclick="() => expanded = !expanded">
+                @(expanded ? "Show less" : $"Show all ({Matched.Count})")
+            </button>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public bool Visible { get; set; } = true;
+    [Parameter] public IEnumerable<TItem> Values { get; set; } = Enumerable.Empty<TItem>();
+    [Parameter] public HashSet<TItem> Selected { get; set; } = new();
+    [Parameter] public Func<TItem, string> Label { get; set; } = x => x?.ToString() ?? "";
+    [Parameter] public EventCallback OnChanged { get; set; }
+
+    private const int CollapsedCount = 6;
+    private const int LargeThreshold = 8;
+
+    private bool expanded;
+    private string search = "";
+
+    private List<TItem> AllValues => Values.ToList();
+    private bool IsLarge => AllValues.Count > LargeThreshold;
+    private bool Searching => !string.IsNullOrWhiteSpace(search);
+    private List<TItem> Matched => Searching
+        ? AllValues.Where(v => Label(v).Contains(search.Trim(), StringComparison.OrdinalIgnoreCase)).ToList()
+        : AllValues;
+    private bool ShowAll => expanded || Searching;
+    private List<TItem> VisibleOptions => (IsLarge && !ShowAll) ? Matched.Take(CollapsedCount).ToList() : Matched;
+    private bool CanToggleExpand => !Searching && Matched.Count > CollapsedCount;
+
+    private async Task Toggle(TItem opt, bool on)
+    {
+        if (on) Selected.Add(opt); else Selected.Remove(opt);
+        await OnChanged.InvokeAsync();
+    }
+}

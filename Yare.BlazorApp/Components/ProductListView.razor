@@ -1,0 +1,236 @@
+@inject ICartService CartService
+
+@* Reusable product-list view: hero + full filter sidebar + toolbar + grid.
+   Each filter group lists ALL its enum values (like the old project). A group only shows when
+   the scoped products include that product type (watch groups when watches are in scope, etc.),
+   and type-specific groups scope to the selected Product Category. *@
+
+<div class="page-hero @HeroClass" style="@HeroStyle">
+    <div class="page-hero-content">
+        <p class="section-label">@Label</p>
+        <h1>@Title</h1>
+        @if (!string.IsNullOrWhiteSpace(Subtitle)) { <p>@Subtitle</p> }
+    </div>
+</div>
+
+<section class="product-list-page section-pad">
+    <div class="container">
+        <div class="product-list-layout">
+            <aside class="filters-sidebar @(filtersOpen ? "open" : "")">
+                <div class="filters-header">
+                    <h3>Filter</h3>
+                    <button class="btn-yare-sm" @onclick="ClearFilters">Clear Filters</button>
+                    <button class="filters-close" @onclick="() => filtersOpen = false">&times;</button>
+                </div>
+
+                @if (all.Any())
+                {
+                    <div class="filter-group">
+                        <h4>Price Range</h4>
+                        <div class="price-range">
+                            <input type="number" placeholder="Min"
+                                   value="@(minPrice > 0 ? minPrice.ToString() : "")"
+                                   @oninput="e => { minPrice = double.TryParse(e.Value?.ToString(), out var v) ? v : 0; ApplyFilters(); }" />
+                            <span>–</span>
+                            <input type="number" placeholder="Max"
+                                   value="@(maxPrice > 0 ? maxPrice.ToString() : "")"
+                                   @oninput="e => { maxPrice = double.TryParse(e.Value?.ToString(), out var v) ? v : 0; ApplyFilters(); }" />
+                        </div>
+                    </div>
+                }
+
+                <FilterGroup TItem="Gender" Title="Gender" Visible="all.Any()"
+                             Values="Enum.GetValues<Gender>()" Selected="genders" Label="@(x => x.DisplayName())" OnChanged="ApplyFilters" />
+                <FilterGroup TItem="ProductCategory" Title="Product Category" Visible="PresentCategories.Count >= 2"
+                             Values="PresentCategories" Selected="categories" Label="@(x => x.DisplayName())" OnChanged="ApplyFilters" />
+                @if (ShowBrandFilter)
+                {
+                    <FilterGroup TItem="WatchBrand" Title="Brand" Visible="ScopeHasWatch"
+                                 Values="Enum.GetValues<WatchBrand>()" Selected="brands" Label="@(x => x.DisplayName())" OnChanged="ApplyFilters" />
+                }
+                <FilterGroup TItem="ByMetal" Title="Metal" Visible="ScopeHasWatch || ScopeHasJewellery"
+                             Values="Enum.GetValues<ByMetal>()" Selected="metals" Label="@(x => x.DisplayName())" OnChanged="ApplyFilters" />
+                <FilterGroup TItem="WatchMovement" Title="Watch Movement" Visible="ScopeHasWatch"
+                             Values="Enum.GetValues<WatchMovement>()" Selected="movements" Label="@(x => x.DisplayName())" OnChanged="ApplyFilters" />
+                <FilterGroup TItem="WaterResistant" Title="Water Resistant" Visible="ScopeHasWatch"
+                             Values="Enum.GetValues<WaterResistant>()" Selected="waterResistants" Label="@(x => x.DisplayName())" OnChanged="ApplyFilters" />
+                <FilterGroup TItem="WatchCaseShape" Title="Case Shape" Visible="ScopeHasWatch"
+                             Values="Enum.GetValues<WatchCaseShape>()" Selected="caseShapes" Label="@(x => x.DisplayName())" OnChanged="ApplyFilters" />
+                <FilterGroup TItem="WatchDiameter" Title="Watch Diameter" Visible="ScopeHasWatch"
+                             Values="Enum.GetValues<WatchDiameter>()" Selected="diameters" Label="@(x => x.DisplayName())" OnChanged="ApplyFilters" />
+                <FilterGroup TItem="WatchStrapType" Title="Strap" Visible="ScopeHasWatch"
+                             Values="Enum.GetValues<WatchStrapType>()" Selected="strapTypes" Label="@(x => x.DisplayName())" OnChanged="ApplyFilters" />
+                <FilterGroup TItem="JewelleryCategory" Title="Jewellery Category" Visible="ScopeHasJewellery"
+                             Values="Enum.GetValues<JewelleryCategory>()" Selected="jewelleryCategories" Label="@(x => x.DisplayName())" OnChanged="ApplyFilters" />
+                <FilterGroup TItem="ByGemstone" Title="By Gemstone" Visible="ScopeHasJewellery"
+                             Values="Enum.GetValues<ByGemstone>()" Selected="gemstones" Label="@(x => x.DisplayName())" OnChanged="ApplyFilters" />
+                <FilterGroup TItem="AccessoryCategory" Title="Accessory Category" Visible="ScopeHasAccessory"
+                             Values="Enum.GetValues<AccessoryCategory>()" Selected="accessoryCategories" Label="@(x => x.DisplayName())" OnChanged="ApplyFilters" />
+                <FilterGroup TItem="ByOccassion" Title="By Occasion" Visible="ScopeHasWatch || ScopeHasJewellery"
+                             Values="Enum.GetValues<ByOccassion>()" Selected="occasions" Label="@(x => x.DisplayName())" OnChanged="ApplyFilters" />
+            </aside>
+
+            <div class="product-list-main">
+                <div class="product-list-toolbar">
+                    <button class="filter-toggle" @onclick="() => filtersOpen = !filtersOpen">
+                        <i class="bi bi-funnel"></i> Filters
+                    </button>
+                    <p class="result-count">@filtered.Count product@(filtered.Count != 1 ? "s" : "")</p>
+                    <div class="grid-toggle">
+                        <button class="@(gridCols == 2 ? "active" : "")" title="Large grid"
+                                @onclick="() => gridCols = 2"><span class="gi gi-2"></span></button>
+                        <button class="@(gridCols == 4 ? "active" : "")" title="Compact grid"
+                                @onclick="() => gridCols = 4"><span class="gi gi-4"></span></button>
+                    </div>
+                    <select value="@sortOrder" @onchange="SortChanged" class="sort-select">
+                        <option value="default">Sort: Featured</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                        <option value="newest">Newest</option>
+                    </select>
+                </div>
+
+                @if (Loading)
+                {
+                    <div class="products-grid">
+                        @for (int i = 0; i < 8; i++) { <div class="skeleton-card"></div> }
+                    </div>
+                }
+                else if (!all.Any())
+                {
+                    <div class="empty-state">
+                        <i class="bi bi-search"></i>
+                        <p>@EmptyMessage</p>
+                    </div>
+                }
+                else if (!filtered.Any())
+                {
+                    <div class="empty-state">
+                        <i class="bi bi-search"></i>
+                        <p>No products match your filters.</p>
+                        <button class="btn-yare-sm" @onclick="ClearFilters">Clear Filters</button>
+                    </div>
+                }
+                else
+                {
+                    <div class="products-grid @(gridCols == 2 ? "cols-2" : "")">
+                        @foreach (var p in filtered)
+                        {
+                            <ProductCard Product="p" OnAddToCart="AddToCart" />
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    [Parameter] public string Title { get; set; } = "Products";
+    [Parameter] public string? Subtitle { get; set; }
+    [Parameter] public string Label { get; set; } = "Collection";
+    [Parameter] public string? HeroClass { get; set; }
+    [Parameter] public string? HeroStyle { get; set; }
+    [Parameter] public List<Product> Products { get; set; } = new();
+    [Parameter] public bool Loading { get; set; }
+    [Parameter] public bool ShowBrandFilter { get; set; } = true;
+    [Parameter] public string EmptyMessage { get; set; } = "No products here yet.";
+
+    private List<Product> all = new(), filtered = new();
+    private bool filtersOpen;
+    private int gridCols = 4;
+    private string sortOrder = "default";
+
+    private HashSet<Gender> genders = new();
+    private HashSet<ProductCategory> categories = new();
+    private HashSet<WatchBrand> brands = new();
+    private HashSet<ByMetal> metals = new();
+    private HashSet<WatchMovement> movements = new();
+    private HashSet<WaterResistant> waterResistants = new();
+    private HashSet<WatchCaseShape> caseShapes = new();
+    private HashSet<WatchDiameter> diameters = new();
+    private HashSet<WatchStrapType> strapTypes = new();
+    private HashSet<JewelleryCategory> jewelleryCategories = new();
+    private HashSet<ByGemstone> gemstones = new();
+    private HashSet<AccessoryCategory> accessoryCategories = new();
+    private HashSet<ByOccassion> occasions = new();
+    private double minPrice, maxPrice;
+
+    private List<Product>? _lastProducts;
+
+    protected override void OnParametersSet()
+    {
+        if (!ReferenceEquals(_lastProducts, Products))
+        {
+            _lastProducts = Products;
+            all = Products ?? new();
+            ClearSelections();
+            ApplyFilters();
+        }
+    }
+
+    // Type-specific filter groups scope to the selected Product Category(ies).
+    private IEnumerable<Product> ScopeProducts =>
+        categories.Any() ? all.Where(p => p.ProductCategory.HasValue && categories.Contains(p.ProductCategory.Value)) : all;
+
+    private List<ProductCategory> PresentCategories =>
+        all.Where(p => p.ProductCategory.HasValue).Select(p => p.ProductCategory!.Value).Distinct().OrderBy(v => v.ToString()).ToList();
+
+    private bool ScopeHasWatch => ScopeProducts.Any(p => p.ProductCategory == ProductCategory.Watch);
+    private bool ScopeHasJewellery => ScopeProducts.Any(p => p.ProductCategory == ProductCategory.Jewellery);
+    private bool ScopeHasAccessory => ScopeProducts.Any(p => p.ProductCategory == ProductCategory.Accessory);
+
+    private void ApplyFilters()
+    {
+        // Clear selections for groups that are currently hidden (so they don't silently filter).
+        if (!all.Any()) genders.Clear();
+        if (PresentCategories.Count < 2) categories.Clear();
+        if (!ShowBrandFilter || !ScopeHasWatch) brands.Clear();
+        if (!(ScopeHasWatch || ScopeHasJewellery)) metals.Clear();
+        if (!ScopeHasWatch) { movements.Clear(); waterResistants.Clear(); caseShapes.Clear(); diameters.Clear(); strapTypes.Clear(); }
+        if (!ScopeHasJewellery) { jewelleryCategories.Clear(); gemstones.Clear(); }
+        if (!ScopeHasAccessory) accessoryCategories.Clear();
+        if (!(ScopeHasWatch || ScopeHasJewellery)) occasions.Clear();
+
+        var q = all.AsEnumerable();
+        if (genders.Any()) q = q.Where(p => p.Gender.HasValue && genders.Contains(p.Gender.Value));
+        if (categories.Any()) q = q.Where(p => p.ProductCategory.HasValue && categories.Contains(p.ProductCategory.Value));
+        if (brands.Any()) q = q.Where(p => p.WatchBrand.HasValue && brands.Contains(p.WatchBrand.Value));
+        if (metals.Any()) q = q.Where(p => p.ByMetal.HasValue && metals.Contains(p.ByMetal.Value));
+        if (movements.Any()) q = q.Where(p => p.WatchMovement.HasValue && movements.Contains(p.WatchMovement.Value));
+        if (waterResistants.Any()) q = q.Where(p => p.WaterResistant.HasValue && waterResistants.Contains(p.WaterResistant.Value));
+        if (caseShapes.Any()) q = q.Where(p => p.WatchCaseShape.HasValue && caseShapes.Contains(p.WatchCaseShape.Value));
+        if (diameters.Any()) q = q.Where(p => p.WatchDiameter.HasValue && diameters.Contains(p.WatchDiameter.Value));
+        if (strapTypes.Any()) q = q.Where(p => p.WatchStrapType.HasValue && strapTypes.Contains(p.WatchStrapType.Value));
+        if (jewelleryCategories.Any()) q = q.Where(p => p.JewelleryCategory.HasValue && jewelleryCategories.Contains(p.JewelleryCategory.Value));
+        if (gemstones.Any()) q = q.Where(p => p.ByGemstone.HasValue && gemstones.Contains(p.ByGemstone.Value));
+        if (accessoryCategories.Any()) q = q.Where(p => p.AccessoryCategory.HasValue && accessoryCategories.Contains(p.AccessoryCategory.Value));
+        if (occasions.Any()) q = q.Where(p => p.ByOccassion.HasValue && occasions.Contains(p.ByOccassion.Value));
+        if (minPrice > 0) q = q.Where(p => p.Price >= minPrice);
+        if (maxPrice > 0) q = q.Where(p => p.Price <= maxPrice);
+        filtered = Sort(q.ToList());
+    }
+
+    private List<Product> Sort(List<Product> list) => sortOrder switch
+    {
+        "price-asc" => list.OrderBy(p => p.Price).ToList(),
+        "price-desc" => list.OrderByDescending(p => p.Price).ToList(),
+        "newest" => list.OrderByDescending(p => p.CreatedDateTime).ToList(),
+        _ => list
+    };
+
+    private void SortChanged(ChangeEventArgs e) { sortOrder = e.Value?.ToString() ?? "default"; ApplyFilters(); }
+
+    private void ClearSelections()
+    {
+        genders.Clear(); categories.Clear(); brands.Clear(); metals.Clear(); movements.Clear();
+        waterResistants.Clear(); caseShapes.Clear(); diameters.Clear(); strapTypes.Clear();
+        jewelleryCategories.Clear(); gemstones.Clear(); accessoryCategories.Clear(); occasions.Clear();
+        minPrice = maxPrice = 0;
+        sortOrder = "default";
+    }
+
+    private void ClearFilters() { ClearSelections(); ApplyFilters(); }
+
+    private async Task AddToCart(Product p) => await CartService.AddToCartAsync(p);
+}

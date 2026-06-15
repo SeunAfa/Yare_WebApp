@@ -1,147 +1,73 @@
 @page "/jewellery"
 @inject IProductService ProductService
-@inject ICartService CartService
 
-<PageTitle>Jewellery — Yare</PageTitle>
+<PageTitle>@title — Yare</PageTitle>
 
-<div class="page-hero page-hero-jewellery">
-    <div class="page-hero-content">
-        <p class="section-label">Collection</p>
-        <h1>Jewellery</h1>
-        <p>From delicate pendants to statement pieces — find your perfect jewel.</p>
-    </div>
-</div>
-
-<section class="product-list-page section-pad">
-    <div class="container">
-        <div class="product-list-layout">
-            <aside class="filters-sidebar @(filtersOpen ? "open" : "")">
-                <div class="filters-header">
-                    <h3>Filter</h3>
-                    <button class="btn-yare-sm" @onclick="ClearFilters">Clear Filters</button>
-                    <button class="filters-close" @onclick="() => filtersOpen = false">&times;</button>
-                </div>
-                <div class="filter-group">
-                    <h4>Category</h4>
-                    @foreach (var cat in Enum.GetValues<JewelleryCategory>())
-                    {
-                        <label class="filter-checkbox">
-                            <input type="checkbox"
-                                   checked="@selectedCategories.Contains(cat)"
-                                   @onchange="e => ToggleCategory(cat, (bool)e.Value!)" />
-                            @cat.ToString()
-                        </label>
-                    }
-                </div>
-                <div class="filter-group">
-                    <h4>Price Range</h4>
-                    <div class="price-range">
-                        <input type="number" placeholder="Min"
-                               value="@(minPrice > 0 ? minPrice.ToString() : "")"
-                               @oninput="e => { minPrice = double.TryParse(e.Value?.ToString(), out var v) ? v : 0; ApplyFilters(); }" />
-                        <span>–</span>
-                        <input type="number" placeholder="Max"
-                               value="@(maxPrice > 0 ? maxPrice.ToString() : "")"
-                               @oninput="e => { maxPrice = double.TryParse(e.Value?.ToString(), out var v) ? v : 0; ApplyFilters(); }" />
-                    </div>
-                </div>
-                <div class="filter-group">
-                    <h4>Metal</h4>
-                    @foreach (var m in Enum.GetValues<ByMetal>())
-                    {
-                        <label class="filter-checkbox">
-                            <input type="checkbox"
-                                   checked="@selectedMetals.Contains(m)"
-                                   @onchange="e => ToggleMetal(m, (bool)e.Value!)" />
-                            @m.ToString()
-                        </label>
-                    }
-                </div>
-            </aside>
-
-            <div class="product-list-main">
-                <div class="product-list-toolbar">
-                    <button class="filter-toggle" @onclick="() => filtersOpen = !filtersOpen">
-                        <i class="bi bi-funnel"></i> Filters
-                    </button>
-                    <p class="result-count">@filtered.Count product@(filtered.Count != 1 ? "s" : "")</p>
-                    <div class="grid-toggle">
-                        <button class="@(gridCols == 2 ? "active" : "")" title="Large grid"
-                                @onclick="() => gridCols = 2"><span class="gi gi-2"></span></button>
-                        <button class="@(gridCols == 4 ? "active" : "")" title="Compact grid"
-                                @onclick="() => gridCols = 4"><span class="gi gi-4"></span></button>
-                    </div>
-                    <select value="@sortOrder" @onchange="SortChanged" class="sort-select">
-                        <option value="default">Sort: Featured</option>
-                        <option value="price-asc">Price: Low to High</option>
-                        <option value="price-desc">Price: High to Low</option>
-                        <option value="newest">Newest</option>
-                    </select>
-                </div>
-
-                @if (loading)
-                {
-                    <div class="products-grid">
-                        @for (int i = 0; i < 8; i++) { <div class="skeleton-card"></div> }
-                    </div>
-                }
-                else if (!filtered.Any())
-                {
-                    <div class="empty-state">
-                        <i class="bi bi-gem"></i>
-                        <p>No jewellery matches your filters.</p>
-                        <button class="btn-yare-sm" @onclick="ClearFilters">Clear Filters</button>
-                    </div>
-                }
-                else
-                {
-                    <div class="products-grid @(gridCols == 2 ? "cols-2" : "")">
-                        @foreach (var p in filtered) { <ProductCard Product="p" OnAddToCart="AddToCart" /> }
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-</section>
+<ProductListView Title="@title" Label="Jewellery" Subtitle="@subtitle"
+                 HeroClass="page-hero-jewellery"
+                 Products="filtered" Loading="loading"
+                 EmptyMessage="No jewellery matches this selection." />
 
 @code {
-    private List<Product> all = new(), filtered = new();
-    private bool loading = true, filtersOpen;
-    private int gridCols = 4;
-    private HashSet<JewelleryCategory> selectedCategories = new();
-    private HashSet<ByMetal> selectedMetals = new();
-    private double minPrice, maxPrice;
-    private string sortOrder = "default";
+    [Parameter, SupplyParameterFromQuery(Name = "view")] public string? View { get; set; }
+
+    private List<Product> all = new();
+    private List<Product> filtered = new();
+    private bool loading = true;
+    private string title = "Jewellery";
+    private string subtitle = "From delicate pendants to statement pieces — find your perfect jewel.";
 
     protected override async Task OnInitializedAsync()
     {
         all = await ProductService.GetByCategoryAsync(ProductCategory.Jewellery);
-        ApplyFilters();
         loading = false;
+        ApplyView();
     }
 
-    private void ToggleCategory(JewelleryCategory c, bool add) { if (add) selectedCategories.Add(c); else selectedCategories.Remove(c); ApplyFilters(); }
-    private void ToggleMetal(ByMetal m, bool add) { if (add) selectedMetals.Add(m); else selectedMetals.Remove(m); ApplyFilters(); }
-
-    private void ApplyFilters()
+    protected override void OnParametersSet()
     {
-        var q = all.AsEnumerable();
-        if (selectedCategories.Any()) q = q.Where(p => p.JewelleryCategory.HasValue && selectedCategories.Contains(p.JewelleryCategory.Value));
-        if (selectedMetals.Any()) q = q.Where(p => p.ByMetal.HasValue && selectedMetals.Contains(p.ByMetal.Value));
-        if (minPrice > 0) q = q.Where(p => p.Price >= minPrice);
-        if (maxPrice > 0) q = q.Where(p => p.Price <= maxPrice);
-        filtered = Sort(q.ToList());
+        if (!loading) ApplyView();
     }
 
-    private List<Product> Sort(List<Product> list) => sortOrder switch
+    private void ApplyView()
     {
-        "price-asc" => list.OrderBy(p => p.Price).ToList(),
-        "price-desc" => list.OrderByDescending(p => p.Price).ToList(),
-        "newest" => list.OrderByDescending(p => p.CreatedDateTime).ToList(),
-        _ => list
-    };
+        Func<Product, bool>? p = null;
+        switch ((View ?? "").ToLowerInvariant())
+        {
+            case "mens": title = "Mens Jewellery"; p = x => x.Gender == Gender.Male; break;
+            case "ladies": title = "Ladies Jewellery"; p = x => x.Gender == Gender.Female; break;
+            case "exclusive": title = "Exclusive Jewellery"; break;
+            case "special-occasion": title = "Special Occasion"; p = x => x.ByOccassion == ByOccassion.SpecialOccasion; break;
 
-    private void SortChanged(ChangeEventArgs e) { sortOrder = e.Value?.ToString() ?? "default"; ApplyFilters(); }
-    private void ClearFilters() { selectedCategories.Clear(); selectedMetals.Clear(); minPrice = maxPrice = 0; sortOrder = "default"; ApplyFilters(); }
-    private async Task AddToCart(Product p) => await CartService.AddToCartAsync(p);
+            case "anklets": title = "Anklets"; p = x => x.JewelleryCategory == JewelleryCategory.Anklets; break;
+            case "bangles": title = "Bangles"; p = x => x.JewelleryCategory == JewelleryCategory.Bangles; break;
+            case "bracelets": title = "Bracelets"; p = x => x.JewelleryCategory == JewelleryCategory.Bracelets; break;
+            case "brooches": title = "Brooches"; p = x => x.JewelleryCategory == JewelleryCategory.Brooches; break;
+            case "cufflinks": title = "Cufflinks"; p = x => x.JewelleryCategory == JewelleryCategory.Cufflinks; break;
+            case "chains": title = "Chains"; p = x => x.JewelleryCategory == JewelleryCategory.Chains; break;
+            case "charms": title = "Charms"; p = x => x.JewelleryCategory == JewelleryCategory.Charms; break;
+            case "earrings": title = "Earrings"; p = x => x.JewelleryCategory == JewelleryCategory.Earrings; break;
+            case "engagement-rings": title = "Engagement Rings"; p = x => x.JewelleryCategory == JewelleryCategory.EngagementRings; break;
+            case "lockets": title = "Lockets"; p = x => x.JewelleryCategory == JewelleryCategory.Lockets; break;
+            case "necklaces": title = "Necklaces"; p = x => x.JewelleryCategory == JewelleryCategory.Necklaces; break;
+            case "pendants": title = "Pendants"; p = x => x.JewelleryCategory == JewelleryCategory.Pendants; break;
+            case "rings": title = "Rings"; p = x => x.JewelleryCategory == JewelleryCategory.Rings; break;
+            case "wedding-rings": title = "Wedding Rings"; p = x => x.JewelleryCategory == JewelleryCategory.WeddingRings; break;
+
+            case "gold": title = "Gold Jewellery"; p = x => x.ByMetal == ByMetal.Gold; break;
+            case "white-gold": title = "White Gold Jewellery"; p = x => x.ByMetal == ByMetal.WhiteGold; break;
+            case "rose-gold": title = "Rose Gold Jewellery"; p = x => x.ByMetal == ByMetal.RoseGold; break;
+            case "silver": title = "Silver Jewellery"; p = x => x.ByMetal == ByMetal.Silver; break;
+            case "platinum": title = "Platinum Jewellery"; p = x => x.ByMetal == ByMetal.Platinum; break;
+
+            case "diamond": title = "Diamond Jewellery"; p = x => x.ByGemstone == ByGemstone.Diamond; break;
+            case "pearl": title = "Pearl Jewellery"; p = x => x.ByGemstone == ByGemstone.Pearl; break;
+            case "ruby": title = "Ruby Jewellery"; p = x => x.ByGemstone == ByGemstone.Ruby; break;
+            case "emerald": title = "Emerald Jewellery"; p = x => x.ByGemstone == ByGemstone.Emerald; break;
+            case "sapphire": title = "Sapphire Jewellery"; p = x => x.ByGemstone == ByGemstone.Sapphire; break;
+
+            default: title = "Jewellery"; break;
+        }
+        filtered = p == null ? all : all.Where(p).ToList();
+    }
 }
