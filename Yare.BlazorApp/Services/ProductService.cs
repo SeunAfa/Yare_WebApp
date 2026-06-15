@@ -27,7 +27,7 @@ public class ProductService : IProductService
         if (_products != null) return _products;
         try
         {
-            _products = await _http.GetFromJsonAsync<List<Product>>("data/products.json?v=9", _jsonOptions) ?? new();
+            _products = await _http.GetFromJsonAsync<List<Product>>("data/products.json?v=20", _jsonOptions) ?? new();
         }
         catch
         {
