@@ -13,6 +13,7 @@ public class AppUser
     public string? Borough { get; set; }
     public string? PostCode { get; set; }
     public string? PhoneNumber { get; set; }
+    public string? StoreName { get; set; }
     public DateTime CreatedDate { get; set; } = DateTime.Now;
 
     public string FullName => $"{FirstName} {LastName}";

@@ -16,4 +16,6 @@ public interface IProductService
     Task<List<Product>> GetNewArrivalsAsync();
     Task<bool> SaveProductAsync(Product product);
     Task<bool> DeleteProductAsync(int id);
+    Task<bool> SaveCollectionAsync(Collection collection);
+    Task<bool> DeleteCollectionAsync(int id);
 }

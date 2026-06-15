@@ -1,0 +1,81 @@
+@page "/admin/collections/detail/{Id:int}"
+@layout AdminLayout
+@inject IProductService ProductService
+@inject NavigationManager Nav
+
+<PageTitle>@(collection?.CollectionName ?? "Collection") — Yare Admin</PageTitle>
+
+<div class="admin-page-header">
+    <div>
+        <h1>@(collection?.CollectionName ?? "Collection")</h1>
+        <p>
+            @if (collection != null)
+            {
+                <span class="cat-badge">@GroupLabel(collection.Group)</span>
+                <span>@products.Count product(s)</span>
+            }
+        </p>
+    </div>
+    <div class="header-actions">
+        <a href="admin/collections" class="btn-outline-sm"><i class="bi bi-arrow-left"></i> Back</a>
+        @if (collection != null)
+        {
+            <a href="@($"admin/collections/edit/{collection.Id}")" class="btn-outline-sm"><i class="bi bi-pencil"></i> Edit Collection</a>
+            <a href="@($"collections/{collection.Id}")" class="btn-outline-sm" target="_blank"><i class="bi bi-box-arrow-up-right"></i> View in Store</a>
+        }
+    </div>
+</div>
+
+<div class="admin-card">
+    @if (loading)
+    {
+        <div class="table-skeleton"></div>
+    }
+    else if (collection == null)
+    {
+        <div class="empty-state">
+            <i class="bi bi-collection"></i>
+            <p>Collection not found.</p>
+        </div>
+    }
+    else if (!products.Any())
+    {
+        <div class="empty-state">
+            <i class="bi bi-collection"></i>
+            <p>No products in this collection yet.</p>
+            <a href="@($"admin/collections/edit/{collection.Id}")" class="btn-yare">Assign Products</a>
+        </div>
+    }
+    else
+    {
+        <p class="form-hint">Click any product to open it for editing.</p>
+        <div class="products-grid">
+            @foreach (var p in products)
+            {
+                <ProductCard Product="p" LinkPrefix="admin/products/edit" />
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private Collection? collection;
+    private List<Product> products = new();
+    private bool loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        collection = await ProductService.GetCollectionByIdAsync(Id);
+        products = await ProductService.GetByCollectionAsync(Id);
+        loading = false;
+    }
+
+    private static string GroupLabel(string? group) => group switch
+    {
+        "Audience" => "By Audience",
+        "Brand" => "By Brand",
+        null or "" => "General",
+        _ => group
+    };
+}

@@ -37,6 +37,9 @@
     [Parameter] public Product? Product { get; set; }
     [Parameter] public EventCallback<Product> OnAddToCart { get; set; }
 
+    /// <summary>Route prefix the card links to; the product id is appended. Defaults to the storefront product page.</summary>
+    [Parameter] public string LinkPrefix { get; set; } = "product";
+
     private bool hover;
 
     private string ShortenedName
@@ -53,6 +56,6 @@
     private void GoToDetails()
     {
         if (Product != null)
-            Nav.NavigateTo($"product/{Product.Id}");
+            Nav.NavigateTo($"{LinkPrefix}/{Product.Id}");
     }
 }

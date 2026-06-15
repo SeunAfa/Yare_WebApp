@@ -1,0 +1,158 @@
+@page "/my-orders/{OrderId:int}"
+@inject IOrderService OrderService
+@inject IAuthService AuthService
+@inject IProductService ProductService
+@inject NavigationManager Nav
+
+<PageTitle>Order #@OrderId — Yare</PageTitle>
+
+<section class="my-orders-page section-pad">
+    <div class="container">
+        @if (loading)
+        {
+            <div class="table-skeleton"></div>
+        }
+        else if (order == null)
+        {
+            <div class="empty-state">
+                <i class="bi bi-box-seam"></i>
+                <p>We couldn't find that order.</p>
+                <a href="my-orders" class="btn-yare-sm">Back to My Orders</a>
+            </div>
+        }
+        else
+        {
+            var cancelled = order.OrderStatus is SD.StatusCancelled or SD.StatusRefunded;
+            var step = StepIndex(order.OrderStatus);
+
+            <a href="my-orders" class="mo-back"><i class="bi bi-arrow-left"></i> My Orders</a>
+
+            <div class="mo-card">
+                <div class="mo-head">
+                    <div class="mo-head-info">
+                        <p class="mo-id">Order #@order.Id</p>
+                        <p class="mo-date">Placed @order.OrderDate.ToString("dd MMMM yyyy")</p>
+                    </div>
+                    <span class="mo-badge @BadgeClass(order.OrderStatus)">@order.OrderStatus</span>
+                    <p class="mo-total">@order.OrderTotal.ToString("C")</p>
+                </div>
+
+                @if (!cancelled)
+                {
+                    <div class="mo-progress">
+                        @foreach (var (label, i) in steps.Select((l, i) => (l, i)))
+                        {
+                            <div class="mo-step @(i <= step ? "done" : "") @(i == step ? "current" : "")">
+                                <span class="mo-dot">
+                                    @if (i < step) { <i class="bi bi-check"></i> }
+                                    else if (i == step) { <i class="bi bi-circle-fill"></i> }
+                                </span>
+                                <span class="mo-step-label">@label</span>
+                            </div>
+                        }
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(order.TrackingNumber))
+                {
+                    <p class="mo-tracking">
+                        <i class="bi bi-truck"></i>
+                        @(string.IsNullOrEmpty(order.Carrier) ? "Tracking" : order.Carrier): <strong>@order.TrackingNumber</strong>
+                    </p>
+                }
+            </div>
+
+            <div class="mo-card">
+                <h2 class="mo-section-title">Delivery Address</h2>
+                <div class="mo-address">
+                    <p>@order.FirstName @order.LastName</p>
+                    <p>@order.StreetAdress</p>
+                    <p>@order.Borough, @order.City</p>
+                    <p>@order.PostCode</p>
+                    @if (!string.IsNullOrWhiteSpace(order.PhoneNumber))
+                    {
+                        <p>@order.PhoneNumber</p>
+                    }
+                </div>
+            </div>
+
+            <div class="mo-card">
+                <h2 class="mo-section-title">Items</h2>
+                <div class="mo-items">
+                    @foreach (var d in details)
+                    {
+                        var p = productMap.GetValueOrDefault(d.ProductId);
+                        <div class="mo-item">
+                            <img src="@(p?.PrimaryDisplayImageUrl ?? "images/cat-watches.jpg")" alt="@p?.ProductName" />
+                            <div class="mo-item-info">
+                                <p class="mo-item-name">@(p?.ProductName ?? $"Product #{d.ProductId}")</p>
+                                <small>Qty: @d.Count</small>
+                                @if (!string.IsNullOrWhiteSpace(d.Engraving))
+                                {
+                                    <small class="co-engraving"><i class="bi bi-pen"></i> Engraved: <em>"@d.Engraving"</em></small>
+                                }
+                            </div>
+                            <span class="mo-item-price">@(((d.Price + d.EngravingFee) * d.Count).ToString("C"))</span>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="mo-card mo-help">
+                <h2 class="mo-section-title">Need Help With This Order?</h2>
+                <p class="mo-help-text">Our team can help with delivery questions, returns, or anything else about this order.</p>
+                <a href="@($"mailto:support@yare.com?subject=Order%20%23{order.Id}")" class="btn-yare-sm">Contact Support</a>
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    [Parameter] public int OrderId { get; set; }
+
+    private OrderHeader? order;
+    private List<OrderDetail> details = new();
+    private Dictionary<int, Product> productMap = new();
+    private bool loading = true;
+
+    private static readonly string[] steps = { "Order Placed", "Approved", "Processing", "Shipped" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await AuthService.GetCurrentUserAsync();
+        if (user == null)
+        {
+            Nav.NavigateTo("login");
+            return;
+        }
+
+        order = await OrderService.GetOrderByIdAsync(OrderId);
+        if (order != null && order.ApplicationUserId == user.Id)
+        {
+            details = await OrderService.GetOrderDetailsAsync(OrderId);
+            productMap = (await ProductService.GetAllAsync()).ToDictionary(p => p.Id);
+        }
+        else
+        {
+            order = null;
+        }
+        loading = false;
+    }
+
+    private static int StepIndex(string? status) => status switch
+    {
+        SD.StatusPending => 0,
+        SD.StatusApproved => 1,
+        SD.StatusInProcess => 2,
+        SD.StatusShipped => 3,
+        _ => 0
+    };
+
+    private static string BadgeClass(string? status) => status switch
+    {
+        SD.StatusShipped => "mo-badge-shipped",
+        SD.StatusApproved or SD.StatusInProcess => "mo-badge-active",
+        SD.StatusCancelled or SD.StatusRefunded => "mo-badge-cancelled",
+        _ => "mo-badge-pending"
+    };
+}

@@ -53,6 +53,7 @@
                             <td><span class="status-badge @(o.PaymentStatus == SD.PaymentStatusApproved ? "badge-shipped" : "badge-pending")">@o.PaymentStatus</span></td>
                             <td>
                                 <div class="table-actions">
+                                    <a href="@($"admin/orders/{o.Id}")" class="btn-icon" title="View details"><i class="bi bi-eye"></i></a>
                                     <select class="status-select" @onchange="@(e => UpdateStatus(o.Id, e.Value?.ToString() ?? string.Empty))">
                                         <option value="">Update Status</option>
                                         <option value="@SD.StatusApproved">Approve</option>

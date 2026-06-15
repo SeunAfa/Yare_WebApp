@@ -8,7 +8,16 @@
 
 <div class="admin-page-header">
     <h1>Dashboard</h1>
-    <p>Overview of your store performance</p>
+    <p>
+        @if (currentUser?.Role == SD.Role_Employee && !string.IsNullOrWhiteSpace(currentUser.StoreName))
+        {
+            @($"Overview of {currentUser.StoreName}'s performance")
+        }
+        else
+        {
+            @("Overview of all stores performance")
+        }
+    </p>
 </div>
 
 @if (loading)
@@ -70,34 +79,29 @@ else
         </div>
     </div>
 
-    <!-- Product breakdown -->
-    <div class="admin-grid-2 mt-4">
-        <div class="admin-card">
-            <h3 class="admin-card-title">Products by Category</h3>
-            <div class="simple-bar-chart">
-                @foreach (var (label, count, color) in productsByCategory)
-                {
-                    <div class="bar-row">
-                        <span class="bar-label">@label</span>
-                        <div class="bar-track">
-                            <div class="bar-fill" style="width: @(totalProducts > 0 ? (count * 100 / totalProducts) : 0)%; background: @color"></div>
-                        </div>
-                        <span class="bar-count">@count</span>
-                    </div>
-                }
+    <!-- Products by Category: mixed bar + line chart (full width) -->
+    <div class="admin-card mt-4">
+        <h3 class="admin-card-title">Products by Category — Count &amp; Stock Volume</h3>
+        <div class="mixed-chart">
+            @((MarkupString)chartSvg)
+            <div class="chart-legend">
+                <span><i class="lg-bar" style="background:#c9a227"></i> Products (count)</span>
+                <span><i class="lg-line" style="background:#4fb3c9"></i> Stock volume (units)</span>
             </div>
         </div>
-        <div class="admin-card">
-            <h3 class="admin-card-title">Order Status Breakdown</h3>
-            <div class="status-grid">
-                @foreach (var (status, count, cls) in orderStatuses)
-                {
-                    <div class="status-pill-box @cls">
-                        <span class="status-count">@count</span>
-                        <span class="status-name">@status</span>
-                    </div>
-                }
-            </div>
+    </div>
+
+    <!-- Order status -->
+    <div class="admin-card mt-4">
+        <h3 class="admin-card-title">Order Status Breakdown</h3>
+        <div class="status-grid">
+            @foreach (var (status, count, cls) in orderStatuses)
+            {
+                <div class="status-pill-box @cls">
+                    <span class="status-count">@count</span>
+                    <span class="status-name">@status</span>
+                </div>
+            }
         </div>
     </div>
 
@@ -111,18 +115,21 @@ else
             <table class="admin-table">
                 <thead>
                     <tr>
-                        <th>#</th><th>Customer</th><th>Date</th><th>Total</th><th>Status</th>
+                        <th>#</th><th>Customer</th><th>Date</th><th>Total</th><th>Status</th><th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var o in recentOrders)
                     {
                         <tr>
-                            <td>@o.Id</td>
+                            <td>#@o.Id</td>
                             <td>@o.FirstName @o.LastName</td>
                             <td>@o.OrderDate.ToString("dd MMM yyyy")</td>
                             <td>@o.OrderTotal.ToString("C")</td>
                             <td><span class="status-badge @GetStatusClass(o.OrderStatus)">@o.OrderStatus</span></td>
+                            <td>
+                                <a href="@($"admin/orders/{o.Id}")" class="link-sm">View</a>
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -138,11 +145,14 @@ else
     private List<Product> allProducts = new();
     private List<OrderHeader> allOrders = new();
     private List<OrderHeader> recentOrders = new();
-    private List<(string, int, string)> productsByCategory = new();
+    private List<(string label, int count, int volume, string color)> categoryChart = new();
     private List<(string, int, string)> orderStatuses = new();
+    private string chartSvg = "";
+    private AppUser? currentUser;
 
     protected override async Task OnInitializedAsync()
     {
+        currentUser = await AuthService.GetCurrentUserAsync();
         allProducts = await ProductService.GetAllAsync();
         allOrders = await OrderService.GetAllOrdersAsync();
 
@@ -158,11 +168,12 @@ else
         revenue = allOrders.Where(o => o.OrderStatus == SD.StatusShipped).Sum(o => o.OrderTotal);
         revenueChange = prev == 0 ? 100 : Math.Round(((curr - prev) / Math.Abs(prev)) * 100, 2);
 
-        productsByCategory = new()
+        int VolOf(ProductCategory cat) => allProducts.Where(p => p.ProductCategory == cat).Sum(p => p.Quantity ?? 0);
+        categoryChart = new()
         {
-            ("Watches", allProducts.Count(p => p.ProductCategory == ProductCategory.Watch), "#2d53de"),
-            ("Jewellery", allProducts.Count(p => p.ProductCategory == ProductCategory.Jewellery), "#553772"),
-            ("Accessories", allProducts.Count(p => p.ProductCategory == ProductCategory.Accessory), "#8f3b76"),
+            ("Watches", allProducts.Count(p => p.ProductCategory == ProductCategory.Watch), VolOf(ProductCategory.Watch), "#c9a227"),
+            ("Jewellery", allProducts.Count(p => p.ProductCategory == ProductCategory.Jewellery), VolOf(ProductCategory.Jewellery), "#b8911f"),
+            ("Accessories", allProducts.Count(p => p.ProductCategory == ProductCategory.Accessory), VolOf(ProductCategory.Accessory), "#8f6d14"),
         };
 
         orderStatuses = new()
@@ -176,7 +187,74 @@ else
         };
 
         recentOrders = allOrders.Take(8).ToList();
+        BuildChartSvg();
         loading = false;
+    }
+
+    private void BuildChartSvg()
+    {
+        int maxCount = Math.Max(1, categoryChart.Max(c => c.count));
+        int maxVol = Math.Max(1, categoryChart.Max(c => c.volume));
+        // round axis maxes up to a "nice" step so tick labels are clean
+        int countTop = NiceMax(maxCount), volTop = NiceMax(maxVol);
+        int W = 960, H = 320, padL = 48, padR = 56, padT = 30, padB = 50;
+        int plotW = W - padL - padR, plotH = H - padT - padB;
+        int n = categoryChart.Count;
+        double slot = (double)plotW / Math.Max(1, n);
+        int barW = (int)Math.Min(140, slot * 0.42);
+        const string barColor = "#c9a227", lineColor = "#4fb3c9"; // gold bars, teal line
+
+        var sb = new System.Text.StringBuilder();
+        sb.Append($"<svg viewBox=\"0 0 {W} {H}\" xmlns=\"http://www.w3.org/2000/svg\" preserveAspectRatio=\"xMidYMid meet\">");
+
+        // gridlines + dual axis tick labels (left = count, right = stock volume)
+        for (int g = 0; g <= 4; g++)
+        {
+            int gy = padT + plotH - plotH * g / 4;
+            sb.Append($"<line x1=\"{padL}\" y1=\"{gy}\" x2=\"{W - padR}\" y2=\"{gy}\" stroke=\"rgba(255,255,255,0.08)\" stroke-width=\"1\"/>");
+            int countTick = (int)Math.Round(countTop * g / 4.0);
+            int volTick = (int)Math.Round(volTop * g / 4.0);
+            sb.Append($"<text x=\"{padL - 9}\" y=\"{gy + 4}\" text-anchor=\"end\" font-size=\"11\" fill=\"{barColor}\">{countTick}</text>");
+            sb.Append($"<text x=\"{W - padR + 9}\" y=\"{gy + 4}\" text-anchor=\"start\" font-size=\"11\" fill=\"{lineColor}\">{volTick}</text>");
+        }
+        // axis captions
+        sb.Append($"<text x=\"{padL - 9}\" y=\"{padT - 12}\" text-anchor=\"end\" font-size=\"10\" fill=\"{barColor}\">Count</text>");
+        sb.Append($"<text x=\"{W - padR + 9}\" y=\"{padT - 12}\" text-anchor=\"start\" font-size=\"10\" fill=\"{lineColor}\">Units</text>");
+
+        var pts = new List<string>();
+        for (int i = 0; i < n; i++)
+        {
+            int cx = (int)(padL + slot * i + slot / 2);
+            int barH = (int)((double)categoryChart[i].count / countTop * plotH);
+            int by = padT + plotH - barH;
+            int volY = (int)(padT + plotH - (double)categoryChart[i].volume / volTop * plotH);
+            pts.Add($"{cx},{volY}");
+            sb.Append($"<rect x=\"{cx - barW / 2}\" y=\"{by}\" width=\"{barW}\" height=\"{barH}\" rx=\"3\" fill=\"{barColor}\"/>");
+            sb.Append($"<text x=\"{cx}\" y=\"{by - 9}\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"600\" fill=\"{barColor}\">{categoryChart[i].count}</text>");
+            sb.Append($"<text x=\"{cx}\" y=\"{H - 16}\" text-anchor=\"middle\" font-size=\"13\" fill=\"rgba(255,255,255,0.7)\">{categoryChart[i].label}</text>");
+        }
+
+        sb.Append($"<polyline fill=\"none\" stroke=\"{lineColor}\" stroke-width=\"2.5\" points=\"{string.Join(" ", pts)}\"/>");
+
+        for (int i = 0; i < n; i++)
+        {
+            int cx = (int)(padL + slot * i + slot / 2);
+            int volY = (int)(padT + plotH - (double)categoryChart[i].volume / volTop * plotH);
+            sb.Append($"<circle cx=\"{cx}\" cy=\"{volY}\" r=\"5\" fill=\"#1a1a1f\" stroke=\"{lineColor}\" stroke-width=\"2.5\"/>");
+            sb.Append($"<text x=\"{cx + 14}\" y=\"{volY + 4}\" text-anchor=\"start\" font-size=\"12\" font-weight=\"600\" fill=\"{lineColor}\">{categoryChart[i].volume}</text>");
+        }
+
+        sb.Append("</svg>");
+        chartSvg = sb.ToString();
+    }
+
+    // round a max value up to a clean axis top (e.g. 7 -> 10, 18 -> 20, 230 -> 300)
+    private static int NiceMax(int v)
+    {
+        if (v <= 5) return 5;
+        if (v <= 10) return 10;
+        int mag = (int)Math.Pow(10, (int)Math.Floor(Math.Log10(v)));
+        return ((v / mag) + 1) * mag;
     }
 
     private string GetStatusClass(string? status) => status switch

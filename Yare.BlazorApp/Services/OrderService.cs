@@ -84,7 +84,9 @@ public class OrderService : IOrderService
             OrderHeaderId = order.Id,
             ProductId = item.ProductId,
             Count = item.Count,
-            Price = item.Price
+            Price = item.Price,
+            Engraving = item.Engraving,
+            EngravingFee = item.EngravingFee
         }).ToList();
         await _localStorage.SetItemAsync($"yare_details_{order.Id}", details);
 

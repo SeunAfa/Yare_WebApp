@@ -15,31 +15,49 @@
     </div>
 }
 
-<section class="section-pad">
+<section class="product-list-page section-pad">
     <div class="container">
-        @if (loading)
-        {
-            <div class="products-grid">
-                @for (int i = 0; i < 8; i++) { <div class="skeleton-card"></div> }
+        <div class="product-list-main">
+            <div class="product-list-toolbar">
+                <p class="result-count">@products.Count product@(products.Count != 1 ? "s" : "")</p>
+                <div class="grid-toggle">
+                    <button class="@(gridCols == 2 ? "active" : "")" title="Large grid"
+                            @onclick="() => gridCols = 2"><span class="gi gi-2"></span></button>
+                    <button class="@(gridCols == 4 ? "active" : "")" title="Compact grid"
+                            @onclick="() => gridCols = 4"><span class="gi gi-4"></span></button>
+                </div>
+                <select value="@sortOrder" @onchange="SortChanged" class="sort-select">
+                    <option value="default">Sort: Featured</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                    <option value="newest">Newest</option>
+                </select>
             </div>
-        }
-        else if (!products.Any())
-        {
-            <div class="empty-state">
-                <i class="bi bi-collection"></i>
-                <p>No products in this collection yet.</p>
-                <a href="watches" class="btn-yare">Browse Watches</a>
-            </div>
-        }
-        else
-        {
-            <div class="products-grid">
-                @foreach (var p in products)
-                {
-                    <ProductCard Product="p" OnAddToCart="AddToCart" />
-                }
-            </div>
-        }
+
+            @if (loading)
+            {
+                <div class="products-grid">
+                    @for (int i = 0; i < 8; i++) { <div class="skeleton-card"></div> }
+                </div>
+            }
+            else if (!products.Any())
+            {
+                <div class="empty-state">
+                    <i class="bi bi-collection"></i>
+                    <p>No products in this collection yet.</p>
+                    <a href="watches" class="btn-yare">Browse Watches</a>
+                </div>
+            }
+            else
+            {
+                <div class="products-grid @(gridCols == 2 ? "cols-2" : "")">
+                    @foreach (var p in products)
+                    {
+                        <ProductCard Product="p" OnAddToCart="AddToCart" />
+                    }
+                </div>
+            }
+        </div>
     </div>
 </section>
 
@@ -48,12 +66,29 @@
     private Collection? collection;
     private List<Product> products = new();
     private bool loading = true;
+    private int gridCols = 4;
+    private string sortOrder = "default";
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
+        loading = true;
         collection = await ProductService.GetCollectionByIdAsync(Id);
-        products = await ProductService.GetByCollectionAsync(Id);
+        products = Sort(await ProductService.GetByCollectionAsync(Id));
         loading = false;
+    }
+
+    private List<Product> Sort(List<Product> list) => sortOrder switch
+    {
+        "price-asc" => list.OrderBy(p => p.Price).ToList(),
+        "price-desc" => list.OrderByDescending(p => p.Price).ToList(),
+        "newest" => list.OrderByDescending(p => p.CreatedDateTime).ToList(),
+        _ => list
+    };
+
+    private void SortChanged(ChangeEventArgs e)
+    {
+        sortOrder = e.Value?.ToString() ?? "default";
+        products = Sort(products);
     }
 
     private async Task AddToCart(Product p) => await CartService.AddToCartAsync(p);

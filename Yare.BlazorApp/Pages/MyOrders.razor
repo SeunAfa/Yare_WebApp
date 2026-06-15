@@ -1,0 +1,90 @@
+@page "/my-orders"
+@inject IOrderService OrderService
+@inject IAuthService AuthService
+@inject NavigationManager Nav
+
+<PageTitle>My Orders — Yare</PageTitle>
+
+<section class="my-orders-page section-pad">
+    <div class="container">
+        <h1 class="page-title">My Orders</h1>
+
+        @if (loading)
+        {
+            <div class="table-skeleton"></div>
+        }
+        else if (orders.Count == 0)
+        {
+            <div class="empty-state">
+                <i class="bi bi-box-seam"></i>
+                <p>You haven't placed any orders yet.</p>
+                <a href="watches" class="btn-yare-sm">Start Shopping</a>
+            </div>
+        }
+        else
+        {
+            <div class="mo-table-wrap">
+                <table class="mo-table">
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Expected Delivery</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var o in orders)
+                        {
+                            <tr @onclick="() => GoToOrder(o.Id)">
+                                <td class="mo-table-id">#@o.Id</td>
+                                <td>@o.OrderDate.ToString("dd MMM yyyy")</td>
+                                <td><span class="mo-badge @BadgeClass(o.OrderStatus)">@o.OrderStatus</span></td>
+                                <td>@GetExpectedDelivery(o)</td>
+                                <td class="mo-table-total">@o.OrderTotal.ToString("C")</td>
+                                <td class="mo-table-chevron"><i class="bi bi-chevron-right"></i></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    private List<OrderHeader> orders = new();
+    private bool loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await AuthService.GetCurrentUserAsync();
+        if (user == null)
+        {
+            Nav.NavigateTo("login");
+            return;
+        }
+        orders = (await OrderService.GetOrdersByUserAsync(user.Id))
+            .OrderByDescending(o => o.OrderDate).ToList();
+        loading = false;
+    }
+
+    private void GoToOrder(int orderId) => Nav.NavigateTo($"my-orders/{orderId}");
+
+    private static string GetExpectedDelivery(OrderHeader o) => o.OrderStatus switch
+    {
+        SD.StatusCancelled or SD.StatusRefunded => "—",
+        SD.StatusShipped => o.OrderDate.AddDays(5).ToString("dd MMM yyyy"),
+        _ => o.OrderDate.AddDays(7).ToString("dd MMM yyyy")
+    };
+
+    private static string BadgeClass(string? status) => status switch
+    {
+        SD.StatusShipped => "mo-badge-shipped",
+        SD.StatusApproved or SD.StatusInProcess => "mo-badge-active",
+        SD.StatusCancelled or SD.StatusRefunded => "mo-badge-cancelled",
+        _ => "mo-badge-pending"
+    };
+}

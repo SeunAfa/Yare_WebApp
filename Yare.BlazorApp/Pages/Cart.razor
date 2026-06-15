@@ -26,25 +26,122 @@
         {
             <div class="cart-layout">
                 <div class="cart-items">
-                    @foreach (var item in cart)
+                    @foreach (var grp in cart.GroupBy(c => c.ProductId))
                     {
+                        var first = grp.First();
+                        var lines = grp.OrderBy(l => l.HasEngraving ? 1 : 0).ThenBy(l => l.Id).ToList();
+                        var personalisable = first.ProductCategory is "Watch" or "Jewellery";
+
                         <div class="cart-item">
-                            <img src="@(item.ImageUrl ?? "https://picsum.photos/seed/cart/120/120")"
-                                 alt="@item.ProductName" class="cart-item-img" />
+                            <a href="product/@first.ProductId" class="cart-item-link">
+                                <img src="@(first.ImageUrl ?? "https://picsum.photos/seed/cart/120/120")"
+                                     alt="@first.ProductName" class="cart-item-img" />
+                            </a>
                             <div class="cart-item-info">
-                                <p class="cart-item-cat">@item.ProductCategory</p>
-                                <h4 class="cart-item-name">@item.ProductName</h4>
-                                <p class="cart-item-price">@item.Price.ToString("C")</p>
+                                <p class="cart-item-cat">@first.ProductCategory</p>
+                                <h4 class="cart-item-name">
+                                    <a href="product/@first.ProductId">@first.ProductName</a>
+                                </h4>
+                                <p class="cart-item-price">@first.Price.ToString("C")</p>
+
+                                @* Engraving message rows — message + Edit + remove only, no counters *@
+                                @if (lines.Any(l => l.HasEngraving))
+                                {
+                                <div class="cart-variants">
+                                    @foreach (var line in lines.Where(l => l.HasEngraving))
+                                    {
+                                        <div class="cart-variant">
+                                            <span class="cv-label">
+                                                <i class="bi bi-pen"></i> <em>“@line.Engraving”</em>
+                                                @if (line.Count > 1)
+                                                {
+                                                    <span class="cv-count">× @line.Count</span>
+                                                }
+                                                <span class="cv-fee">+@line.EngravingFee.ToString("C") / item</span>
+                                            </span>
+                                            <button class="engraving-link" @onclick="() => StartEditEngraving(line)">Edit</button>
+                                            <button class="cv-remove" title="Remove" @onclick="() => Remove(line.Id)">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </div>
+
+                                        @if (editingEngravingId == line.Id)
+                                        {
+                                            <div class="cart-engraving-edit">
+                                                <input type="text" maxlength="20" placeholder="Your engraving"
+                                                       @bind="engravingDraft" @bind:event="oninput" />
+                                                <span class="engraving-count">@engravingDraft.Length / 20</span>
+                                                @if (line.Count > 1)
+                                                {
+                                                    <label class="engraving-applyto">
+                                                        Apply to
+                                                        <select @bind="engravingApplyTo">
+                                                            @for (int n = line.Count; n >= 1; n--)
+                                                            {
+                                                                <option value="@n">@(n == line.Count ? $"all {n} items" : $"{n} of {line.Count}")</option>
+                                                            }
+                                                        </select>
+                                                    </label>
+                                                }
+                                                <div class="cart-engraving-actions">
+                                                    <button class="link-btn" @onclick="CancelEditEngraving">Cancel</button>
+                                                    @if (line.HasEngraving)
+                                                    {
+                                                        <button class="link-btn danger" @onclick="() => ClearEngraving(line.Id)">Remove</button>
+                                                    }
+                                                    <button class="cart-engraving-save" @onclick="() => SaveEngraving(line.Id)">Save</button>
+                                                </div>
+                                                @if (line.Count > 1 && engravingApplyTo < line.Count)
+                                                {
+                                                    <p class="engraving-split-note">
+                                                        The other @(line.Count - engravingApplyTo) will keep their current message.
+                                                    </p>
+                                                }
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                                }
+
+                                @if (personalisable)
+                                {
+                                    @if (addingEngravingProductId == first.ProductId)
+                                    {
+                                        <div class="cart-engraving-edit">
+                                            <input type="text" maxlength="20" placeholder="Your engraving"
+                                                   @bind="engravingDraft" @bind:event="oninput" />
+                                            <span class="engraving-count">@engravingDraft.Length / 20</span>
+                                            <div class="cart-engraving-actions">
+                                                <button class="link-btn" @onclick="CancelEditEngraving">Cancel</button>
+                                                <button class="cart-engraving-save" @onclick="() => SaveNewEngraving(first.ProductId)">Save</button>
+                                            </div>
+                                            <p class="engraving-split-note">
+                                                @(lines.Any(l => !l.HasEngraving)
+                                                    ? "One of your un-engraved items will carry this message."
+                                                    : "An extra item will be added to carry this message.")
+                                            </p>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <button class="engraving-link engraving-add" @onclick="() => StartAddEngraving(first.ProductId)">
+                                            <i class="bi bi-pen"></i>
+                                            @(lines.Any(l => l.HasEngraving) ? "Add another engraving" : $"Add Engraving (+{SD.EngravingFee.ToString("C")})")
+                                        </button>
+                                    }
+                                }
                             </div>
                             <div class="cart-item-qty">
-                                <button @onclick="() => Decrement(item.ProductId)">−</button>
-                                <span>@item.Count</span>
-                                <button @onclick="() => Increment(item.ProductId)">+</button>
+                                <button @onclick="() => DecPlainUnit(first.ProductId)"
+                                        disabled="@(!lines.Any(l => !l.HasEngraving))"
+                                        title="@(lines.Any(l => !l.HasEngraving) ? "Remove one" : "All items are engraved — remove a message instead")">−</button>
+                                <span>@grp.Sum(g => g.Count)</span>
+                                <button @onclick="() => AddPlainUnit(first.ProductId)" title="Add one (no engraving)">+</button>
                             </div>
                             <div class="cart-item-subtotal">
-                                @((item.Price * item.Count).ToString("C"))
+                                @(grp.Sum(g => g.LineTotal).ToString("C"))
                             </div>
-                            <button class="cart-item-remove" @onclick="() => Remove(item.ProductId)">
+                            <button class="cart-item-remove" title="Remove all" @onclick="() => RemoveGroup(first.ProductId)">
                                 <i class="bi bi-trash3"></i>
                             </button>
                         </div>
@@ -53,10 +150,21 @@
 
                 <div class="cart-summary">
                     <h3>Order Summary</h3>
+                    @{
+                        var itemsSubtotal = cart.Sum(c => c.Price * c.Count);
+                        var engravingTotal = cart.Sum(c => c.EngravingFee * c.Count);
+                    }
                     <div class="summary-row">
                         <span>Subtotal (@cart.Sum(c => c.Count) item@(cart.Sum(c => c.Count) != 1 ? "s" : ""))</span>
-                        <span>@total.ToString("C")</span>
+                        <span>@itemsSubtotal.ToString("C")</span>
                     </div>
+                    @if (engravingTotal > 0)
+                    {
+                        <div class="summary-row">
+                            <span>Engraving</span>
+                            <span>@engravingTotal.ToString("C")</span>
+                        </div>
+                    }
                     <div class="summary-row">
                         <span>Shipping</span>
                         <span>@(total >= 500 ? "Free" : "£9.99")</span>
@@ -81,6 +189,55 @@
     private double total;
     private bool loading = true;
 
+    // Engraving edit state — only one editor open at a time
+    private int? editingEngravingId;
+    private int addingEngravingProductId;
+    private string engravingDraft = string.Empty;
+    private int engravingApplyTo;
+
+    private void StartEditEngraving(CartItem item)
+    {
+        editingEngravingId = item.Id;
+        addingEngravingProductId = 0;
+        engravingDraft = item.Engraving ?? string.Empty;
+        engravingApplyTo = item.Count;
+    }
+    private void StartAddEngraving(int productId)
+    {
+        addingEngravingProductId = productId;
+        editingEngravingId = null;
+        engravingDraft = string.Empty;
+    }
+    private void CancelEditEngraving()
+    {
+        editingEngravingId = null;
+        addingEngravingProductId = 0;
+        engravingDraft = string.Empty;
+    }
+    private async Task SaveEngraving(int cartItemId)
+    {
+        await CartService.UpdateEngravingAsync(cartItemId, engravingDraft, engravingApplyTo);
+        CancelEditEngraving();
+    }
+    private async Task SaveNewEngraving(int productId)
+    {
+        if (!string.IsNullOrWhiteSpace(engravingDraft))
+            await CartService.AddEngravingMessageAsync(productId, engravingDraft);
+        CancelEditEngraving();
+    }
+    private async Task ClearEngraving(int cartItemId)
+    {
+        await CartService.UpdateEngravingAsync(cartItemId, null);
+        CancelEditEngraving();
+    }
+    private async Task RemoveGroup(int productId)
+    {
+        foreach (var line in cart.Where(c => c.ProductId == productId).ToList())
+            await CartService.RemoveAsync(line.Id);
+    }
+    private async Task AddPlainUnit(int productId) => await CartService.AddUnitAsync(productId);
+    private async Task DecPlainUnit(int productId) => await CartService.RemoveUnitAsync(productId);
+
     protected override async Task OnInitializedAsync()
     {
         CartService.OnChange += RefreshCart;
@@ -96,9 +253,9 @@
     }
 
     private async void RefreshCart() => await LoadCart();
-    private async Task Increment(int pid) => await CartService.IncrementAsync(pid);
-    private async Task Decrement(int pid) => await CartService.DecrementAsync(pid);
-    private async Task Remove(int pid) => await CartService.RemoveAsync(pid);
+    private async Task Increment(int cartItemId) => await CartService.IncrementAsync(cartItemId);
+    private async Task Decrement(int cartItemId) => await CartService.DecrementAsync(cartItemId);
+    private async Task Remove(int cartItemId) => await CartService.RemoveAsync(cartItemId);
     private void GoCheckout() => Nav.NavigateTo("checkout");
 
     public void Dispose() => CartService.OnChange -= RefreshCart;

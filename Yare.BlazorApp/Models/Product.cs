@@ -44,7 +44,10 @@ public class Product
 
     public ProductCategory? ProductCategory { get; set; }
     public ByMetal? ByMetal { get; set; }
-    public int? Product_CollectionId { get; set; }
+    public List<int> CollectionIds { get; set; } = new();
+
+    /// <summary>Indices (0-5) of the image slots — Primary, Secondary, Slider 1-4 — to display on the storefront product page.</summary>
+    public List<int> DisplayImageSlots { get; set; } = new();
 
     // Watch-specific
     public WatchBrand? WatchBrand { get; set; }

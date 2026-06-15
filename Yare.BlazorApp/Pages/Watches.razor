@@ -19,6 +19,7 @@
             <aside class="filters-sidebar @(filtersOpen ? "open" : "")">
                 <div class="filters-header">
                     <h3>Filter</h3>
+                    <button class="btn-yare-sm" @onclick="ClearFilters">Clear Filters</button>
                     <button class="filters-close" @onclick="() => filtersOpen = false">&times;</button>
                 </div>
                 <div class="filter-group">
@@ -26,7 +27,9 @@
                     @foreach (var g in Enum.GetValues<Gender>())
                     {
                         <label class="filter-checkbox">
-                            <input type="checkbox" @onchange="e => ToggleGender(g, (bool)e.Value!)" />
+                            <input type="checkbox"
+                                   checked="@selectedGenders.Contains(g)"
+                                   @onchange="e => ToggleGender(g, (bool)e.Value!)" />
                             @g.ToString()
                         </label>
                     }
@@ -34,10 +37,12 @@
                 <div class="filter-group">
                     <h4>Price Range</h4>
                     <div class="price-range">
-                        <input type="number" placeholder="Min" value="@minPrice"
+                        <input type="number" placeholder="Min"
+                               value="@(minPrice > 0 ? minPrice.ToString() : "")"
                                @oninput="e => { minPrice = double.TryParse(e.Value?.ToString(), out var v) ? v : 0; ApplyFilters(); }" />
                         <span>–</span>
-                        <input type="number" placeholder="Max" value="@maxPrice"
+                        <input type="number" placeholder="Max"
+                               value="@(maxPrice > 0 ? maxPrice.ToString() : "")"
                                @oninput="e => { maxPrice = double.TryParse(e.Value?.ToString(), out var v) ? v : 0; ApplyFilters(); }" />
                     </div>
                 </div>
@@ -46,12 +51,13 @@
                     @foreach (var m in Enum.GetValues<WatchMovement>())
                     {
                         <label class="filter-checkbox">
-                            <input type="checkbox" @onchange="e => ToggleMovement(m, (bool)e.Value!)" />
+                            <input type="checkbox"
+                                   checked="@selectedMovements.Contains(m)"
+                                   @onchange="e => ToggleMovement(m, (bool)e.Value!)" />
                             @m.ToString()
                         </label>
                     }
                 </div>
-                <button class="btn-yare-sm mt-2" @onclick="ClearFilters">Clear Filters</button>
             </aside>
 
             <!-- Main Content -->
@@ -61,7 +67,13 @@
                         <i class="bi bi-funnel"></i> Filters
                     </button>
                     <p class="result-count">@filtered.Count product@(filtered.Count != 1 ? "s" : "")</p>
-                    <select @onchange="SortChanged" class="sort-select">
+                    <div class="grid-toggle">
+                        <button class="@(gridCols == 2 ? "active" : "")" title="Large grid"
+                                @onclick="() => gridCols = 2"><span class="gi gi-2"></span></button>
+                        <button class="@(gridCols == 4 ? "active" : "")" title="Compact grid"
+                                @onclick="() => gridCols = 4"><span class="gi gi-4"></span></button>
+                    </div>
+                    <select value="@sortOrder" @onchange="SortChanged" class="sort-select">
                         <option value="default">Sort: Featured</option>
                         <option value="price-asc">Price: Low to High</option>
                         <option value="price-desc">Price: High to Low</option>
@@ -80,12 +92,12 @@
                     <div class="empty-state">
                         <i class="bi bi-watch"></i>
                         <p>No watches match your filters.</p>
-                        <button class="btn-yare" @onclick="ClearFilters">Clear Filters</button>
+                        <button class="btn-yare-sm" @onclick="ClearFilters">Clear Filters</button>
                     </div>
                 }
                 else
                 {
-                    <div class="products-grid">
+                    <div class="products-grid @(gridCols == 2 ? "cols-2" : "")">
                         @foreach (var p in filtered)
                         {
                             <ProductCard Product="p" OnAddToCart="AddToCart" />
@@ -100,6 +112,7 @@
 @code {
     private List<Product> all = new(), filtered = new();
     private bool loading = true, filtersOpen;
+    private int gridCols = 4;
     private HashSet<Gender> selectedGenders = new();
     private HashSet<WatchMovement> selectedMovements = new();
     private double minPrice, maxPrice;

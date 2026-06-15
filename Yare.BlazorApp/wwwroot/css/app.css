@@ -78,6 +78,12 @@ h6 {
   line-height: 1.08;
   color: var(--c-text);
 }
+/* Blazor's FocusOnNavigate focuses the h1 after each navigation (good for
+   screen readers) — suppress the visual focus ring it leaves on titles */
+h1:focus,
+h1:focus-visible {
+  outline: none;
+}
 p,
 a,
 span,
@@ -167,6 +173,51 @@ textarea:focus {
   background: var(--c-black);
   gap: 1.6rem;
 }
+/* Section spacing utilities used by detail pages, etc. */
+.section-pad {
+  padding: clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 2rem);
+}
+.section-pad .container {
+  max-width: var(--maxw);
+  margin: 0 auto;
+}
+.bg-light-section {
+  background: #f5f4f0; /* warm off-white, just enough to separate from pure white */
+}
+.section-header {
+  margin-bottom: clamp(1.4rem, 3vw, 2.4rem);
+}
+.section-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3.6vw, 2.6rem);
+  font-weight: 500;
+  position: relative;
+  padding-top: 14px;
+}
+.section-header h2::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 42px;
+  height: 2px;
+  background: var(--c-gold);
+}
+
+/* Canonical YARE wordmark — used in loading, header, footer, sidebar, auth */
+.yare-wordmark {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: 0.5em;
+  padding-left: 0.5em;
+  color: #fff;
+  display: inline-block;
+  line-height: 1;
+  transition: color 0.4s var(--ease);
+}
+.yare-wordmark-header { font-size: 1.6rem; }
+.yare-wordmark-footer { font-size: 1.5rem; }
+.logo-link:hover .yare-wordmark { color: var(--c-gold-soft); }
 .yare-loading-logo {
   font-family: var(--font-display);
   font-size: 3rem;
@@ -510,7 +561,8 @@ textarea:focus {
 }
 /* Crisp curtain reveal — no opacity, so it never blends with the page behind */
 .subMenu-Tabs_Active {
-  animation: mega-open 0.42s var(--ease) forwards;
+  animation: mega-open 0.3s var(--ease) forwards;
+  will-change: clip-path;
 }
 @keyframes mega-open {
   from {
@@ -599,27 +651,52 @@ textarea:focus {
   object-fit: cover;
   object-position: center;
 }
+/* center the whole content block (image + links) within the panel */
+#yareWatches-tabWrapper {
+  justify-content: center;
+}
 #yareWatches-subMenu-tabWrapper-Right {
-  width: 62%;
+  width: auto;
   display: flex;
   padding: 12px 0;
 }
-.watches-tablinksList-Wrapper:nth-child(2),
-.collection-tablinksList-Wrapper:nth-child(2) {
-  border-left: 1px solid var(--c-line);
+/* divider line matches the links' height exactly (inset past the column's
+   36px top/bottom padding) without moving the links */
+.watches-tablinksList-Wrapper:nth-child(2) {
+  position: relative;
+}
+.watches-tablinksList-Wrapper:nth-child(2)::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 36px;
+  bottom: 36px;
+  width: 1px;
+  background: var(--c-line);
 }
 
 /* Jewellery mega */
 #yareJewellery-tabWrapper {
   background: var(--c-ink);
 }
+/* center the whole content block (links + images) within the panel */
+#yareJewellery-tabWrapper {
+  justify-content: center;
+}
 #yareJewellery-subMenu-tabWrapper-Left {
-  width: 30%;
+  width: auto;
   display: flex;
-  padding: 30px 0 30px 30px;
+  /* top padding matches the right image column (26px) so the link columns
+     start level with the top of the images; no left padding now that the
+     block is centered (the column's own 30px padding mirrors the image side) */
+  padding: 26px 0 30px 0;
+}
+/* links align to the top of the columns, inline with the right-hand image */
+#yareJewellery-subMenu-tabWrapper-Left .subMenu-tablinksList-Wrapper {
+  padding-top: 0;
 }
 #yareJewellery-subMenu-tabWrapper-Right {
-  width: 70%;
+  width: 62%;
   display: flex;
   padding: 26px 30px;
 }
@@ -682,11 +759,14 @@ textarea:focus {
   background: var(--c-ink);
 }
 #yareAccessories-subMenu-tabWrapper-Left {
-  width: 36%;
-  padding: 12px 0;
+  width: 48%;
+  /* right padding pushes the right-aligned links further left, away from the image */
+  padding: 12px 110px 12px 0;
+  display: flex;
+  justify-content: flex-end;
 }
 #yareAccessories-subMenu-tabWrapper-Right {
-  width: 64%;
+  width: 52%;
   margin: 0;
   padding: 0;
   height: 100%;
@@ -699,29 +779,40 @@ textarea:focus {
 #yareCollections-tabWrapper {
   background: var(--c-ink);
 }
+/* center the whole content block (links + cards) within the panel */
+#yareCollections-tabWrapper {
+  justify-content: center;
+}
 #yareCollections-subMenu-tabWrapper-Left {
-  width: 56%;
+  width: auto;
   display: flex;
   padding: 12px 0;
 }
+/* tighten the gap between the three collections link columns */
+#yareCollections-subMenu-tabWrapper-Left .subMenu-tablinksList-Wrapper {
+  padding-left: 18px;
+  padding-right: 18px;
+}
 #yareCollections-subMenu-tabWrapper-Right {
-  width: 44%;
+  width: 480px;
   height: 100%;
+  /* gap between the link columns and the card panel */
+  margin-left: 48px;
 }
 .yareCollections-imgContainer-Right {
   width: 100%;
   height: 100%;
-  padding: 22px;
-  overflow-y: auto;
+  padding: 16px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   background: linear-gradient(180deg, rgba(201, 162, 39, 0.06), transparent);
 }
 .yareCollections-eachItem-Container {
   display: flex;
   gap: 14px;
-  padding: 12px;
+  padding: 10px;
   background: var(--c-coal);
   border: 1px solid var(--c-line);
   transition: border-color var(--t), transform var(--t);
@@ -731,8 +822,8 @@ textarea:focus {
   transform: translateX(3px);
 }
 .yareCollections-eachItem-imgLeft {
-  width: 82px;
-  height: 82px;
+  width: 64px;
+  height: 64px;
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -998,7 +1089,7 @@ textarea:focus {
       rgba(0, 0, 0, 0.6),
       rgba(0, 0, 0, 0.05) 55%
     ),
-    url("../images/hero-watches.jpg");
+    url("../images/hero-watches.jpg?v=2");
 }
 .slide-2-Img {
   background-image: linear-gradient(
@@ -1014,7 +1105,7 @@ textarea:focus {
       rgba(0, 0, 0, 0.6),
       rgba(0, 0, 0, 0.05) 55%
     ),
-    url("../images/hero-rings.jpg");
+    url("../images/hero-rings.jpg?v=2");
 }
 
 .slide-1-infoContent,
@@ -1399,6 +1490,11 @@ textarea:focus {
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: clamp(14px, 1.8vw, 26px);
 }
+/* Large-card view: 2 per row */
+.products-grid.cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(18px, 2.4vw, 36px);
+}
 .productCard-Container {
   display: flex;
   flex-direction: column;
@@ -1455,6 +1551,9 @@ textarea:focus {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  /* Reserve exactly two lines so 1-line and 2-line names occupy
+     the same vertical space — keeps the price row flush across cards */
+  min-height: calc(1.2em * 2);
 }
 .productCard-info-Bottom {
   margin-top: 2px;
@@ -1684,8 +1783,8 @@ textarea:focus {
   background-image: url("../images/cats/charms.png");
 } /* shell charm pendant */
 .jewelleryCategory-eachItem-ImgEarings {
-  background-image: url("../images/products/j4.jpg");
-} /* gemstone earrings */
+  background-image: url("../images/cats/earrings.png");
+} /* gold hoop earrings */
 .jewelleryCategory-eachItem-ImgEngagementRings {
   background-image: url("../images/cats/engagement.jpg");
 } /* diamond solitaire */
@@ -1897,7 +1996,8 @@ textarea:focus {
   background-image: url("../images/news-1.jpg");
 }
 .news-itemTop-Img-2 {
-  background-image: url("../images/news-2.jpg");
+  background-image: url("../images/news-2.jpg?v=2");
+  background-position: center;
 }
 .news-item-Title {
   font-family: var(--font-display);
@@ -1959,6 +2059,7 @@ textarea:focus {
   font-size: clamp(2.4rem, 6vw, 4.4rem);
   font-weight: 400;
   margin: 10px 0 8px;
+  color: #fff;
 }
 .page-hero p {
   font-size: 13.5px;
@@ -1967,34 +2068,148 @@ textarea:focus {
   max-width: 560px;
   margin: 0 auto;
 }
+/* keep banner content above any background-image overlay */
+.page-hero-content {
+  position: relative;
+  z-index: 1;
+}
+/* gold eyebrow label above the banner title */
+.page-hero .section-label {
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--c-gold-soft);
+  margin-bottom: 6px;
+}
+/* Collections list banner — luxury hero image with dark overlay */
+.page-hero-collections {
+  background:
+    linear-gradient(rgba(10, 10, 11, 0.7), rgba(10, 10, 11, 0.82)),
+    url("../images/collection-jewellery.jpg") center / cover no-repeat;
+  background-color: var(--c-black);
+}
+
+/* ═════════════ COLLECTIONS LIST ═════════════ */
+.collections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: clamp(18px, 2.4vw, 34px);
+}
+.collection-card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid var(--c-line-soft);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow var(--t), transform var(--t), border-color var(--t);
+}
+.collection-card:hover {
+  border-color: var(--c-gold);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+}
+.collection-card-img {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: var(--c-cloud);
+}
+.collection-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+.collection-card:hover .collection-card-img img {
+  transform: scale(1.06);
+}
+.collection-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 22px 24px 26px;
+}
+.collection-card-body h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--c-text);
+}
+.collection-card-body p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--c-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.collection-card .link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--c-gold-deep);
+  font-weight: 500;
+}
+.collection-card .link-arrow i {
+  transition: transform var(--t);
+}
+.collection-card:hover .link-arrow i {
+  transform: translateX(5px);
+}
+.skeleton-card.tall {
+  aspect-ratio: auto;
+  height: clamp(300px, 32vw, 380px);
+}
+@media (max-width: 600px) {
+  .collections-grid {
+    grid-template-columns: 1fr;
+  }
+}
 
 /* ═════════════ PRODUCT LIST PAGE ═════════════ */
-.product-list-page-wrapper {
-  display: flex;
-  gap: clamp(1.4rem, 3vw, 2.6rem);
+.product-list-page .container {
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: clamp(2rem, 4vw, 3rem) clamp(1rem, 4vw, 2rem);
+}
+.product-list-layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: clamp(1.4rem, 3vw, 2.6rem);
+  align-items: start;
 }
 .filters-sidebar {
-  width: 240px;
-  flex-shrink: 0;
-  align-self: flex-start;
+  width: 100%;
   position: sticky;
   top: 130px;
 }
 .filters-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding-bottom: 14px;
+  gap: 12px;
+  /* Locked total height (border-box) so this underline lands at the
+     same Y as the product-list-toolbar underline; content centres
+     vertically between top and underline */
+  height: 54px;
   border-bottom: 1px solid var(--c-line-soft);
-  margin-bottom: 18px;
+  margin-bottom: 22px;
 }
 .filters-header h3 {
   font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 500;
+  /* Bootstrap h3 { margin-bottom: .5rem } pushes the title above centre —
+     zero it so the title sits on the same vertical line as the button */
+  margin: 0 auto 0 0 !important; /* right-auto pushes Clear Filters to the right */
+  line-height: 1;
 }
 .filters-close {
   display: none;
@@ -2053,10 +2268,12 @@ textarea:focus {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding-bottom: 16px;
+  /* Locked total height (border-box) so this underline lands at the
+     same Y as the filters-header underline; content centres
+     vertically between top and underline */
+  height: 54px;
   margin-bottom: 22px;
   border-bottom: 1px solid var(--c-line-soft);
-  flex-wrap: wrap;
 }
 .filter-toggle {
   display: none;
@@ -2074,16 +2291,87 @@ textarea:focus {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--c-muted);
+  /* Bootstrap p { margin-bottom: 1rem } pushes the count above centre —
+     zero it so the text sits on the same vertical line as the sort select */
+  margin: 0 !important;
+  line-height: 1;
 }
 .sort-select {
-  padding: 9px 14px;
+  /* Mirror .btn-yare-sm so the sort control and Clear Filters match */
+  padding: 7px 36px 7px 14px;
+  background-color: transparent;
   border: 1px solid var(--c-line-soft);
-  font-size: 12px;
-  background: #fff;
+  color: var(--c-text);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-family: var(--font-body);
+  font-weight: 500;
   cursor: pointer;
+  transition: border-color var(--t);
+  flex-shrink: 0;
+  /* Replace the native arrow (flush to the edge) with a chevron that
+     has breathing room on the right */
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%231a1a1a' stroke-width='1.2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
 }
+.sort-select:hover,
 .sort-select:focus {
-  border-color: var(--c-gold);
+  border-color: var(--c-black);
+  outline: none;
+}
+.grid-toggle {
+  display: flex;
+  gap: 4px;
+}
+.grid-toggle button {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--c-faint);
+  cursor: pointer;
+  transition: color var(--t), border-color var(--t);
+}
+.grid-toggle button:hover {
+  color: var(--c-text);
+}
+.grid-toggle button.active {
+  color: var(--c-text);
+  border-color: var(--c-line-soft);
+}
+/* CSS-drawn grid icons: squares painted with currentColor so they
+   follow the button's faint/hover/active colour states */
+.gi {
+  display: block;
+  width: 14px;
+  height: 14px;
+  background-repeat: no-repeat;
+}
+/* Two squares side by side = 2-column view */
+.gi-2 {
+  background-image:
+    linear-gradient(currentColor, currentColor),
+    linear-gradient(currentColor, currentColor);
+  background-size: 6px 6px;
+  background-position: left center, right center;
+}
+/* Four squares (2 × 2) = 4-column view */
+.gi-4 {
+  background-image:
+    linear-gradient(currentColor, currentColor),
+    linear-gradient(currentColor, currentColor),
+    linear-gradient(currentColor, currentColor),
+    linear-gradient(currentColor, currentColor);
+  background-size: 6px 6px;
+  background-position: left top, right top, left bottom, right bottom;
 }
 .empty-state {
   text-align: center;
@@ -2104,7 +2392,7 @@ textarea:focus {
 .breadcrumb-nav {
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: 22px clamp(1rem, 4vw, 2rem) 0;
+  padding: 6px clamp(1rem, 4vw, 2rem) 0;
   font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -2116,13 +2404,16 @@ textarea:focus {
 .breadcrumb-nav span {
   color: var(--c-text);
 }
+.product-detail {
+  padding-top: 10px;
+}
 .product-detail-layout {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   gap: clamp(2rem, 5vw, 4.5rem);
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: clamp(1.6rem, 3vw, 2.6rem) clamp(1rem, 4vw, 2rem)
+  padding: 18px clamp(1rem, 4vw, 2rem)
     clamp(3rem, 6vw, 5rem);
   align-items: start;
 }
@@ -2236,36 +2527,66 @@ textarea:focus {
 .quantity-add {
   display: flex;
   gap: 14px;
-  align-items: stretch;
+  align-items: stretch;       /* let both children own the row height */
   margin-bottom: 22px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;          /* keep qty + add-to-bag on a single row */
+}
+.staff-purchase-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--c-muted);
+  border: 1px solid var(--c-line-soft);
+  padding: 12px 16px;
+  margin: 0 0 22px !important;
+}
+.staff-purchase-note i { color: var(--c-gold-deep); }
+/* Both controls share an identical 52px outer height */
+.quantity-add > .qty-control,
+.quantity-add > .btn-add-lg {
+  height: 52px !important;
+  box-sizing: border-box;
+  line-height: 1;
 }
 .qty-control {
-  display: flex;
-  align-items: center;
+  display: inline-flex;
+  align-items: stretch;
   border: 1px solid var(--c-line-soft);
 }
-.qty-control button {
-  width: 44px;
+.qty-control > button,
+.qty-control > span {
   height: 100%;
-  min-height: 50px;
-  font-size: 1.2rem;
-  color: var(--c-text);
-  transition: background var(--t);
-}
-.qty-control button:hover {
-  background: var(--c-cloud);
-}
-.qty-control span {
-  width: 46px;
-  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 !important;
+  border: none !important;
+  background: transparent;
   font-size: 14px;
   font-weight: 500;
+  color: var(--c-text);
+  line-height: 1;
 }
+.qty-control > button {
+  width: 48px;
+  padding: 0 !important;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background var(--t);
+}
+.qty-control > button:hover { background: var(--c-cloud); }
+.qty-control > span { width: 46px; }
 .btn-add-lg {
-  flex: 1;
-  min-width: 200px;
-  min-height: 50px;
+  flex: 1 1 0 !important;
+  width: auto !important;       /* override .btn-yare width: 100% */
+  min-width: 0 !important;
+  margin-top: 0 !important;     /* override .btn-yare margin-top: 18px */
+  height: 52px !important;
+  line-height: 1;
+  box-sizing: border-box;
+  padding: 0 20px;
+  white-space: nowrap;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2440,10 +2761,67 @@ textarea:focus {
 .btn-yare:hover:not(:disabled) {
   background: var(--c-gold-deep);
 }
+/* When .btn-yare is an <a>, Bootstrap's a:hover/:visited (higher specificity
+   than a bare class) turns the text blue — pin it white in every state */
+a.btn-yare,
+a.btn-yare:hover,
+a.btn-yare:focus,
+a.btn-yare:active,
+a.btn-yare:visited {
+  color: #fff;
+  text-decoration: none;
+}
 .btn-yare:disabled {
   background: #c9c4bb;
   cursor: not-allowed;
 }
+/* Place Order sits in the wide form column — don't span the full width */
+.checkout-actions .btn-yare {
+  width: auto;
+  min-width: 300px;
+  padding: 0 40px;
+}
+@media (max-width: 768px) {
+  .checkout-actions .btn-yare {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* "Add Product/Watch/Jewellery/Accessory" button in admin page headers —
+   shrink from the full-width form button to a compact action button */
+.header-actions .btn-yare {
+  width: auto;
+  min-height: 0;
+  margin-top: 0;
+  padding: 12px 20px;
+  gap: 8px;
+}
+
+/* Small outline button — "Clear Filters" beside the Filter title */
+.btn-yare-sm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 14px;
+  background: transparent;
+  border: 1px solid var(--c-line-soft);
+  color: var(--c-text);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-family: var(--font-body);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background var(--t), color var(--t), border-color var(--t);
+}
+.btn-yare-sm:hover {
+  background: var(--c-black);
+  border-color: var(--c-black);
+  color: #fff;
+}
+
 .btn-outline-full {
   display: block;
   width: 100%;
@@ -2543,29 +2921,42 @@ textarea:focus {
 }
 .checkout-item {
   display: flex;
-  align-items: center;
+  /* top-align: items with engraving lines are taller — centering made
+     rows look randomly offset against each other */
+  align-items: flex-start;
   gap: 12px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 .checkout-item img {
   width: 58px;
   height: 58px;
   object-fit: cover;
   background: #fff;
+  flex-shrink: 0;
 }
 .checkout-item div {
   flex: 1;
+  min-width: 0;
 }
 .checkout-item div p {
   font-size: 13px;
+  /* Bootstrap p { margin-bottom: 1rem } sneaks a big gap under the name */
+  margin: 0 0 2px !important;
+  line-height: 1.35;
 }
 .checkout-item div small {
+  display: block;
   font-size: 11px;
   color: var(--c-muted);
+  line-height: 1.5;
 }
-.checkout-item span {
+.checkout-item > span {
   font-size: 13px;
   font-weight: 500;
+  white-space: nowrap;
+  /* align price with the product name line */
+  line-height: 1.35;
+  padding-top: 1px;
 }
 .order-confirmed {
   text-align: center;
@@ -2596,33 +2987,69 @@ textarea:focus {
 }
 
 /* ═════════════ AUTH ═════════════ */
-.auth-page {
-  min-height: 100vh;
+.auth-split {
+  height: 100dvh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  background: linear-gradient(160deg, var(--c-black), #1a1206);
+  overflow: hidden;
+  background: var(--c-black);
 }
-.auth-card {
+.auth-left {
+  flex: 1 1 480px;
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+  padding: 2rem;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(201, 162, 39, 0.07), transparent 60%),
+    radial-gradient(circle at 85% 90%, rgba(201, 162, 39, 0.035), transparent 55%),
+    linear-gradient(165deg, var(--c-ink) 0%, var(--c-black) 60%, #0f0b04 100%);
+}
+.auth-left-inner {
   width: 100%;
-  max-width: 440px;
-  background: var(--c-ink);
-  border: 1px solid var(--c-line);
-  padding: clamp(1.8rem, 4vw, 2.6rem);
-  box-shadow: var(--shadow-lg);
+  max-width: 380px;
+  padding: 2rem 0;
+  /* auto margins center the form when there's room, but collapse to 0 when
+     content is taller than the panel — keeps the logo at top reachable/scrollable
+     (avoids the flexbox align-items:center overflow-clipping bug) */
+  margin-block: auto;
+}
+.auth-right {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+.auth-right img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 .auth-logo {
   display: block;
   text-align: center;
   font-family: var(--font-display);
   font-size: 2.2rem;
-  letter-spacing: 0.45em;
+  font-weight: 500;
+  letter-spacing: 0.5em;
   color: #fff;
-  padding-left: 0.45em;
+  text-decoration: none;
+  padding-left: 0.5em;
   margin-bottom: 6px;
+  transition: color var(--t);
 }
-.auth-card h1 {
+a.auth-logo:hover,
+a.auth-logo:focus,
+a.auth-logo:hover:visited,
+.auth-left-inner a.auth-logo:hover {
+  color: var(--c-gold-soft) !important;
+  text-decoration: none;
+}
+a.auth-logo:visited {
+  color: #fff;
+}
+.auth-left-inner h1 {
   text-align: center;
   font-size: 1.9rem;
   color: #fff;
@@ -2635,86 +3062,102 @@ textarea:focus {
   color: rgba(255, 255, 255, 0.5);
   margin-bottom: 24px;
 }
-.demo-label {
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-  margin-bottom: 12px;
-  text-align: center;
-}
-.role-buttons {
+.auth-tabs {
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
 }
-.role-btn {
+.auth-tab {
   flex: 1;
-  min-width: 110px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 7px;
-  padding: 16px 8px;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 6px;
   border: 1px solid var(--c-line);
-  color: rgba(255, 255, 255, 0.82);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
   font-size: 10px;
+  font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  line-height: 1;
+  text-align: center;
   transition: all var(--t);
 }
-.role-btn i {
-  font-size: 1.3rem;
+.auth-tab i {
+  display: block;
+  font-size: 1.2rem;
+  line-height: 1;
 }
-.role-admin:hover {
-  border-color: var(--c-red);
-  background: rgba(212, 17, 30, 0.12);
+.auth-tab span {
+  display: block;
+  line-height: 1;
+}
+.auth-tab:hover {
+  border-color: rgba(255, 255, 255, 0.3);
   color: #fff;
 }
-.role-employee:hover {
+.auth-tab.active {
   border-color: var(--c-gold);
   background: rgba(201, 162, 39, 0.12);
-  color: #fff;
+  color: var(--c-gold-soft);
 }
-.role-customer:hover {
-  border-color: #ccc;
-  background: rgba(255, 255, 255, 0.06);
-  color: #fff;
-}
-.auth-divider {
+.auth-account-card {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 22px 0;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  background: var(--c-charcoal);
+  border: 1px solid var(--c-line);
 }
-.auth-divider::before,
-.auth-divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: var(--c-line);
+.auth-account-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border: 1px solid var(--c-gold);
+  color: var(--c-gold);
+  font-size: 1.1rem;
 }
-.auth-divider span {
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.35);
+.auth-account-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
 }
-.auth-card .form-group {
+.auth-account-name {
+  margin: 0;
+  color: #fff;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1;
+}
+.auth-account-desc {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11.5px;
+  line-height: 1;
+}
+.auth-left-inner .form-group {
   margin-bottom: 16px;
 }
-.auth-card .form-group label {
+.auth-left-inner .form-group label {
   color: rgba(255, 255, 255, 0.6);
 }
-.auth-card .form-control {
+.auth-left-inner .form-control {
   background: var(--c-charcoal);
   border-color: var(--c-line);
   color: #fff;
 }
-.auth-card .form-control:focus {
+.auth-left-inner .form-control:focus {
   border-color: var(--c-gold);
 }
-.auth-card .form-control::placeholder {
+.auth-left-inner .form-control::placeholder {
   color: rgba(255, 255, 255, 0.3);
 }
 .password-wrap {
@@ -2734,6 +3177,15 @@ textarea:focus {
 .pwd-toggle:hover {
   color: #fff;
 }
+.auth-demo-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 16px;
+}
 .auth-error {
   display: flex;
   align-items: center;
@@ -2745,11 +3197,11 @@ textarea:focus {
   font-size: 12.5px;
   margin-bottom: 14px;
 }
-.auth-card .btn-yare {
+.auth-left-inner .btn-yare {
   background: var(--c-gold);
   color: var(--c-black);
 }
-.auth-card .btn-yare:hover:not(:disabled) {
+.auth-left-inner .btn-yare:hover:not(:disabled) {
   background: var(--c-gold-soft);
 }
 .auth-footer {
@@ -2761,12 +3213,27 @@ textarea:focus {
 .auth-footer a {
   color: var(--c-gold-soft);
 }
+.auth-copyright {
+  text-align: center;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  margin-top: 28px;
+}
+@media (max-width: 900px) {
+  .auth-right {
+    display: none;
+  }
+  .auth-left {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+}
 
 /* ═════════════ ADMIN ═════════════ */
 .admin-app {
   display: flex;
   min-height: 100vh;
-  background: #f4f2ee;
+  background: var(--c-charcoal);
 }
 .admin-sidebar {
   width: 244px;
@@ -2789,9 +3256,10 @@ textarea:focus {
 .sidebar-logo {
   font-family: var(--font-display);
   font-size: 1.5rem;
-  letter-spacing: 0.32em;
+  font-weight: 500;
+  letter-spacing: 0.5em;
   color: #fff;
-  padding-left: 0.3em;
+  padding-left: 0.5em;
 }
 .sidebar-close {
   display: none;
@@ -2867,6 +3335,40 @@ textarea:focus {
 .sidebar-logout:hover {
   color: var(--c-red);
 }
+/* admin order detail */
+.od-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--c-line-soft);
+  font-size: 13.5px;
+}
+.od-row:last-child { border-bottom: none; }
+.od-row > span:first-child { color: var(--c-muted); }
+.od-status-update {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.od-status-update label {
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+}
+.od-saved {
+  color: #2e7d32;
+  font-size: 12.5px;
+  margin-top: 4px;
+}
+.od-address p {
+  margin: 0 0 4px;
+  font-size: 13.5px;
+}
+
 .admin-content {
   flex: 1;
   display: flex;
@@ -2879,11 +3381,21 @@ textarea:focus {
   align-items: center;
   gap: 14px;
   padding: 0 22px;
-  background: #fff;
-  border-bottom: 1px solid var(--c-line-soft);
+  background: var(--c-ink);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   position: sticky;
   top: 0;
   z-index: 10;
+}
+.admin-topbar .topbar-title { color: rgba(255, 255, 255, 0.7); }
+.admin-topbar .sidebar-toggle { color: rgba(255, 255, 255, 0.7); }
+.admin-topbar .btn-outline-sm {
+  color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+.admin-topbar .btn-outline-sm:hover {
+  border-color: var(--c-gold-soft);
+  color: #fff;
 }
 .sidebar-toggle {
   display: none;
@@ -2915,11 +3427,15 @@ textarea:focus {
   font-family: var(--font-display);
   font-size: 2rem;
   font-weight: 500;
+  color: #fff;
 }
 .admin-page-header p {
   font-size: 13px;
-  color: var(--c-muted);
+  color: rgba(255, 255, 255, 0.55);
   margin-top: 2px;
+}
+.admin-page-header a {
+  color: var(--c-gold-soft);
 }
 
 .kpi-grid {
@@ -2929,12 +3445,15 @@ textarea:focus {
 }
 .kpi-card {
   display: flex;
+  align-items: center;
   gap: 14px;
   padding: 20px;
-  background: #fff;
-  border: 1px solid var(--c-line-soft);
-  transition: box-shadow var(--t), transform var(--t);
+  min-height: 136px;
+  background: #1a1a1f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: box-shadow var(--t), transform var(--t), border-color var(--t);
 }
+.kpi-card:hover { border-color: rgba(201, 162, 39, 0.4); }
 .kpi-card:hover {
   box-shadow: var(--shadow-sm);
   transform: translateY(-2px);
@@ -2977,7 +3496,7 @@ textarea:focus {
   font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--c-muted);
+  color: rgba(255, 255, 255, 0.5);
   margin-bottom: 5px;
 }
 .kpi-value {
@@ -2986,6 +3505,7 @@ textarea:focus {
   font-weight: 600;
   line-height: 1;
   margin-bottom: 5px;
+  color: #fff;
 }
 .kpi-change {
   display: inline-flex;
@@ -3000,18 +3520,77 @@ textarea:focus {
   color: var(--c-red);
 }
 .kpi-change.neutral {
-  color: var(--c-muted);
+  color: rgba(255, 255, 255, 0.45);
 }
 .kpi-skeleton {
-  height: 88px;
-  background: linear-gradient(100deg, #ece7df 30%, #f6f3ee 50%, #ece7df 70%);
+  height: 136px;
+  background: linear-gradient(100deg, #1f1f25 30%, #2a2a31 50%, #1f1f25 70%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
 }
 .admin-card {
-  background: #fff;
-  border: 1px solid var(--c-line-soft);
+  background: #1a1a1f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 20px;
+  color: rgba(255, 255, 255, 0.85);
+}
+/* dark admin card internals */
+.admin-card .admin-card-title { color: #fff; }
+.admin-card .admin-table th {
+  color: rgba(255, 255, 255, 0.5);
+  border-bottom-color: rgba(255, 255, 255, 0.16);
+}
+.admin-card .admin-table td {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.82);
+}
+.admin-card .admin-table tr:hover td { background: rgba(255, 255, 255, 0.04); }
+.admin-card .table-product-name { color: #fff; }
+.admin-card small { color: rgba(255, 255, 255, 0.5); }
+.admin-card .search-input,
+.admin-card .status-select,
+.admin-card .sort-select {
+  background: #111114;
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+.admin-card .search-input::placeholder { color: rgba(255, 255, 255, 0.4); }
+.admin-card .table-footer,
+.admin-card .toolbar-count { color: rgba(255, 255, 255, 0.5); }
+.admin-card .link-sm { color: var(--c-gold-soft); }
+.admin-card .link-sm:hover { color: #fff; }
+.admin-card .cat-badge { background: rgba(255, 255, 255, 0.09); color: rgba(255, 255, 255, 0.8); }
+.admin-card .btn-icon { color: rgba(255, 255, 255, 0.6); }
+.admin-card .btn-icon:hover { color: #fff; background: rgba(255, 255, 255, 0.08); }
+.admin-card .btn-icon.danger:hover { color: var(--c-red); }
+.admin-card .od-row { border-bottom-color: rgba(255, 255, 255, 0.08); }
+.admin-card .od-row > span:first-child { color: rgba(255, 255, 255, 0.5); }
+.admin-card .od-row strong { color: #fff; }
+.admin-card .od-address p { color: rgba(255, 255, 255, 0.85); }
+.admin-card .empty-state { color: rgba(255, 255, 255, 0.6); }
+.admin-card .pagination { border-top-color: rgba(255, 255, 255, 0.12); }
+.admin-card .page-btn {
+  background: #111114;
+  border-color: rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.7);
+}
+.admin-card .page-btn:hover:not(:disabled) { border-color: var(--c-gold); color: var(--c-gold-soft); }
+.admin-card .page-btn.active { background: var(--c-gold-deep); border-color: var(--c-gold-deep); color: #1a1a1f; }
+.admin-card .form-section h3 { color: #fff; border-bottom-color: rgba(255, 255, 255, 0.12); }
+.admin-card .form-actions {
+  border-top-color: rgba(255, 255, 255, 0.12);
+  background: #1a1a1f;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
+}
+.admin-card label { color: rgba(255, 255, 255, 0.7); }
+/* header buttons sit on the dark page background, not in a card */
+.admin-page-header .btn-outline-sm {
+  color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+.admin-page-header .btn-outline-sm:hover {
+  border-color: var(--c-gold-soft);
+  color: #fff;
 }
 .admin-card + .admin-card {
   margin-top: 16px;
@@ -3028,6 +3607,38 @@ textarea:focus {
 .admin-card-title {
   font-family: var(--font-display);
   font-size: 1.3rem;
+}
+.mixed-chart {
+  width: 100%;
+}
+.mixed-chart svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.chart-legend {
+  display: flex;
+  gap: 22px;
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--c-muted);
+}
+.chart-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.chart-legend .lg-bar {
+  width: 13px;
+  height: 13px;
+  border-radius: 2px;
+  display: inline-block;
+}
+.chart-legend .lg-line {
+  width: 18px;
+  height: 3px;
+  border-radius: 2px;
+  display: inline-block;
 }
 .admin-grid-2 {
   display: grid;
@@ -3162,9 +3773,45 @@ textarea:focus {
   text-transform: uppercase;
   color: var(--c-muted);
 }
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--c-line-soft);
+}
+.page-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 6px;
+  border: 1px solid var(--c-line-soft);
+  background: #fff;
+  font-size: 12px;
+  color: var(--c-ink);
+  cursor: pointer;
+  transition: border-color var(--t), color var(--t), background var(--t);
+}
+.page-btn:hover:not(:disabled) {
+  border-color: var(--c-gold);
+  color: var(--c-gold-deep);
+}
+.page-btn.active {
+  background: var(--c-black);
+  border-color: var(--c-black);
+  color: #fff;
+}
+.page-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
 .table-skeleton {
   height: 200px;
-  background: linear-gradient(100deg, #ece7df 30%, #f6f3ee 50%, #ece7df 70%);
+  background: linear-gradient(100deg, #1f1f25 30%, #2a2a31 50%, #1f1f25 70%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
 }
@@ -3242,10 +3889,279 @@ textarea:focus {
 .form-actions {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 12px;
-  margin-top: 24px;
-  padding-top: 18px;
+  margin: 24px -20px -20px;
+  padding: 16px 20px;
   border-top: 1px solid var(--c-line-soft);
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.06);
+}
+.form-actions .btn-outline-sm,
+.form-actions .btn-yare {
+  width: auto;
+  min-height: 0;
+  height: 44px;
+  margin-top: 0;
+  padding: 0 28px;
+}
+
+/* ─── Image gallery (ProductEdit) ─── */
+.image-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.image-preview-main {
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 1 / 1;
+  background: #111114;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.image-preview-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.image-preview-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.image-preview-empty i {
+  font-size: 2rem;
+}
+.image-thumb-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.image-thumb {
+  width: 64px;
+  height: 64px;
+  background: #111114;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+  transition: border-color var(--t);
+}
+.image-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.image-thumb:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+.image-thumb.active {
+  border-color: var(--c-gold);
+}
+.image-thumb-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.thumb-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--c-muted);
+  cursor: pointer;
+}
+.admin-card .thumb-toggle {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.form-hint {
+  font-size: 12px;
+  color: var(--c-muted);
+}
+
+/* ─── Margin chart (ProductEdit) ─── */
+.margin-chart svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  min-height: 320px;
+}
+
+/* ─── Collections checkboxes (ProductEdit) ─── */
+.checkbox-group {
+  margin-top: 18px;
+}
+.checkbox-group:first-of-type {
+  margin-top: 14px;
+}
+.checkbox-group-label {
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-gold-soft);
+  margin: 0 0 10px;
+}
+.admin-card .checkbox-group-label {
+  color: var(--c-gold-soft);
+}
+.checkbox-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ─── Price tier "Apply" controls (ProductEdit) ─── */
+.tier-apply-row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+.tier-apply-row .form-control {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.btn-tier-apply {
+  flex: 0 0 auto;
+  padding: 0 16px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-gold-soft);
+  background: transparent;
+  border: 1px solid var(--c-gold-soft);
+  cursor: pointer;
+  transition: background var(--t), color var(--t);
+  white-space: nowrap;
+}
+.btn-tier-apply:hover {
+  background: var(--c-gold-soft);
+  color: #1a1a1a;
+}
+
+/* ─── Product picker tiles (CollectionEdit) ─── */
+.product-pick-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 10px;
+}
+.product-pick {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color var(--t), background var(--t);
+}
+.product-pick input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.product-pick:hover {
+  border-color: var(--c-gold-soft);
+}
+.product-pick.selected {
+  border-color: var(--c-gold);
+  background: rgba(201, 162, 39, 0.10);
+}
+.product-pick-thumb {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+}
+.product-pick-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.product-pick-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.product-pick-name {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.88);
+  text-decoration: none;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.product-pick-name:hover {
+  color: var(--c-gold-soft);
+  text-decoration: underline;
+}
+.product-pick-meta {
+  font-size: 11px;
+  color: var(--c-muted);
+}
+.product-pick-check {
+  margin-left: auto;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: transparent;
+  font-size: 13px;
+  transition: background var(--t), border-color var(--t), color var(--t);
+}
+.product-pick.selected .product-pick-check {
+  background: var(--c-gold);
+  border-color: var(--c-gold);
+  color: #1a1a1a;
+}
+.checkbox-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border: 1px solid var(--c-line-soft);
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color var(--t);
+}
+.checkbox-pill:hover {
+  border-color: var(--c-black);
+}
+.admin-card .checkbox-pill {
+  border-color: rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.8);
+}
+.admin-card .checkbox-pill:hover {
+  border-color: var(--c-gold-soft);
 }
 .alert-success {
   display: flex;
@@ -3403,6 +4319,12 @@ textarea:focus {
   font-size: 1.1rem;
   margin-bottom: 1.4rem;
 }
+.not-found-page .btn-yare {
+  width: auto;
+  min-width: 220px;
+  padding: 0 40px;
+  margin: 0 auto;
+}
 
 /* Blazor error */
 #blazor-error-ui {
@@ -3466,8 +4388,9 @@ textarea:focus {
   .filter-toggle {
     display: inline-flex;
   }
-  .product-list-page-wrapper {
-    display: block;
+  .product-list-layout {
+    display: block;            /* stack on tablet/mobile */
+    grid-template-columns: none;
   }
 }
 
@@ -3623,9 +4546,10 @@ textarea:focus {
   inset: 0;
   z-index: 150;
   background: rgba(8, 8, 10, 0.5);
-  backdrop-filter: blur(1.5px);
-  -webkit-backdrop-filter: blur(1.5px);
-  animation: fade-in 0.3s var(--ease);
+  /* no backdrop-filter: blurring the whole viewport every frame made the
+     mega-menu reveal stutter; the dark tint alone is enough */
+  animation: fade-in 0.25s var(--ease);
+  will-change: opacity;
 }
 
 /* ═════════════ CART DRAWER ═════════════ */
@@ -3812,4 +4736,735 @@ textarea:focus {
   .popular-products-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+/* ═════════════ PRODUCT DETAIL — sticky scroll bar ═════════════ */
+.pd-sticky-bar {
+  position: fixed; top: 110px; left: 0; right: 0; z-index: 150; /* below full header (top-nav 60 + submenu 50) */
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: saturate(150%) blur(10px);
+  -webkit-backdrop-filter: saturate(150%) blur(10px);
+  border-bottom: 1px solid var(--c-line-soft);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+  transform: translateY(-100%);
+  transition: transform 0.4s var(--ease);
+  pointer-events: none;
+}
+.pd-sticky-bar.is-visible {
+  transform: translateY(0);
+  pointer-events: auto;
+}
+@media (max-width: 768px) {
+  .pd-sticky-bar { top: 56px; } /* mobile: only the top-nav is sticky */
+}
+.pd-sticky-inner {
+  display: flex; align-items: center; gap: clamp(0.8rem, 2vw, 1.4rem);
+  max-width: var(--maxw); margin: 0 auto; padding: 10px clamp(1rem, 4vw, 2rem);
+}
+.pd-sticky-img {
+  width: 56px; height: 56px; object-fit: cover; flex-shrink: 0; background: var(--c-cloud);
+}
+.pd-sticky-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.pd-sticky-cat {
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--c-muted); margin: 0;
+}
+.pd-sticky-name {
+  font-family: var(--font-display); font-size: clamp(1rem, 1.4vw, 1.25rem);
+  font-weight: 500; color: var(--c-text); margin: 0; line-height: 1.2;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pd-sticky-price {
+  display: flex; align-items: baseline; gap: 8px; flex-shrink: 0;
+}
+.pd-sticky-price .price-now {
+  font-size: 1.05rem; font-weight: 500; letter-spacing: 0.02em; color: var(--c-text);
+}
+.pd-sticky-price .price-was {
+  font-size: 12px; color: var(--c-faint); text-decoration: line-through;
+}
+.pd-sticky-add {
+  flex: 0 0 auto !important;
+  width: auto !important;          /* don't stretch like .btn-add-lg on the product page */
+  min-width: 140px !important;
+  max-width: 180px;
+  height: 42px !important;
+  padding: 0 22px;
+  font-size: 10.5px !important;
+  letter-spacing: 0.18em !important;
+}
+
+/* Hide non-essentials on small screens; keep name + add button */
+@media (max-width: 640px) {
+  .pd-sticky-img { display: none; }
+  .pd-sticky-cat { display: none; }
+  .pd-sticky-price .price-was { display: none; }
+  .pd-sticky-add { padding: 0 14px; }
+}
+
+/* Extra breathing space between Related Products and the footer */
+.product-detail + .section-pad.bg-light-section {
+  padding-bottom: clamp(4rem, 8vw, 7rem);
+}
+
+/* ── ENGRAVING (product details) ───────────────────────────────────────── */
+.engraving { margin: 4px 0 24px; }
+.engraving-toggle {
+  display: inline-flex; align-items: center; gap: 10px; width: 100%;
+  padding: 14px 16px;
+  background: transparent;
+  border: 1px solid var(--c-line-soft);
+  font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--c-text);
+  cursor: pointer;
+  transition: border-color var(--t), background var(--t);
+}
+.engraving-toggle:hover { border-color: var(--c-black); }
+.engraving-icon { fill: var(--c-gold-deep); flex-shrink: 0; }
+.engraving-chev { margin-left: auto; font-size: 0.9rem; color: var(--c-muted); }
+.engraving-panel {
+  margin-top: -1px;
+  padding: 18px 16px;
+  background: var(--c-cream);
+  border: 1px solid var(--c-line-soft);
+  animation: engraving-open 0.3s var(--ease);
+}
+@keyframes engraving-open {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.engraving-hint {
+  font-size: 12px; color: var(--c-muted); line-height: 1.55;
+  margin: 0 0 12px;
+}
+.engraving-field {
+  position: relative;
+  display: flex; align-items: center;
+  background: #fff;
+  border: 1px solid var(--c-line-soft);
+}
+.engraving-field:focus-within { border-color: var(--c-gold); }
+.engraving-field input {
+  flex: 1; height: 44px; padding: 0 14px;
+  border: none; outline: none; background: transparent;
+  font-family: var(--font-display); font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  color: var(--c-text);
+}
+.engraving-field input::placeholder { color: var(--c-faint); font-style: italic; }
+.engraving-count {
+  padding: 0 14px;
+  font-size: 10.5px; letter-spacing: 0.1em;
+  color: var(--c-faint); white-space: nowrap;
+}
+.engraving-actions {
+  display: flex; gap: 10px; margin-top: 12px;
+}
+.engraving-clear {
+  background: transparent; border: none; padding: 8px 0;
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--c-muted); cursor: pointer; transition: color var(--t);
+}
+.engraving-clear:hover { color: var(--c-red); }
+.engraving-save {
+  margin-left: auto;
+  padding: 10px 22px;
+  background: var(--c-black); color: #fff; border: none;
+  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+  cursor: pointer; transition: background var(--t);
+}
+.engraving-save:hover { background: var(--c-gold-deep); }
+.engraving-preview {
+  margin: 10px 2px 0;
+  font-size: 12.5px; color: var(--c-muted);
+}
+.engraving-preview em {
+  color: var(--c-text); font-family: var(--font-display);
+  font-style: italic; font-size: 14px;
+}
+
+/* ── Engraving badge in cart drawer + full cart ── */
+.cd-engraving,
+.cart-item-engraving {
+  margin: 6px 0 0;
+  font-size: 11.5px;
+  color: var(--c-muted);
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  line-height: 1.4;
+}
+.cd-engraving i,
+.cart-item-engraving i { color: var(--c-gold-deep); }
+.cd-engraving em,
+.cart-item-engraving em {
+  font-family: var(--font-display); font-style: italic;
+  color: var(--c-text); font-size: 13px;
+}
+.cd-engraving span,
+.cart-item-engraving span {
+  margin-left: auto;
+  font-size: 10.5px; letter-spacing: 0.06em;
+  color: var(--c-gold-deep); font-weight: 500;
+}
+
+/* ── Engraving edit affordances in cart ── */
+.engraving-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 6px;
+  padding: 0; border: none; background: transparent;
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--c-gold-deep); cursor: pointer; transition: color .25s var(--ease);
+}
+.engraving-link:hover { color: var(--c-text); }
+.engraving-link i { color: var(--c-gold-deep); }
+.engraving-add { padding: 8px 0; }
+
+.cart-item-engraving .engraving-link {
+  margin: 0 0 0 auto;
+  font-size: 10.5px; letter-spacing: 0.1em;
+}
+.cart-item-engraving { align-items: center; }
+
+.cart-engraving-edit {
+  margin-top: 8px;
+  background: var(--c-cream);
+  border: 1px solid var(--c-line-soft);
+  padding: 10px 12px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+}
+.cart-engraving-edit input {
+  flex: 1; min-width: 160px; height: 36px; padding: 0 12px;
+  background: #fff; border: 1px solid var(--c-line-soft); outline: none;
+  font-family: var(--font-display); font-size: 1rem; letter-spacing: 0.04em;
+  color: var(--c-text);
+}
+.cart-engraving-edit input:focus { border-color: var(--c-gold); }
+.cart-engraving-edit .engraving-count {
+  font-size: 10px; letter-spacing: 0.08em; color: var(--c-faint);
+}
+.cart-engraving-actions {
+  display: flex; gap: 14px; align-items: center; margin-left: auto;
+}
+.link-btn {
+  background: transparent; border: none; padding: 0;
+  font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--c-muted); cursor: pointer; transition: color .25s var(--ease);
+}
+.link-btn:hover { color: var(--c-text); }
+.link-btn.danger:hover { color: var(--c-red); }
+.cart-engraving-save {
+  padding: 8px 18px;
+  background: var(--c-black); color: #fff; border: none;
+  font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+  cursor: pointer; transition: background .25s var(--ease);
+}
+.cart-engraving-save:hover { background: var(--c-gold-deep); }
+
+/* Drawer engraving edit / add links */
+.cd-engraving-edit,
+.cd-engraving-add {
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--c-gold-deep); cursor: pointer;
+  text-decoration: none;
+}
+.cd-engraving-edit:hover, .cd-engraving-add:hover { color: var(--c-text); }
+.cd-engraving-add {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 6px; padding: 4px 0;
+}
+.cd-engraving-add i { color: var(--c-gold-deep); }
+
+/* Engraving note in the checkout order summary — matches cart/drawer badges */
+.co-engraving {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--c-muted);
+}
+.co-engraving i {
+  color: var(--c-gold-deep);
+  font-size: 11px;
+}
+.co-engraving em {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--c-text);
+}
+
+/* Bag items link to their product page */
+.cd-name a,
+.cart-item-name a {
+  transition: color var(--t);
+}
+.cd-name a:hover,
+.cart-item-name a:hover {
+  color: var(--c-gold-deep);
+}
+.cd-item-link img,
+.cart-item-link img {
+  transition: opacity var(--t);
+}
+.cd-item-link:hover img,
+.cart-item-link:hover img {
+  opacity: 0.82;
+}
+
+/* "Not engraved" note — shown on a plain line when the same product
+   also sits in the bag with engraving, so the two lines read clearly */
+.cart-item-noengraving,
+.cd-noengraving {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0 0;
+  font-size: 11px;
+  font-style: italic;
+  color: var(--c-faint);
+}
+.cart-item-noengraving i,
+.cd-noengraving i {
+  font-style: normal;
+  font-size: 11px;
+}
+.co-noengraving {
+  font-style: italic;
+  color: var(--c-faint);
+}
+.co-noengraving i {
+  color: var(--c-faint);
+}
+
+/* Engraving "apply to" selector — engrave all or only some of a line */
+.engraving-applyto {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  margin: 0;
+}
+.engraving-applyto select {
+  padding: 6px 10px;
+  background: #fff;
+  border: 1px solid var(--c-line-soft);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-text);
+  cursor: pointer;
+}
+.engraving-applyto select:focus {
+  border-color: var(--c-gold);
+  outline: none;
+}
+.engraving-split-note {
+  flex-basis: 100%;
+  margin: 2px 0 0;
+  font-size: 11px;
+  font-style: italic;
+  color: var(--c-muted);
+}
+
+/* ── Grouped bag: one product card, engraving messages iterate beneath ── */
+.cart-variants {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cart-variant {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 10px;
+  background: var(--c-cream);
+  border: 1px solid var(--c-line-soft);
+}
+.cv-label {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--c-text);
+  min-width: 0;
+}
+.cv-label i { color: var(--c-gold-deep); font-size: 12px; }
+.cv-label em {
+  font-family: var(--font-display);
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cv-fee {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--c-muted);
+  white-space: nowrap;
+}
+.cv-plain {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--c-faint);
+}
+.cv-qty {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.cv-qty button {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--c-line-soft);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  transition: border-color var(--t);
+}
+.cv-qty button:hover { border-color: var(--c-black); }
+.cv-qty span {
+  min-width: 20px;
+  text-align: center;
+  font-size: 12px;
+}
+.cv-remove {
+  color: var(--c-faint);
+  padding: 4px;
+  font-size: 11px;
+  transition: color var(--t);
+}
+.cv-remove:hover { color: var(--c-red); }
+
+/* Drawer flavour of the variant rows */
+.cd-variant {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 8px;
+  margin-top: 6px;
+  background: var(--c-cream);
+  border: 1px solid var(--c-line-soft);
+}
+.cd-v-label {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--c-text);
+  min-width: 0;
+}
+.cd-v-label i { color: var(--c-gold-deep); font-size: 11px; }
+.cd-v-label em {
+  font-family: var(--font-display);
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cd-v-plain {
+  font-style: italic;
+  color: var(--c-faint);
+}
+.cd-v-remove {
+  color: var(--c-faint);
+  padding: 3px;
+  font-size: 10px;
+  transition: color var(--t);
+}
+.cd-v-remove:hover { color: var(--c-red); }
+
+/* Engraving message rows on the product details page */
+.engraving-msg-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  margin-bottom: 6px;
+  background: #fff;
+  border: 1px solid var(--c-line-soft);
+}
+.emr-label {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--c-text);
+  min-width: 0;
+}
+.emr-label i { color: var(--c-gold-deep); font-size: 12px; }
+.emr-label em {
+  font-family: var(--font-display);
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.emr-remove {
+  color: var(--c-faint);
+  padding: 4px;
+  font-size: 11px;
+  transition: color var(--t);
+}
+.emr-remove:hover { color: var(--c-red); }
+.engraving-full-note {
+  font-size: 11.5px;
+  font-style: italic;
+  color: var(--c-muted);
+  margin: 4px 0 8px;
+}
+.engraving-preview-list { margin-top: 8px; }
+.engraving-preview-list .engraving-preview { margin-bottom: 3px; }
+
+/* Engraving row count (same message on several items) */
+.cv-count {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--c-gold-deep);
+  white-space: nowrap;
+}
+/* Product-level counter: minus disabled when every unit is engraved */
+.cart-item-qty button:disabled,
+.cd-qty button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  border-color: var(--c-line-soft);
+}
+
+/* ═════════════ MY ORDERS PAGE ═════════════ */
+.my-orders-page .container {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.my-orders-page .page-title {
+  padding: 0;
+  margin: 0 0 24px;
+  text-align: left;
+}
+.mo-card {
+  background: #fff;
+  border: 1px solid var(--c-line-soft);
+  padding: 22px 24px;
+  margin-bottom: 18px;
+}
+.mo-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.mo-head-info { flex: 1; min-width: 0; }
+.mo-id {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  margin: 0 !important;
+}
+.mo-date {
+  font-size: 12px;
+  color: var(--c-muted);
+  margin: 2px 0 0 !important;
+}
+.mo-total {
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0 !important;
+  white-space: nowrap;
+}
+.mo-badge {
+  padding: 5px 14px;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.mo-badge-pending { background: #f6f1e4; color: #8a6d1a; }
+.mo-badge-active { background: #e8f0f8; color: #2c5f8a; }
+.mo-badge-shipped { background: #e8f3ea; color: #2e7d4f; }
+.mo-badge-cancelled { background: #f8e9e9; color: #a13434; }
+
+/* Status tracker */
+.mo-progress {
+  display: flex;
+  margin: 22px 0 4px;
+}
+.mo-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+.mo-step::before {
+  content: "";
+  position: absolute;
+  top: 11px;
+  left: -50%;
+  width: 100%;
+  height: 2px;
+  background: var(--c-line-soft);
+}
+.mo-step:first-child::before { display: none; }
+.mo-step.done::before { background: var(--c-gold-deep); }
+.mo-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--c-line-soft);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+}
+.mo-step.done .mo-dot {
+  background: var(--c-gold-deep);
+  border-color: var(--c-gold-deep);
+}
+.mo-step.current .mo-dot i { font-size: 7px; }
+.mo-step-label {
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-faint);
+  text-align: center;
+}
+.mo-step.done .mo-step-label { color: var(--c-text); }
+
+.mo-tracking {
+  margin: 14px 0 0 !important;
+  font-size: 12.5px;
+  color: var(--c-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mo-tracking i { color: var(--c-gold-deep); }
+.mo-tracking strong { color: var(--c-text); letter-spacing: 0.04em; }
+
+/* Orders table */
+.mo-table-wrap {
+  background: #fff;
+  border: 1px solid var(--c-line-soft);
+  overflow-x: auto;
+}
+.mo-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.mo-table th {
+  text-align: left;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-faint);
+  font-weight: 500;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--c-line-soft);
+  white-space: nowrap;
+}
+.mo-table td {
+  padding: 20px 20px;
+  border-bottom: 1px solid var(--c-line-soft);
+  font-size: 13.5px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.mo-table tbody tr:last-child td { border-bottom: none; }
+.mo-table tbody tr {
+  cursor: pointer;
+  transition: background var(--t);
+}
+.mo-table tbody tr:hover { background: var(--c-cloud); }
+.mo-table-id {
+  font-family: var(--font-display);
+  font-size: 15px;
+}
+.mo-table-total { font-weight: 500; }
+.mo-table-chevron {
+  text-align: right;
+  color: var(--c-faint);
+  width: 1%;
+}
+@media (max-width: 480px) {
+  .mo-table th,
+  .mo-table td {
+    padding: 12px 10px;
+    font-size: 12.5px;
+  }
+  .mo-table-id { font-size: 13px; }
+}
+
+/* Order detail page */
+.mo-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-gold-deep);
+  margin-bottom: 18px;
+  transition: color var(--t);
+}
+.mo-back:hover { color: var(--c-text); }
+.mo-section-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  margin: 0 0 14px !important;
+}
+.mo-address p {
+  font-size: 13.5px;
+  color: var(--c-text);
+  margin: 0 0 4px !important;
+}
+.mo-help-text {
+  font-size: 13px;
+  color: var(--c-muted);
+  margin: 0 0 14px !important;
+  max-width: 480px;
+}
+
+.mo-items {
+  margin-top: 14px;
+  border-top: 1px solid var(--c-line-soft);
+  padding-top: 14px;
+}
+.mo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.mo-item img {
+  width: 54px;
+  height: 54px;
+  object-fit: cover;
+  background: var(--c-cloud);
+  flex-shrink: 0;
+}
+.mo-item-info { flex: 1; min-width: 0; }
+.mo-item-name {
+  font-size: 13px;
+  margin: 0 0 2px !important;
+}
+.mo-item-info small {
+  display: block;
+  font-size: 11px;
+  color: var(--c-muted);
+}
+.mo-item-price {
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
 }

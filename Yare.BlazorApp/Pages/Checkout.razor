@@ -8,7 +8,10 @@
 
 <section class="checkout-page section-pad">
     <div class="container">
-        <h1 class="page-title">Checkout</h1>
+        @if (!orderPlaced)
+        {
+            <h1 class="page-title">Checkout</h1>
+        }
 
         @if (cart.Count == 0 && !orderPlaced)
         {
@@ -25,7 +28,8 @@
                 <h2>Order Confirmed!</h2>
                 <p>Thank you, @order.FirstName! Your order #@order.Id has been placed.</p>
                 <p class="order-total">Total: @order.OrderTotal.ToString("C")</p>
-                <a href="" class="btn-yare">Continue Shopping</a>
+                <a href="my-orders" class="btn-yare">Track My Order</a>
+                <a href="" class="btn-outline-full">Continue Shopping</a>
             </div>
         }
         else
@@ -89,22 +93,43 @@
                 <!-- Order Summary -->
                 <div class="checkout-summary">
                     <h2>Your Bag (@cart.Sum(c => c.Count) items)</h2>
-                    @foreach (var item in cart)
+                    @foreach (var grp in cart.GroupBy(c => c.ProductId))
                     {
+                        var first = grp.First();
+                        var lines = grp.OrderBy(l => l.HasEngraving ? 1 : 0).ThenBy(l => l.Id).ToList();
+
                         <div class="checkout-item">
-                            <img src="@(item.ImageUrl ?? "https://picsum.photos/seed/item/80/80")" alt="@item.ProductName" />
+                            <img src="@(first.ImageUrl ?? "https://picsum.photos/seed/item/80/80")" alt="@first.ProductName" />
                             <div>
-                                <p>@item.ProductName</p>
-                                <small>Qty: @item.Count</small>
+                                <p>@first.ProductName</p>
+                                <small>Qty: @grp.Sum(g => g.Count)</small>
+                                @foreach (var line in lines.Where(l => l.HasEngraving))
+                                {
+                                    <small class="co-engraving">
+                                        <i class="bi bi-pen"></i>
+                                        @(line.Count > 1 ? $"{line.Count} ×" : "") Engraved: <em>“@line.Engraving”</em>
+                                    </small>
+                                }
                             </div>
-                            <span>@((item.Price * item.Count).ToString("C"))</span>
+                            <span>@grp.Sum(g => g.LineTotal).ToString("C")</span>
                         </div>
                     }
                     <div class="summary-divider"></div>
+                    @{
+                        var itemsSubtotal = cart.Sum(c => c.Price * c.Count);
+                        var engravingTotal = cart.Sum(c => c.EngravingFee * c.Count);
+                    }
                     <div class="summary-row">
                         <span>Subtotal</span>
-                        <span>@orderTotal.ToString("C")</span>
+                        <span>@itemsSubtotal.ToString("C")</span>
                     </div>
+                    @if (engravingTotal > 0)
+                    {
+                        <div class="summary-row">
+                            <span>Engraving</span>
+                            <span>@engravingTotal.ToString("C")</span>
+                        </div>
+                    }
                     <div class="summary-row">
                         <span>Shipping</span>
                         <span>@(orderTotal >= 500 ? "Free" : "£9.99")</span>

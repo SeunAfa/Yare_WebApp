@@ -1,78 +1,104 @@
 @page "/login"
+@layout BlankLayout
 @inject IAuthService AuthService
 @inject NavigationManager Nav
 
 <PageTitle>Sign In — Yare</PageTitle>
 
-<section class="auth-page">
-    <div class="auth-card">
-        <a href="" class="auth-logo">YARE</a>
-        <h1>Welcome Back</h1>
-        <p class="auth-sub">Sign in to your account</p>
+<section class="auth-split">
+    <div class="auth-left">
+        <div class="auth-left-inner">
+            <a href="" class="auth-logo">YARE</a>
+            <h1>Welcome Back</h1>
+            <p class="auth-sub">Sign in to your account to continue</p>
 
-        <!-- Demo role quick-login buttons -->
-        <div class="demo-roles">
-            <p class="demo-label">Quick demo access:</p>
-            <div class="role-buttons">
+            <div class="auth-tabs">
                 @foreach (var u in demoUsers)
                 {
-                    <button class="role-btn @GetRoleClass(u.Role)" @onclick="() => PrefillUser(u)">
+                    <button type="button" class="auth-tab @(selectedUser?.Id == u.Id ? "active" : "")" @onclick="() => PrefillUser(u)">
                         <i class="bi @GetRoleIcon(u.Role)"></i>
-                        <span>@u.Role</span>
+                        <span>@RoleLabel(u.Role)</span>
                     </button>
                 }
             </div>
-        </div>
 
-        <div class="auth-divider"><span>or enter credentials</span></div>
-
-        <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
-            <div class="form-group">
-                <label>Email</label>
-                <InputText @bind-Value="loginModel.Email" class="form-control" type="email" placeholder="email@example.com" />
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <div class="password-wrap">
-                    <InputText @bind-Value="loginModel.Password" class="form-control"
-                               type="@(showPassword ? "text" : "password")" placeholder="Password" />
-                    <button type="button" class="pwd-toggle" @onclick="() => showPassword = !showPassword">
-                        <i class="bi @(showPassword ? "bi-eye-slash" : "bi-eye")"></i>
-                    </button>
-                </div>
-            </div>
-
-            @if (!string.IsNullOrEmpty(error))
+            @if (selectedUser != null)
             {
-                <div class="auth-error">
-                    <i class="bi bi-exclamation-circle"></i> @error
+                <div class="auth-account-card">
+                    <div class="auth-account-icon"><i class="bi @GetRoleIcon(selectedUser.Role)"></i></div>
+                    <div class="auth-account-info">
+                        <p class="auth-account-name">@selectedUser.FirstName @selectedUser.LastName</p>
+                        <p class="auth-account-desc">@RoleDescription(selectedUser.Role)</p>
+                    </div>
                 </div>
             }
 
-            <button type="submit" class="btn-yare btn-full" disabled="@loading">
-                @(loading ? "Signing in..." : "Sign In")
-            </button>
-        </EditForm>
+            <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+                <div class="form-group">
+                    <label>Email</label>
+                    <InputText @bind-Value="loginModel.Email" class="form-control" type="email" placeholder="email@example.com" readonly="@InputsLocked" autocomplete="off" />
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="password-wrap">
+                        <InputText @bind-Value="loginModel.Password" class="form-control"
+                                   type="@(showPassword ? "text" : "password")" placeholder="Password" readonly="@InputsLocked" autocomplete="new-password" />
+                        <button type="button" class="pwd-toggle" @onclick="() => showPassword = !showPassword">
+                            <i class="bi @(showPassword ? "bi-eye-slash" : "bi-eye")"></i>
+                        </button>
+                    </div>
+                </div>
 
-        <p class="auth-footer">
-            Don't have an account? <a href="register">Register here</a>
-        </p>
+                <p class="auth-demo-note">
+                    <i class="bi bi-info-circle"></i>
+                    <span>Demo mode — credentials are pre-filled and locked.</span>
+                </p>
+
+                @if (!string.IsNullOrEmpty(error))
+                {
+                    <div class="auth-error">
+                        <i class="bi bi-exclamation-circle"></i> @error
+                    </div>
+                }
+
+                <button type="submit" class="btn-yare btn-full" disabled="@loading">
+                    @(loading ? "Signing in..." : "Sign In")
+                </button>
+            </EditForm>
+
+            <p class="auth-footer">
+                Don't have an account? <a href="register">Register here</a>
+            </p>
+
+            <p class="copyRight-Text auth-copyright">&copy; @DateTime.Now.Year Seun. All rights reserved.</p>
+        </div>
+    </div>
+    <div class="auth-right">
+        <img src="images/hero-watches.jpg" alt="" />
     </div>
 </section>
 
 @code {
     private LoginModel loginModel = new();
     private List<AppUser> demoUsers = new();
+    private AppUser? selectedUser;
     private string error = "";
     private bool loading, showPassword;
+
+    private bool InputsLocked => selectedUser != null;
+    private bool IsAdminSelected => selectedUser?.Role is SD.Role_MasterAdmin or SD.Role_Admin;
 
     protected override void OnInitialized()
     {
         demoUsers = AuthService.GetDemoUsers();
+        var customer = demoUsers.FirstOrDefault(u => u.Role == SD.Role_Customer);
+        if (customer != null)
+            PrefillUser(customer);
     }
 
     private void PrefillUser(AppUser user)
     {
+        selectedUser = user;
         loginModel.Email = user.Email ?? "";
         loginModel.Password = user.Password ?? "";
         error = "";
@@ -98,11 +124,18 @@
         loading = false;
     }
 
-    private string GetRoleClass(string? role) => role switch
+    private string RoleLabel(string? role) => role switch
     {
-        SD.Role_MasterAdmin or SD.Role_Admin => "role-admin",
-        SD.Role_Employee => "role-employee",
-        _ => "role-customer"
+        SD.Role_MasterAdmin or SD.Role_Admin => "Admin",
+        SD.Role_Employee => "Employee",
+        _ => "Customer"
+    };
+
+    private string RoleDescription(string? role) => role switch
+    {
+        SD.Role_MasterAdmin or SD.Role_Admin => "Full store management access",
+        SD.Role_Employee => "Manage products & orders",
+        _ => "Shop, track orders & more"
     };
 
     private string GetRoleIcon(string? role) => role switch

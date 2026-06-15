@@ -36,7 +36,8 @@ public class AuthService : IAuthService
             StreetAdress = "22 Store Street",
             City = "London",
             Borough = "Camden",
-            PostCode = "WC1E 7BT"
+            PostCode = "WC1E 7BT",
+            StoreName = "Yare — Camden"
         },
         new AppUser
         {

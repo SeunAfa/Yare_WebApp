@@ -1,0 +1,151 @@
+@page "/admin/orders/{OrderId:int}"
+@layout AdminLayout
+@inject IOrderService OrderService
+@inject IProductService ProductService
+@inject NavigationManager Nav
+
+<PageTitle>Order #@OrderId — Yare Admin</PageTitle>
+
+<div class="admin-page-header">
+    <div>
+        <h1>Order #@OrderId</h1>
+        <p><a href="admin/orders" class="link-sm"><i class="bi bi-arrow-left"></i> Back to Orders</a></p>
+    </div>
+</div>
+
+@if (loading)
+{
+    <div class="table-skeleton"></div>
+}
+else if (order == null)
+{
+    <div class="admin-card">
+        <div class="empty-state">
+            <i class="bi bi-receipt"></i>
+            <p>Order not found.</p>
+            <a href="admin/orders" class="btn-yare-sm">Back to Orders</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="admin-grid-2">
+        <!-- Summary + status management -->
+        <div class="admin-card">
+            <h3 class="admin-card-title">Order Summary</h3>
+            <div class="od-row"><span>Placed</span><strong>@order.OrderDate.ToString("dd MMM yyyy, HH:mm")</strong></div>
+            <div class="od-row"><span>Status</span><span class="status-badge @GetStatusClass(order.OrderStatus)">@order.OrderStatus</span></div>
+            <div class="od-row"><span>Payment</span><span class="status-badge @(order.PaymentStatus == SD.PaymentStatusApproved ? "badge-shipped" : "badge-pending")">@order.PaymentStatus</span></div>
+            <div class="od-row"><span>Total</span><strong>@order.OrderTotal.ToString("C")</strong></div>
+
+            @if (!string.IsNullOrEmpty(order.TrackingNumber))
+            {
+                <div class="od-row"><span>Tracking</span><strong>@(string.IsNullOrEmpty(order.Carrier) ? "" : order.Carrier + " · ")@order.TrackingNumber</strong></div>
+            }
+
+            <div class="od-status-update">
+                <label>Update status</label>
+                <div class="table-actions">
+                    <select class="status-select" @bind="newStatus">
+                        <option value="@SD.StatusPending">Pending</option>
+                        <option value="@SD.StatusApproved">Approved</option>
+                        <option value="@SD.StatusInProcess">Processing</option>
+                        <option value="@SD.StatusShipped">Shipped</option>
+                        <option value="@SD.StatusCancelled">Cancelled</option>
+                        <option value="@SD.StatusRefunded">Refunded</option>
+                    </select>
+                    <button class="btn-yare-sm" @onclick="SaveStatus" disabled="@(newStatus == order.OrderStatus)">Save</button>
+                </div>
+                @if (saved) { <p class="od-saved"><i class="bi bi-check2"></i> Status updated</p> }
+            </div>
+        </div>
+
+        <!-- Customer + shipping -->
+        <div class="admin-card">
+            <h3 class="admin-card-title">Customer &amp; Delivery</h3>
+            <div class="od-address">
+                <p><strong>@order.FirstName @order.LastName</strong></p>
+                <p>@order.StreetAdress</p>
+                <p>@order.Borough, @order.City</p>
+                <p>@order.PostCode</p>
+                @if (!string.IsNullOrWhiteSpace(order.PhoneNumber)) { <p><i class="bi bi-telephone"></i> @order.PhoneNumber</p> }
+            </div>
+        </div>
+    </div>
+
+    <!-- Line items -->
+    <div class="admin-card mt-4">
+        <h3 class="admin-card-title">Items (@details.Sum(d => d.Count))</h3>
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr><th>Image</th><th>Product</th><th>Unit Price</th><th>Qty</th><th>Line Total</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var d in details)
+                    {
+                        var p = productMap.GetValueOrDefault(d.ProductId);
+                        <tr>
+                            <td><img src="@(p?.PrimaryDisplayImageUrl ?? "https://picsum.photos/seed/od/60/60")" class="table-thumb" alt="" /></td>
+                            <td>
+                                <div class="table-product-name">@(p?.ProductName ?? $"Product #{d.ProductId}")</div>
+                                @if (!string.IsNullOrWhiteSpace(d.Engraving)) { <small><i class="bi bi-pen"></i> "@d.Engraving"</small> }
+                            </td>
+                            <td>@((d.Price + d.EngravingFee).ToString("C"))</td>
+                            <td>@d.Count</td>
+                            <td>@(((d.Price + d.EngravingFee) * d.Count).ToString("C"))</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" style="text-align:right"><strong>Order Total</strong></td>
+                        <td><strong>@order.OrderTotal.ToString("C")</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public int OrderId { get; set; }
+
+    private OrderHeader? order;
+    private List<OrderDetail> details = new();
+    private Dictionary<int, Product> productMap = new();
+    private bool loading = true;
+    private string newStatus = "";
+    private bool saved;
+
+    protected override async Task OnInitializedAsync()
+    {
+        order = await OrderService.GetOrderByIdAsync(OrderId);
+        if (order != null)
+        {
+            newStatus = order.OrderStatus ?? SD.StatusPending;
+            details = await OrderService.GetOrderDetailsAsync(OrderId);
+            productMap = (await ProductService.GetAllAsync()).ToDictionary(p => p.Id);
+        }
+        loading = false;
+    }
+
+    private async Task SaveStatus()
+    {
+        if (order == null || newStatus == order.OrderStatus) return;
+        await OrderService.UpdateOrderStatusAsync(order.Id, newStatus);
+        order.OrderStatus = newStatus;
+        saved = true;
+    }
+
+    private string GetStatusClass(string? s) => s switch
+    {
+        SD.StatusApproved => "badge-approved",
+        SD.StatusPending => "badge-pending",
+        SD.StatusInProcess => "badge-processing",
+        SD.StatusShipped => "badge-shipped",
+        SD.StatusCancelled => "badge-cancelled",
+        SD.StatusRefunded => "badge-refunded",
+        _ => ""
+    };
+}

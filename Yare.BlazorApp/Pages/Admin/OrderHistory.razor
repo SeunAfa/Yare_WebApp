@@ -1,0 +1,97 @@
+@page "/admin/orders/history"
+@layout AdminLayout
+@inject IOrderService OrderService
+
+<PageTitle>Order History — Yare Admin</PageTitle>
+
+<div class="admin-page-header">
+    <div>
+        <h1>Order History</h1>
+        <p>Completed, cancelled and refunded orders</p>
+    </div>
+    <div class="header-actions">
+        <a href="admin/orders" class="btn-outline-sm"><i class="bi bi-arrow-left"></i> Active Orders</a>
+    </div>
+</div>
+
+<div class="admin-card">
+    <div class="table-toolbar">
+        <input type="text" placeholder="Search history..." @bind="search" @bind:event="oninput" class="search-input" />
+        <select @onchange="e => statusFilter = e.Value?.ToString()" class="sort-select">
+            <option value="">All</option>
+            <option value="@SD.StatusShipped">Shipped</option>
+            <option value="@SD.StatusCancelled">Cancelled</option>
+            <option value="@SD.StatusRefunded">Refunded</option>
+        </select>
+    </div>
+
+    @if (loading)
+    {
+        <div class="table-skeleton"></div>
+    }
+    else if (!Filtered.Any())
+    {
+        <div class="empty-state">
+            <i class="bi bi-clock-history"></i>
+            <p>No completed orders yet.</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr><th>#</th><th>Customer</th><th>Date</th><th>Total</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var o in Filtered)
+                    {
+                        <tr>
+                            <td>#@o.Id</td>
+                            <td>@o.FirstName @o.LastName</td>
+                            <td>@o.OrderDate.ToString("dd MMM yyyy")</td>
+                            <td>@o.OrderTotal.ToString("C")</td>
+                            <td><span class="status-badge @GetStatusClass(o.OrderStatus)">@o.OrderStatus</span></td>
+                            <td>
+                                <div class="table-actions">
+                                    <a href="@($"admin/orders/{o.Id}")" class="btn-icon" title="View details"><i class="bi bi-eye"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="table-footer">
+            <p>@Filtered.Count() of @history.Count completed orders</p>
+        </div>
+    }
+</div>
+
+@code {
+    private List<OrderHeader> history = new();
+    private string search = "", statusFilter = "";
+    private bool loading = true;
+
+    private static readonly string[] finalStatuses = { SD.StatusShipped, SD.StatusCancelled, SD.StatusRefunded };
+
+    protected override async Task OnInitializedAsync()
+    {
+        var all = await OrderService.GetAllOrdersAsync();
+        history = all.Where(o => finalStatuses.Contains(o.OrderStatus))
+                     .OrderByDescending(o => o.OrderDate).ToList();
+        loading = false;
+    }
+
+    private IEnumerable<OrderHeader> Filtered => history.Where(o =>
+        (string.IsNullOrEmpty(search) || $"{o.FirstName} {o.LastName} {o.Id}".Contains(search, StringComparison.OrdinalIgnoreCase)) &&
+        (string.IsNullOrEmpty(statusFilter) || o.OrderStatus == statusFilter));
+
+    private string GetStatusClass(string? s) => s switch
+    {
+        SD.StatusShipped => "badge-shipped",
+        SD.StatusCancelled => "badge-cancelled",
+        SD.StatusRefunded => "badge-refunded",
+        _ => ""
+    };
+}

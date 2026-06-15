@@ -27,7 +27,7 @@ public class ProductService : IProductService
         if (_products != null) return _products;
         try
         {
-            _products = await _http.GetFromJsonAsync<List<Product>>("data/products.json?v=5", _jsonOptions) ?? new();
+            _products = await _http.GetFromJsonAsync<List<Product>>("data/products.json?v=9", _jsonOptions) ?? new();
         }
         catch
         {
@@ -41,7 +41,7 @@ public class ProductService : IProductService
         if (_collections != null) return _collections;
         try
         {
-            _collections = await _http.GetFromJsonAsync<List<Collection>>("data/collections.json", _jsonOptions) ?? new();
+            _collections = await _http.GetFromJsonAsync<List<Collection>>("data/collections.json?v=5", _jsonOptions) ?? new();
         }
         catch
         {
@@ -112,7 +112,7 @@ public class ProductService : IProductService
         return products.OrderByDescending(p => p.CreatedDateTime).Take(8).ToList();
     }
 
-    public Task<bool> SaveProductAsync(Product product)
+    public async Task<bool> SaveProductAsync(Product product)
     {
         // In-memory only — GitHub Pages has no server to persist to
         if (_products == null) _products = new();
@@ -124,12 +124,55 @@ public class ProductService : IProductService
             product.Id = _products.Any() ? _products.Max(p => p.Id) + 1 : 1;
             _products.Add(product);
         }
-        return Task.FromResult(true);
+
+        var collections = await LoadCollectionsAsync();
+        foreach (var collection in collections)
+        {
+            if (product.CollectionIds.Contains(collection.Id))
+            {
+                if (!collection.ProductIds.Contains(product.Id))
+                    collection.ProductIds.Add(product.Id);
+            }
+            else
+            {
+                collection.ProductIds.Remove(product.Id);
+            }
+        }
+
+        return true;
     }
 
     public Task<bool> DeleteProductAsync(int id)
     {
         _products?.RemoveAll(p => p.Id == id);
         return Task.FromResult(true);
+    }
+
+    public async Task<bool> SaveCollectionAsync(Collection collection)
+    {
+        // In-memory only — GitHub Pages has no server to persist to
+        var collections = await LoadCollectionsAsync();
+        var existing = collections.FirstOrDefault(c => c.Id == collection.Id);
+        if (existing != null)
+            collections[collections.IndexOf(existing)] = collection;
+        else
+        {
+            collection.Id = collections.Any() ? collections.Max(c => c.Id) + 1 : 1;
+            collections.Add(collection);
+        }
+        return true;
+    }
+
+    public async Task<bool> DeleteCollectionAsync(int id)
+    {
+        var collections = await LoadCollectionsAsync();
+        collections.RemoveAll(c => c.Id == id);
+        // Drop the collection from any product that still references it
+        if (_products != null)
+        {
+            foreach (var p in _products)
+                p.CollectionIds.Remove(id);
+        }
+        return true;
     }
 }

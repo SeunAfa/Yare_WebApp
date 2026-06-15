@@ -79,6 +79,25 @@ function createProductSlider(slidesId, prevId, nextId) {
     next.addEventListener('click', () => goTo(cur + 1));
 }
 
+// Product details: slide the sticky bar in when the header info is out of view, out when back in.
+function initProductStickyBar() {
+    const bar = document.getElementById('pd-sticky-bar');
+    const sentinel = document.getElementById('pd-header-sentinel');
+    if (!bar || !sentinel) return;
+    // Avoid double-binding on re-render
+    if (bar._observerBound) return;
+    bar._observerBound = true;
+
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            // Show bar when the sentinel is NOT intersecting (i.e. scrolled past the product header)
+            if (entry.isIntersecting) bar.classList.remove('is-visible');
+            else                       bar.classList.add('is-visible');
+        });
+    }, { threshold: 0, rootMargin: '-60px 0px 0px 0px' });
+    io.observe(sentinel);
+}
+
 function initHomePage() {
     // Hero slider
     createSlider('.slide-hmPg', 'sliderBtnLeft', 'sliderBtnRight', 'sliderDots');

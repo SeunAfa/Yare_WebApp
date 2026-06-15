@@ -17,8 +17,8 @@
 
 <div class="admin-card">
     <div class="table-toolbar">
-        <input type="text" placeholder="Search products..." @bind="searchTerm" @bind:event="oninput" class="search-input" />
-        <select @onchange="e => filterCategory = e.Value?.ToString()" class="sort-select">
+        <input type="text" placeholder="Search products..." value="@searchTerm" @oninput="OnSearchInput" class="search-input" />
+        <select @onchange="OnCategoryChange" class="sort-select">
             <option value="">All Categories</option>
             <option value="Watch">Watches</option>
             <option value="Jewellery">Jewellery</option>
@@ -45,7 +45,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var p in Filtered)
+                    @foreach (var p in Paged)
                     {
                         <tr>
                             <td><img src="@(p.PrimaryDisplayImageUrl ?? "https://picsum.photos/seed/p/60/60")" class="table-thumb" alt="@p.ProductName" /></td>
@@ -59,7 +59,7 @@
                             <td>
                                 <div class="table-actions">
                                     <a href="@($"admin/products/edit/{p.Id}")" class="btn-icon" title="Edit"><i class="bi bi-pencil"></i></a>
-                                    <a href="@($"product/{p.Id}")" class="btn-icon" title="View" target="_blank"><i class="bi bi-eye"></i></a>
+                                    <a href="@($"product/{p.Id}")" class="btn-icon" title="View details in store front" target="_blank"><i class="bi bi-eye"></i></a>
                                     <button class="btn-icon danger" @onclick="() => ConfirmDelete(p.Id)" title="Delete"><i class="bi bi-trash3"></i></button>
                                 </div>
                             </td>
@@ -71,6 +71,7 @@
         <div class="table-footer">
             <p>@Filtered.Count() of @products.Count products</p>
         </div>
+        <Pagination CurrentPage="currentPage" TotalPages="TotalPages" OnPageChange="(p) => currentPage = p" />
     }
 </div>
 
@@ -89,10 +90,12 @@
 }
 
 @code {
+    private const int PageSize = 10;
     private List<Product> products = new();
     private string searchTerm = "", filterCategory = "";
     private bool loading = true;
     private int deleteId;
+    private int currentPage = 1;
 
     protected override async Task OnInitializedAsync()
     {
@@ -103,6 +106,30 @@
     private IEnumerable<Product> Filtered => products.Where(p =>
         (string.IsNullOrEmpty(searchTerm) || (p.ProductName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)) &&
         (string.IsNullOrEmpty(filterCategory) || p.ProductCategory?.ToString() == filterCategory));
+
+    private int TotalPages => Math.Max(1, (int)Math.Ceiling(Filtered.Count() / (double)PageSize));
+
+    private IEnumerable<Product> Paged
+    {
+        get
+        {
+            if (currentPage > TotalPages) currentPage = TotalPages;
+            if (currentPage < 1) currentPage = 1;
+            return Filtered.Skip((currentPage - 1) * PageSize).Take(PageSize);
+        }
+    }
+
+    private void OnSearchInput(ChangeEventArgs e)
+    {
+        searchTerm = e.Value?.ToString() ?? "";
+        currentPage = 1;
+    }
+
+    private void OnCategoryChange(ChangeEventArgs e)
+    {
+        filterCategory = e.Value?.ToString() ?? "";
+        currentPage = 1;
+    }
 
     private void ConfirmDelete(int id) => deleteId = id;
 

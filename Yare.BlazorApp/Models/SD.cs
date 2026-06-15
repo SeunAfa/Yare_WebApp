@@ -26,6 +26,9 @@ public static class SD
     public const string PaymentStatusApproved = "Approved";
     public const string PaymentStatusRejected = "Rejected";
 
+    // Pricing
+    public const double EngravingFee = 25.00; // per-unit, complimentary-style upcharge
+
     // LocalStorage keys
     public const string CartKey = "yare_cart";
     public const string UserKey = "yare_user";

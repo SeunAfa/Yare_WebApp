@@ -1,0 +1,165 @@
+@page "/admin/collections/edit/{Id:int}"
+@layout AdminLayout
+@inject IProductService ProductService
+@inject NavigationManager Nav
+
+<PageTitle>@(Id == 0 ? "Add" : "Edit") Collection — Yare Admin</PageTitle>
+
+<div class="admin-page-header">
+    <h1>@(Id == 0 ? "Add New Collection" : "Edit Collection")</h1>
+    <a href="admin/collections" class="btn-outline-sm"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
+
+@if (loading)
+{
+    <div class="admin-card"><div class="table-skeleton"></div></div>
+}
+else
+{
+    <div class="admin-card">
+        <EditForm Model="@collection" OnValidSubmit="Save">
+            <DataAnnotationsValidator />
+            <div class="form-section">
+                <h3>Collection Details</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Collection Name</label>
+                        <InputText @bind-Value="collection.CollectionName" class="form-control" placeholder="e.g. Summer Edit" />
+                    </div>
+                    <div class="form-group">
+                        <label>Group</label>
+                        <InputSelect @bind-Value="collection.Group" class="form-control">
+                            @foreach (var g in Groups)
+                            {
+                                <option value="@g">@GroupLabel(g)</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Description</label>
+                        <InputTextArea @bind-Value="collection.Description" class="form-control" rows="3" />
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Image URL</label>
+                        <InputText @bind-Value="collection.ImageUrl" @bind-Value:event="oninput" class="form-control" placeholder="https://..." />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Image Preview</h3>
+                <div class="image-preview-main">
+                    @if (!string.IsNullOrWhiteSpace(collection.ImageUrl))
+                    {
+                        <img src="@collection.ImageUrl" alt="@collection.CollectionName" />
+                    }
+                    else
+                    {
+                        <div class="image-preview-empty"><i class="bi bi-image"></i><span>No image</span></div>
+                    }
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Products in this Collection</h3>
+                @if (products.Count == 0)
+                {
+                    <p class="form-hint">No products available.</p>
+                }
+                else
+                {
+                    <p class="form-hint">@collection.ProductIds.Count product(s) selected. Click a product to add or remove it from this collection.</p>
+                    @foreach (var cat in ProductCategories)
+                    {
+                        var items = products.Where(p => p.ProductCategory == cat).ToList();
+                        if (items.Count == 0) { continue; }
+                        <div class="checkbox-group">
+                            <h4 class="checkbox-group-label">@cat</h4>
+                            <div class="product-pick-grid">
+                                @foreach (var p in items)
+                                {
+                                    <div class="product-pick @(collection.ProductIds.Contains(p.Id) ? "selected" : "")"
+                                         @onclick="() => ToggleProduct(p.Id, !collection.ProductIds.Contains(p.Id))"
+                                         title="Click to add or remove from this collection">
+                                        <span class="product-pick-thumb">
+                                            <img src="@(string.IsNullOrWhiteSpace(p.PrimaryDisplayImageUrl) ? $"https://picsum.photos/seed/p{p.Id}/120/120" : p.PrimaryDisplayImageUrl)" alt="@p.ProductName" loading="lazy" />
+                                        </span>
+                                        <span class="product-pick-info">
+                                            <a href="admin/products/edit/@p.Id" target="_blank" class="product-pick-name"
+                                               @onclick:stopPropagation="true" title="Open product in edit mode (opens in new tab)">@p.ProductName</a>
+                                            <span class="product-pick-meta">@p.ProductNumber · @p.Price.ToString("C")</span>
+                                        </span>
+                                        <span class="product-pick-check"><i class="bi bi-check-lg"></i></span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+
+            @if (saved)
+            {
+                <div class="alert-success"><i class="bi bi-check-circle"></i> Collection saved successfully!</div>
+            }
+            <ValidationSummary />
+            <div class="form-actions">
+                <a href="admin/collections" class="btn-outline-sm">Cancel</a>
+                <button type="submit" class="btn-yare" disabled="@saving">
+                    @(saving ? "Saving..." : (Id == 0 ? "Create Collection" : "Save Changes"))
+                </button>
+            </div>
+        </EditForm>
+    </div>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private Collection collection = new() { Group = "General" };
+    private List<Product> products = new();
+    private bool loading = true, saving, saved;
+
+    private static readonly string[] Groups = { "Audience", "General", "Featured", "Brand" };
+    private static readonly ProductCategory[] ProductCategories =
+        { ProductCategory.Watch, ProductCategory.Jewellery, ProductCategory.Accessory };
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await ProductService.GetAllAsync();
+        if (Id != 0)
+        {
+            collection = await ProductService.GetCollectionByIdAsync(Id) ?? collection;
+        }
+        loading = false;
+    }
+
+    private void ToggleProduct(int id, bool isChecked)
+    {
+        if (isChecked)
+        {
+            if (!collection.ProductIds.Contains(id)) collection.ProductIds.Add(id);
+        }
+        else
+        {
+            collection.ProductIds.Remove(id);
+        }
+    }
+
+    private async Task Save()
+    {
+        saving = true;
+        await ProductService.SaveCollectionAsync(collection);
+        saved = true;
+        saving = false;
+        await Task.Delay(1500);
+        Nav.NavigateTo("admin/collections");
+    }
+
+    private static string GroupLabel(string? group) => group switch
+    {
+        "Audience" => "By Audience",
+        "Brand" => "By Brand",
+        null or "" => "General",
+        _ => group
+    };
+}

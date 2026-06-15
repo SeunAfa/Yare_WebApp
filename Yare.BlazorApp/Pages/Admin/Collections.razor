@@ -1,0 +1,158 @@
+@page "/admin/collections"
+@layout AdminLayout
+@inject IProductService ProductService
+@inject NavigationManager Nav
+
+<PageTitle>Collections — Yare Admin</PageTitle>
+
+<div class="admin-page-header">
+    <div>
+        <h1>Collections</h1>
+        <p>Curated groups of products</p>
+    </div>
+    <div class="header-actions">
+        <a href="admin/collections/edit/0" class="btn-yare"><i class="bi bi-plus-lg"></i> Add Collection</a>
+    </div>
+</div>
+
+<div class="admin-card">
+    <div class="table-toolbar">
+        <input type="text" placeholder="Search collections..." value="@searchTerm" @oninput="OnSearchInput" class="search-input" />
+        <select @onchange="OnGroupChange" class="sort-select">
+            <option value="">All Groups</option>
+            <option value="Audience">By Audience</option>
+            <option value="General">General</option>
+            <option value="Featured">Featured</option>
+            <option value="Brand">By Brand</option>
+        </select>
+        <span class="toolbar-count">@Filtered.Count() of @collections.Count</span>
+    </div>
+
+    @if (loading)
+    {
+        <div class="table-skeleton"></div>
+    }
+    else if (!Filtered.Any())
+    {
+        <div class="empty-state">
+            <i class="bi bi-collection"></i>
+            <p>No collections found.</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Group</th>
+                        <th>Description</th>
+                        <th>Products</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in Paged)
+                    {
+                        <tr>
+                            <td><img src="@(c.ImageUrl ?? $"https://picsum.photos/seed/col{c.Id}/60/60")" class="table-thumb" alt="@c.CollectionName" /></td>
+                            <td><div class="table-product-name">@c.CollectionName</div></td>
+                            <td><span class="cat-badge">@GroupLabel(c.Group)</span></td>
+                            <td><small>@(Truncate(c.Description, 70))</small></td>
+                            <td><span class="cat-badge">@c.ProductIds.Count items</span></td>
+                            <td>
+                                <div class="table-actions">
+                                    <a href="@($"admin/collections/detail/{c.Id}")" class="btn-icon" title="View products"><i class="bi bi-grid"></i></a>
+                                    <a href="@($"admin/collections/edit/{c.Id}")" class="btn-icon" title="Edit"><i class="bi bi-pencil"></i></a>
+                                    <a href="@($"collections/{c.Id}")" class="btn-icon" title="View details in store front" target="_blank"><i class="bi bi-eye"></i></a>
+                                    <button class="btn-icon danger" @onclick="() => ConfirmDelete(c.Id)" title="Delete"><i class="bi bi-trash3"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <Pagination CurrentPage="currentPage" TotalPages="TotalPages" OnPageChange="(p) => currentPage = p" />
+    }
+</div>
+
+@if (deleteId > 0)
+{
+    <div class="modal-overlay">
+        <div class="modal-card">
+            <h3>Delete Collection?</h3>
+            <p>This action cannot be undone in this session.</p>
+            <div class="modal-actions">
+                <button class="btn-outline-sm" @onclick="() => deleteId = 0">Cancel</button>
+                <button class="btn-danger" @onclick="DoDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private const int PageSize = 10;
+    private List<Collection> collections = new();
+    private string searchTerm = "", filterGroup = "";
+    private bool loading = true;
+    private int currentPage = 1;
+    private int deleteId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        collections = await ProductService.GetCollectionsAsync();
+        loading = false;
+    }
+
+    private IEnumerable<Collection> Filtered => collections.Where(c =>
+        (string.IsNullOrEmpty(searchTerm) ||
+            (c.CollectionName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)) &&
+        (string.IsNullOrEmpty(filterGroup) || (c.Group ?? "General") == filterGroup));
+
+    private int TotalPages => Math.Max(1, (int)Math.Ceiling(Filtered.Count() / (double)PageSize));
+
+    private IEnumerable<Collection> Paged
+    {
+        get
+        {
+            if (currentPage > TotalPages) currentPage = TotalPages;
+            if (currentPage < 1) currentPage = 1;
+            return Filtered.Skip((currentPage - 1) * PageSize).Take(PageSize);
+        }
+    }
+
+    private void OnSearchInput(ChangeEventArgs e)
+    {
+        searchTerm = e.Value?.ToString() ?? "";
+        currentPage = 1;
+    }
+
+    private void OnGroupChange(ChangeEventArgs e)
+    {
+        filterGroup = e.Value?.ToString() ?? "";
+        currentPage = 1;
+    }
+
+    private void ConfirmDelete(int id) => deleteId = id;
+
+    private async Task DoDelete()
+    {
+        await ProductService.DeleteCollectionAsync(deleteId);
+        collections.RemoveAll(c => c.Id == deleteId);
+        deleteId = 0;
+    }
+
+    private static string GroupLabel(string? group) => group switch
+    {
+        "Audience" => "By Audience",
+        "Brand" => "By Brand",
+        null or "" => "General",
+        _ => group
+    };
+
+    private static string Truncate(string? s, int n) =>
+        string.IsNullOrEmpty(s) ? "" : (s.Length <= n ? s : s.Substring(0, n) + "…");
+}

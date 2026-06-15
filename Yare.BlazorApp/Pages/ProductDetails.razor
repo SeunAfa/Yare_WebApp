@@ -1,7 +1,9 @@
 @page "/product/{Id:int}"
 @inject IProductService ProductService
 @inject ICartService CartService
+@inject IAuthService AuthService
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 
 <PageTitle>@(product?.ProductName ?? "Product") — Yare</PageTitle>
 
@@ -20,7 +22,30 @@ else if (product == null)
 }
 else
 {
-    <section class="product-detail section-pad">
+    <!-- Sticky scroll banner: hidden by default, slides down when product header is out of view -->
+    <div id="pd-sticky-bar" class="pd-sticky-bar">
+        <div class="pd-sticky-inner">
+            <img src="@(product.PrimaryDisplayImageUrl ?? "")" alt="" class="pd-sticky-img" />
+            <div class="pd-sticky-info">
+                <p class="pd-sticky-cat">@product.ProductCategory · Ref. @product.ProductNumber</p>
+                <h4 class="pd-sticky-name">@product.ProductName</h4>
+            </div>
+            <div class="pd-sticky-price">
+                @if (product.PriceWas > product.Price) { <span class="price-was">@product.PriceWas.ToString("C")</span> }
+                <span class="price-now">@product.Price.ToString("C")</span>
+            </div>
+            @if (!isStaff)
+            {
+                <button class="pd-sticky-add btn-add-lg" @onclick="AddToCart"
+                        disabled="@(product.StockStatus == SD.OutOfStock || added)">
+                    @if (added) { <i class="bi bi-check2"></i> <span>Added!</span> }
+                    else { <i class="bi bi-bag-plus"></i> <span>Add to Bag</span> }
+                </button>
+            }
+        </div>
+    </div>
+
+    <section class="product-detail">
         <div class="container">
             <nav class="breadcrumb-nav">
                 <a href="">Home</a> /
@@ -46,20 +71,23 @@ else
 
                 <!-- Info -->
                 <div class="product-info">
-                    <p class="product-detail-cat">@product.ProductCategory</p>
-                    <h1 class="product-detail-name">@product.ProductName</h1>
-                    <p class="product-detail-number">Ref. @product.ProductNumber</p>
+                    <!-- Scroll-trigger sentinel: when this leaves view, the sticky bar appears -->
+                    <div id="pd-header-sentinel">
+                        <p class="product-detail-cat">@product.ProductCategory</p>
+                        <h1 class="product-detail-name">@product.ProductName</h1>
+                        <p class="product-detail-number">Ref. @product.ProductNumber</p>
 
-                    <div class="product-detail-price">
-                        @if (product.PriceWas > product.Price)
-                        {
-                            <span class="price-was">@product.PriceWas.ToString("C")</span>
-                        }
-                        <span class="price-now-lg">@product.Price.ToString("C")</span>
-                    </div>
+                        <div class="product-detail-price">
+                            @if (product.PriceWas > product.Price)
+                            {
+                                <span class="price-was">@product.PriceWas.ToString("C")</span>
+                            }
+                            <span class="price-now-lg">@product.Price.ToString("C")</span>
+                        </div>
 
-                    <div class="stock-status @GetStockClass()">
-                        <i class="bi @GetStockIcon()"></i> @product.StockStatus
+                        <div class="stock-status @GetStockClass()">
+                            <i class="bi @GetStockIcon()"></i> @product.StockStatus
+                        </div>
                     </div>
 
                     <p class="product-detail-desc">@product.ProductDescription</p>
@@ -68,47 +96,93 @@ else
                     <div class="product-specs">
                         @if (product.ProductCategory == ProductCategory.Watch)
                         {
-                            <SpecRow Label="Brand" Value="@product.WatchBrand?.ToString()" />
-                            <SpecRow Label="Movement" Value="@product.WatchMovement?.ToString()" />
-                            <SpecRow Label="Strap" Value="@product.WatchStrapType?.ToString()" />
-                            <SpecRow Label="Diameter" Value="@product.WatchDiameter?.ToString()" />
-                            <SpecRow Label="Water Resistant" Value="@product.WaterResistant?.ToString()" />
+                            <SpecRow Label="Brand" Value="@product.WatchBrand?.DisplayName()" />
+                            <SpecRow Label="Movement" Value="@product.WatchMovement?.DisplayName()" />
+                            <SpecRow Label="Strap" Value="@product.WatchStrapType?.DisplayName()" />
+                            <SpecRow Label="Diameter" Value="@product.WatchDiameter?.DisplayName()" />
+                            <SpecRow Label="Water Resistant" Value="@product.WaterResistant?.DisplayName()" />
                             @if (!string.IsNullOrEmpty(product.DialColor)) { <SpecRow Label="Dial Color" Value="@product.DialColor" /> }
-                            @if (product.ByGemstone.HasValue) { <SpecRow Label="Gemstone" Value="@product.ByGemstone?.ToString()" /> }
+                            @if (product.ByGemstone.HasValue) { <SpecRow Label="Gemstone" Value="@product.ByGemstone?.DisplayName()" /> }
                         }
                         else if (product.ProductCategory == ProductCategory.Jewellery)
                         {
-                            @if (product.JewelleryCategory.HasValue) { <SpecRow Label="Category" Value="@product.JewelleryCategory?.ToString()" /> }
-                            @if (product.ByMetal.HasValue) { <SpecRow Label="Metal" Value="@product.ByMetal?.ToString()" /> }
-                            @if (product.ByGemstone.HasValue) { <SpecRow Label="Gemstone" Value="@product.ByGemstone?.ToString()" /> }
+                            @if (product.JewelleryCategory.HasValue) { <SpecRow Label="Category" Value="@product.JewelleryCategory?.DisplayName()" /> }
+                            @if (product.ByMetal.HasValue) { <SpecRow Label="Metal" Value="@product.ByMetal?.DisplayName()" /> }
+                            @if (product.ByGemstone.HasValue) { <SpecRow Label="Gemstone" Value="@product.ByGemstone?.DisplayName()" /> }
                         }
                         else if (product.ProductCategory == ProductCategory.Accessory)
                         {
-                            @if (product.AccessoryCategory.HasValue) { <SpecRow Label="Category" Value="@product.AccessoryCategory?.ToString()" /> }
+                            @if (product.AccessoryCategory.HasValue) { <SpecRow Label="Category" Value="@product.AccessoryCategory?.DisplayName()" /> }
                         }
-                        @if (product.Gender.HasValue) { <SpecRow Label="Gender" Value="@product.Gender?.ToString()" /> }
-                        @if (product.WarrantyYears.HasValue) { <SpecRow Label="Warranty" Value="@product.WarrantyYears?.ToString()" /> }
-                        @if (product.ByMetal.HasValue && product.ProductCategory != ProductCategory.Watch) { <SpecRow Label="Metal" Value="@product.ByMetal?.ToString()" /> }
+                        @if (product.Gender.HasValue) { <SpecRow Label="Gender" Value="@product.Gender?.DisplayName()" /> }
+                        @if (product.WarrantyYears.HasValue) { <SpecRow Label="Warranty" Value="@product.WarrantyYears?.DisplayName()" /> }
+                        @if (product.ByMetal.HasValue && product.ProductCategory != ProductCategory.Watch) { <SpecRow Label="Metal" Value="@product.ByMetal?.DisplayName()" /> }
                     </div>
 
-                    <div class="quantity-add">
-                        <div class="qty-control">
-                            <button @onclick="DecrQty">−</button>
-                            <span>@qty</span>
-                            <button @onclick="IncrQty">+</button>
+                    @if (isStaff)
+                    {
+                        <p class="staff-purchase-note">
+                            <i class="bi bi-info-circle"></i> Employee accounts cannot purchase products.
+                        </p>
+                    }
+                    else
+                    {
+                        <div class="quantity-add">
+                            <div class="qty-control">
+                                <button @onclick="DecrQty">−</button>
+                                <span>@qty</span>
+                                <button @onclick="IncrQty">+</button>
+                            </div>
+                            <button class="btn-yare btn-add-lg" @onclick="AddToCart"
+                                    disabled="@(product.StockStatus == SD.OutOfStock || added)">
+                                @if (added)
+                                {
+                                    <i class="bi bi-check2"></i> <span>Added!</span>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-bag-plus"></i> <span>Add to Bag</span>
+                                }
+                            </button>
                         </div>
-                        <button class="btn-yare btn-add-lg" @onclick="AddToCart"
-                                disabled="@(product.StockStatus == SD.OutOfStock || added)">
-                            @if (added)
+                    }
+
+                    @* Add Engraving — only for Watches and Jewellery *@
+                    @if (product.ProductCategory is ProductCategory.Watch or ProductCategory.Jewellery)
+                    {
+                        <div class="engraving">
+                            <button class="engraving-toggle" @onclick="() => engravingOpen = !engravingOpen" type="button">
+                                <svg class="engraving-icon" width="20" height="20" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M21.7312 2.28276C20.706 1.25763 19.044 1.25763 18.0189 2.28276L16.8617 3.43992L20.574 7.15223L21.7312 5.99507C22.7563 4.96995 22.7563 3.30789 21.7312 2.28276Z"/>
+                                    <path d="M19.5134 8.21289L15.801 4.50058L3.65021 16.6514C3.03342 17.2682 2.58003 18.029 2.33101 18.8649L1.53123 21.5498C1.45261 21.8137 1.52496 22.0995 1.71969 22.2942C1.91442 22.489 2.2002 22.5613 2.46413 22.4827L5.14902 21.6829C5.98499 21.4339 6.74574 20.9805 7.36253 20.3637L19.5134 8.21289Z"/>
+                                </svg>
+                                <span>@(string.IsNullOrWhiteSpace(engravingText) ? "Add Engraving" : "Engraving Added")</span>
+                                <i class="bi @(engravingOpen ? "bi-chevron-up" : "bi-chevron-down") engraving-chev"></i>
+                            </button>
+                            @if (engravingOpen)
                             {
-                                <i class="bi bi-check2"></i> <span>Added!</span>
+                                <div class="engraving-panel">
+                                    <p class="engraving-hint">Personalise this piece with up to 20 characters. Initials, dates, or short phrases. £25 per item. You can add or change messages any time from your bag.</p>
+                                    <div class="engraving-field">
+                                        <input type="text" maxlength="20" placeholder="Your engraving"
+                                               @bind="engravingText" @bind:event="oninput" />
+                                        <span class="engraving-count">@(engravingText?.Length ?? 0) / 20</span>
+                                    </div>
+                                    <div class="engraving-actions">
+                                        @if (!string.IsNullOrWhiteSpace(engravingText))
+                                        {
+                                            <button type="button" class="engraving-clear" @onclick="() => engravingText = string.Empty">Remove</button>
+                                        }
+                                        <button type="button" class="engraving-save" @onclick="() => engravingOpen = false">Done</button>
+                                    </div>
+                                </div>
                             }
-                            else
+                            else if (!string.IsNullOrWhiteSpace(engravingText))
                             {
-                                <i class="bi bi-bag-plus"></i> <span>Add to Bag</span>
+                                <p class="engraving-preview">Engraving: <em>“@engravingText”</em></p>
                             }
-                        </button>
-                    </div>
+                        </div>
+                    }
 
                     <div class="product-trust">
                         <span><i class="bi bi-shield-check"></i> Authentic</span>
@@ -146,16 +220,38 @@ else
     private string? activeImage;
     private bool loading = true, added;
     private int qty = 1;
+    private bool engravingOpen;
+    private string engravingText = string.Empty;
+    private bool isStaff;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await AuthService.GetCurrentUserAsync();
+        isStaff = user?.Role is SD.Role_Employee or SD.Role_Admin or SD.Role_MasterAdmin;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Wire up the sticky scroll bar each time content (re)renders
+        if (product != null)
+        {
+            try { await JS.InvokeVoidAsync("initProductStickyBar"); } catch { /* ignore prerender */ }
+        }
+    }
 
     protected override async Task OnParametersSetAsync()
     {
         loading = true;
+        // Component instance is reused across product navigations — reset per-product state
+        qty = 1;
+        engravingText = string.Empty;
+        engravingOpen = false;
         product = await ProductService.GetByIdAsync(Id);
         if (product != null)
         {
-            activeImage = product.PrimaryDisplayImageUrl;
             var all = await ProductService.GetByCategoryAsync(product.ProductCategory ?? ProductCategory.Watch);
             related = all.Where(p => p.Id != Id).Take(4).ToList();
+            activeImage = GetImages().FirstOrDefault() ?? product.PrimaryDisplayImageUrl;
         }
         loading = false;
     }
@@ -170,6 +266,12 @@ else
             product?.SliderImageUrlThree,
             product?.SliderImageUrlFour
         };
+
+        if (product != null && product.DisplayImageSlots.Count > 0)
+        {
+            imgs = imgs.Where((url, slot) => product.DisplayImageSlots.Contains(slot)).ToList();
+        }
+
         return imgs.Where(i => !string.IsNullOrEmpty(i)).Cast<string>().Distinct().ToList();
     }
 
@@ -179,8 +281,17 @@ else
     private async Task AddToCart()
     {
         if (product == null) return;
-        await CartService.AddToCartAsync(product, qty);
+        if (!await AuthService.IsAuthenticatedAsync())
+        {
+            Nav.NavigateTo("login");
+            return;
+        }
+        var eng = string.IsNullOrWhiteSpace(engravingText) ? null : engravingText.Trim();
+        await CartService.AddToCartAsync(product, qty, eng);
         added = true;
+        // Reset engraving so the next add isn't accidentally engraved with the same text
+        engravingText = string.Empty;
+        engravingOpen = false;
         await Task.Delay(2000);
         added = false;
         StateHasChanged();
