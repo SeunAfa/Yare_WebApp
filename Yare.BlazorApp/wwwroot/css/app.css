@@ -2154,6 +2154,24 @@ textarea:focus {
   background-color: var(--c-black);
 }
 
+/* Product-list banners — luxury dark gradients with a soft gold glow
+   (used in place of hero photography), one subtle tint per category */
+.page-hero-watches {
+  background:
+    radial-gradient(120% 150% at 50% -25%, rgba(201, 162, 39, 0.22), transparent 60%),
+    linear-gradient(160deg, #15120b 0%, #0a0a0b 55%, #060607 100%);
+}
+.page-hero-jewellery {
+  background:
+    radial-gradient(120% 150% at 50% -25%, rgba(221, 193, 115, 0.22), transparent 60%),
+    linear-gradient(160deg, #181014 0%, #0a0a0b 55%, #060607 100%);
+}
+.page-hero-accessories {
+  background:
+    radial-gradient(120% 150% at 50% -25%, rgba(201, 162, 39, 0.18), transparent 60%),
+    linear-gradient(160deg, #0e1113 0%, #0a0a0b 55%, #060607 100%);
+}
+
 /* ═════════════ COLLECTIONS LIST ═════════════ */
 .collections-grid {
   display: grid;
@@ -3449,6 +3467,10 @@ a.auth-logo:visited {
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+/* beat ".admin-card + .admin-card { margin-top:16px }" so both tiles align at the top */
+.dash-charts-grid.admin-grid-2 .dash-chart-card {
+  margin: 0;
 }
 .dash-chart-card .rank-chart {
   flex: 1;
