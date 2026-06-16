@@ -91,6 +91,32 @@ else
         </div>
     </div>
 
+    <!-- Best sellers + popular collections (equal height) -->
+    <div class="admin-grid-2 dash-charts-grid mt-4">
+        <div class="admin-card dash-chart-card">
+            <h3 class="admin-card-title">Best-Selling Products</h3>
+            @if (bestSellers.Any())
+            {
+                <div class="rank-chart">@((MarkupString)bestSellersSvg)</div>
+            }
+            else
+            {
+                <div class="empty-state"><i class="bi bi-bag"></i><p>No sales recorded yet.</p></div>
+            }
+        </div>
+        <div class="admin-card dash-chart-card">
+            <h3 class="admin-card-title">Popular Collections</h3>
+            @if (popularCollections.Any())
+            {
+                <div class="rank-chart">@((MarkupString)collectionsSvg)</div>
+            }
+            else
+            {
+                <div class="empty-state"><i class="bi bi-collection"></i><p>No collection sales yet.</p></div>
+            }
+        </div>
+    </div>
+
     <!-- Order status -->
     <div class="admin-card mt-4">
         <h3 class="admin-card-title">Order Status Breakdown</h3>
@@ -148,6 +174,10 @@ else
     private List<(string label, int count, int volume, string color)> categoryChart = new();
     private List<(string, int, string)> orderStatuses = new();
     private string chartSvg = "";
+    private List<(string label, int units)> bestSellers = new();
+    private List<(string label, int units)> popularCollections = new();
+    private string bestSellersSvg = "";
+    private string collectionsSvg = "";
     private AppUser? currentUser;
 
     protected override async Task OnInitializedAsync()
@@ -187,8 +217,71 @@ else
         };
 
         recentOrders = allOrders.Take(8).ToList();
+
+        await BuildSalesChartsAsync();
         BuildChartSvg();
         loading = false;
+    }
+
+    private async Task BuildSalesChartsAsync()
+    {
+        // Aggregate units sold per product across every order's line items.
+        var unitsByProduct = new Dictionary<int, int>();
+        foreach (var o in allOrders)
+        {
+            var dets = await OrderService.GetOrderDetailsAsync(o.Id);
+            foreach (var d in dets)
+            {
+                unitsByProduct[d.ProductId] = unitsByProduct.GetValueOrDefault(d.ProductId) + d.Count;
+            }
+        }
+
+        var productMap = allProducts.ToDictionary(p => p.Id);
+        bestSellers = unitsByProduct
+            .OrderByDescending(kv => kv.Value)
+            .Take(5)
+            .Select(kv => (productMap.GetValueOrDefault(kv.Key)?.ProductName ?? $"#{kv.Key}", kv.Value))
+            .ToList();
+
+        // Collection popularity = total units sold of its member products.
+        var collections = await ProductService.GetCollectionsAsync();
+        popularCollections = collections
+            .Select(c => (c.CollectionName ?? $"Collection {c.Id}",
+                          c.ProductIds.Sum(pid => unitsByProduct.GetValueOrDefault(pid))))
+            .Where(x => x.Item2 > 0)
+            .OrderByDescending(x => x.Item2)
+            .Take(5)
+            .ToList();
+
+        bestSellersSvg = BuildRankChart(bestSellers, "#c9a227");
+        collectionsSvg = BuildRankChart(popularCollections, "#4fb3c9");
+    }
+
+    // Horizontal ranked bar chart for a short top-N list.
+    private static string BuildRankChart(List<(string label, int units)> data, string color)
+    {
+        if (!data.Any()) return "";
+        int W = 520, rowH = 46, padT = 10, padB = 10, labelW = 170, padR = 50;
+        int H = padT + padB + data.Count * rowH;
+        int barMaxW = W - labelW - padR;
+        int max = Math.Max(1, data.Max(d => d.units));
+
+        var sb = new System.Text.StringBuilder();
+        sb.Append($"<svg viewBox=\"0 0 {W} {H}\" xmlns=\"http://www.w3.org/2000/svg\" preserveAspectRatio=\"xMidYMid meet\">");
+        for (int i = 0; i < data.Count; i++)
+        {
+            int y = padT + i * rowH;
+            int barH = 22;
+            int by = y + (rowH - barH) / 2;
+            int barW = (int)Math.Max(3, (double)data[i].units / max * barMaxW);
+            var label = data[i].label.Length > 24 ? data[i].label.Substring(0, 23) + "…" : data[i].label;
+            sb.Append($"<text x=\"{labelW - 12}\" y=\"{by + 15}\" text-anchor=\"end\" font-size=\"13\" fill=\"rgba(255,255,255,0.82)\">{System.Security.SecurityElement.Escape(label)}</text>");
+            sb.Append($"<rect x=\"{labelW}\" y=\"{by}\" width=\"{barMaxW}\" height=\"{barH}\" rx=\"4\" fill=\"rgba(255,255,255,0.06)\"/>");
+            sb.Append($"<rect x=\"{labelW}\" y=\"{by}\" width=\"{barW}\" height=\"{barH}\" rx=\"4\" fill=\"{color}\"/>");
+            sb.Append($"<text x=\"{labelW + barW + 8}\" y=\"{by + 15}\" text-anchor=\"start\" font-size=\"13\" font-weight=\"600\" fill=\"{color}\">{data[i].units}</text>");
+        }
+        sb.Append("</svg>");
+        return sb.ToString();
     }
 
     private void BuildChartSvg()

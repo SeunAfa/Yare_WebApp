@@ -1,6 +1,7 @@
 @inherits LayoutComponentBase
 @inject IAuthService AuthService
 @inject ICartService CartService
+@inject IProductService ProductService
 @inject NavigationManager Nav
 @implements IDisposable
 
@@ -218,6 +219,7 @@
                     <div id="yareAccessories-tabWrapper" class="subMenu-tabWrapper">
                         <div id="yareAccessories-subMenu-tabWrapper-Left" class="subMenu-tabWrapper-Left">
                             <div class="accessories-tablinksList-Wrapper subMenu-tablinksList-Wrapper">
+                                <a class="nav-link text-white subMenu-subTitles">Shop by Category</a>
                                 <a href="accessories?view=watch-straps" class="nav-link text-white submMenu-navLink navLink-Animation" @onclick="CloseTab">Watch Straps</a>
                                 <a href="accessories?view=cases-boxes" class="nav-link text-white submMenu-navLink navLink-Animation" @onclick="CloseTab">Cases &amp; Boxes</a>
                                 <a href="accessories?view=wallets" class="nav-link text-white submMenu-navLink navLink-Animation" @onclick="CloseTab">Wallets</a>
@@ -227,8 +229,44 @@
                                 <a href="accessories?view=cleaning-products" class="nav-link text-white submMenu-navLink navLink-Animation" @onclick="CloseTab">Cleaning Products</a>
                                 <a href="accessories" class="nav-link text-white submMenu-navLink navLink-Animation" @onclick="CloseTab">View All</a>
                             </div>
+                            <div class="accessories-tablinksList-Wrapper subMenu-tablinksList-Wrapper">
+                                <a class="nav-link text-white subMenu-subTitles">By Material</a>
+                                <a href="accessories?view=leather" class="nav-link text-white submMenu-navLink navLink-Animation" @onclick="CloseTab">Leather</a>
+                                <a href="accessories?view=gold" class="nav-link text-white submMenu-navLink navLink-Animation" @onclick="CloseTab">Gold</a>
+                                <a href="accessories?view=silver" class="nav-link text-white submMenu-navLink navLink-Animation" @onclick="CloseTab">Silver</a>
+                                <a href="accessories?view=steel" class="nav-link text-white submMenu-navLink navLink-Animation" @onclick="CloseTab">Stainless Steel</a>
+                            </div>
                         </div>
-                        <div id="yareAccessories-subMenu-tabWrapper-Right" class="subMenu-tabWrapper-Right"></div>
+                        <div id="yareAccessories-subMenu-tabWrapper-Right" class="subMenu-tabWrapper-Right">
+                            <div id="yareAccessories-imgRight-Container">
+                                <div class="yareAccessories-eachImgRight-imgContainer">
+                                    <div class="yareAccessories-eachImg-Container"><div class="yareAccessories-eachImg yareAccessories-eachImg--gifts"></div></div>
+                                    <div class="yareAccessories-eachLinks-Container">
+                                        <a class="nav-link text-white yareAccessories-eachLinks subMenu-subTitles">The Gift Edit</a>
+                                        <a href="accessories?view=gifts-for-him" class="nav-link text-white yareAccessories-eachLinks navLink-Animation" @onclick="CloseTab">Gifts for Him</a>
+                                        <a href="accessories?view=gifts-for-her" class="nav-link text-white yareAccessories-eachLinks navLink-Animation" @onclick="CloseTab">Gifts for Her</a>
+                                        <a href="accessories?view=gift-sets" class="nav-link text-white yareAccessories-eachLinks navLink-Animation" @onclick="CloseTab">Gift Sets</a>
+                                    </div>
+                                </div>
+                                <div class="yareAccessories-eachImgRight-imgContainer">
+                                    <div class="yareAccessories-eachImg-Container"><div class="yareAccessories-eachImg yareAccessories-eachImg--care"></div></div>
+                                    <div class="yareAccessories-eachLinks-Container">
+                                        <a class="nav-link text-white yareAccessories-eachLinks subMenu-subTitles">Care &amp; Storage</a>
+                                        <a href="accessories?view=cases-boxes" class="nav-link text-white yareAccessories-eachLinks navLink-Animation" @onclick="CloseTab">Watch Boxes</a>
+                                        <a href="accessories?view=cleaning-products" class="nav-link text-white yareAccessories-eachLinks navLink-Animation" @onclick="CloseTab">Cleaning Kits</a>
+                                        <a href="accessories?view=travel" class="nav-link text-white yareAccessories-eachLinks navLink-Animation" @onclick="CloseTab">Travel Rolls</a>
+                                    </div>
+                                </div>
+                                <div class="yareAccessories-eachImgRight-imgContainer">
+                                    <div class="yareAccessories-eachImg-Container"><div class="yareAccessories-eachImg yareAccessories-eachImg--new"></div></div>
+                                    <div class="yareAccessories-eachLinks-Container">
+                                        <a class="nav-link text-white yareAccessories-eachLinks subMenu-subTitles">Featured</a>
+                                        <a href="accessories?view=new-in" class="nav-link text-white yareAccessories-eachLinks navLink-Animation" @onclick="CloseTab">New In</a>
+                                        <a href="accessories?view=best-sellers" class="nav-link text-white yareAccessories-eachLinks navLink-Animation" @onclick="CloseTab">Best Sellers</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             }
@@ -459,6 +497,8 @@
 
 <main class="yare-main">@Body</main>
 
+<ToastContainer />
+
 <footer class="footer">
     <a href=""><span class="yare-wordmark yare-wordmark-footer">YARE</span></a>
     <ul class="footer-links-List">
@@ -500,17 +540,22 @@
         searchQuery = "";
     }
 
-    private static readonly (string, string, string)[] collectionItems =
+    // IDs of the collections featured as cards in the mega menu (image is pulled
+    // from the collection's own data so it matches the collection page).
+    private static readonly (int id, string title, string link)[] featuredCollectionIds =
     {
-        ("images/coll-ring.jpg", "Cartier", "collections/16"),
-        ("images/mega-watches.jpg", "Our Top Ten", "collections/7"),
-        ("images/brand-3.jpg", "Limited Edition", "collections/11"),
+        (16, "Cartier", "collections/16"),
+        (7, "Our Top Ten", "collections/7"),
+        (11, "Limited Edition", "collections/11"),
     };
+
+    private List<(string img, string title, string link)> collectionItems = new();
 
     protected override async Task OnInitializedAsync()
     {
         currentUser = await AuthService.GetCurrentUserAsync();
         cartCount = await CartService.GetCartCountAsync();
+        await LoadFeaturedCollectionsAsync();
         UpdateRoles();
         AuthService.OnChange += OnAuthChanged;
         CartService.OnChange += OnCartChanged;
@@ -521,6 +566,20 @@
     {
         isAdmin = currentUser?.Role is SD.Role_MasterAdmin or SD.Role_Admin;
         isEmployee = currentUser?.Role == SD.Role_Employee;
+    }
+
+    private async Task LoadFeaturedCollectionsAsync()
+    {
+        var collections = await ProductService.GetCollectionsAsync();
+        var items = new List<(string, string, string)>();
+        foreach (var (id, title, link) in featuredCollectionIds)
+        {
+            var c = collections.FirstOrDefault(x => x.Id == id);
+            // use the collection's own image so the menu matches the collection page
+            var img = !string.IsNullOrWhiteSpace(c?.ImageUrl) ? c!.ImageUrl! : $"https://picsum.photos/seed/col{id}/400/300";
+            items.Add((img, c?.CollectionName ?? title, link));
+        }
+        collectionItems = items;
     }
 
     private async void OnAuthChanged()

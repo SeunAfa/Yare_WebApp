@@ -2,6 +2,7 @@
 @layout AdminLayout
 @inject IProductService ProductService
 @inject NavigationManager Nav
+@inject ToastService Toasts
 
 <PageTitle>@(Id == 0 ? "Add" : "Edit") Product — Yare Admin</PageTitle>
 
@@ -24,7 +25,7 @@ else
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Category</label>
-                        <InputSelect @bind-Value="product.ProductCategory" @bind-Value:after="SyncGenderCollection" class="form-control">
+                        <InputSelect @bind-Value="product.ProductCategory" @bind-Value:after="OnCategoryChanged" class="form-control">
                             @foreach (var cat in Enum.GetValues<ProductCategory>())
                             {
                                 <option value="@cat">@cat</option>
@@ -42,12 +43,12 @@ else
                         <InputText @bind-Value="product.ProductName" class="form-control" placeholder="Product name" />
                     </div>
                     <div class="form-group">
-                        <label>Product Number</label>
-                        <InputText @bind-Value="product.ProductNumber" class="form-control" placeholder="e.g. YW-001" />
+                        <label>Product Number <span class="auto-tag">auto</span></label>
+                        <InputText @bind-Value="product.ProductNumber" class="form-control" readonly />
                     </div>
                     <div class="form-group">
-                        <label>Model Number</label>
-                        <InputText @bind-Value="product.ModelNumber" class="form-control" />
+                        <label>Model Number <span class="auto-tag">auto</span></label>
+                        <InputText @bind-Value="product.ModelNumber" class="form-control" readonly />
                     </div>
                     <div class="form-group">
                         <label>Supplier</label>
@@ -60,6 +61,7 @@ else
                     <div class="form-group">
                         <label>Gender</label>
                         <InputSelect @bind-Value="product.Gender" @bind-Value:after="SyncGenderCollection" class="form-control">
+                            <option value="">Select gender…</option>
                             @foreach (var g in Enum.GetValues<Gender>())
                             {
                                 <option value="@g">@g.DisplayName()</option>
@@ -69,6 +71,7 @@ else
                     <div class="form-group">
                         <label>Warranty</label>
                         <InputSelect @bind-Value="product.WarrantyYears" class="form-control">
+                            <option value="">Select warranty…</option>
                             @foreach (var w in Enum.GetValues<WarrantyYears>())
                             {
                                 <option value="@w">@w.DisplayName()</option>
@@ -182,18 +185,38 @@ else
                 @if (product.ProductCategory == ProductCategory.Watch)
                 {
                     <div class="form-grid">
-                        <div class="form-group">
+                        <div class="form-group searchable-select @(brandOpen ? "open" : "")">
                             <label>Watch Brand</label>
-                            <InputSelect @bind-Value="product.WatchBrand" class="form-control">
-                                @foreach (var v in Enum.GetValues<WatchBrand>())
-                                {
-                                    <option value="@v">@v.DisplayName()</option>
-                                }
-                            </InputSelect>
+                            <button type="button" class="form-control ss-trigger" @onclick="ToggleBrandOpen">
+                                <span class="@(product.WatchBrand == null ? "ss-placeholder" : "")">@(product.WatchBrand?.DisplayName() ?? "Select brand…")</span>
+                                <i class="bi bi-chevron-down"></i>
+                            </button>
+                            @if (brandOpen)
+                            {
+                                <div class="ss-panel">
+                                    <div class="ss-search">
+                                        <i class="bi bi-search"></i>
+                                        <input type="text" placeholder="Search brands…" value="@brandSearch" @oninput="OnBrandSearch" @onclick:stopPropagation="true" autofocus />
+                                    </div>
+                                    <div class="ss-options">
+                                        @foreach (var v in FilteredBrands)
+                                        {
+                                            <button type="button" class="ss-option @(product.WatchBrand == v ? "selected" : "")" @onclick="() => SelectBrand(v)">
+                                                @v.DisplayName()
+                                            </button>
+                                        }
+                                        @if (!FilteredBrands.Any())
+                                        {
+                                            <div class="ss-empty">No brands match "@brandSearch"</div>
+                                        }
+                                    </div>
+                                </div>
+                            }
                         </div>
                         <div class="form-group">
                             <label>Case Metal</label>
                             <InputSelect @bind-Value="product.ByMetal" class="form-control">
+                                <option value="">Select metal…</option>
                                 @foreach (var v in Enum.GetValues<ByMetal>())
                                 {
                                     <option value="@v">@v.DisplayName()</option>
@@ -203,6 +226,7 @@ else
                         <div class="form-group">
                             <label>Strap Type</label>
                             <InputSelect @bind-Value="product.WatchStrapType" class="form-control">
+                                <option value="">Select strap type…</option>
                                 @foreach (var v in Enum.GetValues<WatchStrapType>())
                                 {
                                     <option value="@v">@v.DisplayName()</option>
@@ -216,6 +240,7 @@ else
                         <div class="form-group">
                             <label>Movement</label>
                             <InputSelect @bind-Value="product.WatchMovement" class="form-control">
+                                <option value="">Select movement…</option>
                                 @foreach (var v in Enum.GetValues<WatchMovement>())
                                 {
                                     <option value="@v">@v.DisplayName()</option>
@@ -225,6 +250,7 @@ else
                         <div class="form-group">
                             <label>Water Resistance</label>
                             <InputSelect @bind-Value="product.WaterResistant" class="form-control">
+                                <option value="">Select water resistance…</option>
                                 @foreach (var v in Enum.GetValues<WaterResistant>())
                                 {
                                     <option value="@v">@v.DisplayName()</option>
@@ -234,6 +260,7 @@ else
                         <div class="form-group">
                             <label>Case Shape</label>
                             <InputSelect @bind-Value="product.WatchCaseShape" class="form-control">
+                                <option value="">Select case shape…</option>
                                 @foreach (var v in Enum.GetValues<WatchCaseShape>())
                                 {
                                     <option value="@v">@v.DisplayName()</option>
@@ -243,6 +270,7 @@ else
                         <div class="form-group">
                             <label>Case Diameter</label>
                             <InputSelect @bind-Value="product.WatchDiameter" class="form-control">
+                                <option value="">Select diameter…</option>
                                 @foreach (var v in Enum.GetValues<WatchDiameter>())
                                 {
                                     <option value="@v">@v.DisplayName()</option>
@@ -256,6 +284,7 @@ else
                         <div class="form-group">
                             <label>Gemstone</label>
                             <InputSelect @bind-Value="product.ByGemstone" class="form-control">
+                                <option value="">Select gemstone…</option>
                                 @foreach (var v in Enum.GetValues<ByGemstone>())
                                 {
                                     <option value="@v">@v.DisplayName()</option>
@@ -265,6 +294,7 @@ else
                         <div class="form-group">
                             <label>Occasion</label>
                             <InputSelect @bind-Value="product.ByOccassion" class="form-control">
+                                <option value="">Select occasion…</option>
                                 @foreach (var v in Enum.GetValues<ByOccassion>())
                                 {
                                     <option value="@v">@v.DisplayName()</option>
@@ -279,6 +309,7 @@ else
                         <div class="form-group">
                             <label>Jewellery Type</label>
                             <InputSelect @bind-Value="product.JewelleryCategory" class="form-control">
+                                <option value="">Select type…</option>
                                 @foreach (var v in Enum.GetValues<JewelleryCategory>())
                                 {
                                     <option value="@v">@v.DisplayName()</option>
@@ -288,6 +319,7 @@ else
                         <div class="form-group">
                             <label>Metal</label>
                             <InputSelect @bind-Value="product.ByMetal" class="form-control">
+                                <option value="">Select metal…</option>
                                 @foreach (var v in Enum.GetValues<ByMetal>())
                                 {
                                     <option value="@v">@v.DisplayName()</option>
@@ -297,6 +329,7 @@ else
                         <div class="form-group">
                             <label>Gemstone</label>
                             <InputSelect @bind-Value="product.ByGemstone" class="form-control">
+                                <option value="">Select gemstone…</option>
                                 @foreach (var v in Enum.GetValues<ByGemstone>())
                                 {
                                     <option value="@v">@v.DisplayName()</option>
@@ -306,6 +339,7 @@ else
                         <div class="form-group">
                             <label>Occasion</label>
                             <InputSelect @bind-Value="product.ByOccassion" class="form-control">
+                                <option value="">Select occasion…</option>
                                 @foreach (var v in Enum.GetValues<ByOccassion>())
                                 {
                                     <option value="@v">@v.DisplayName()</option>
@@ -320,6 +354,7 @@ else
                         <div class="form-group">
                             <label>Accessory Type</label>
                             <InputSelect @bind-Value="product.AccessoryCategory" class="form-control">
+                                <option value="">Select type…</option>
                                 @foreach (var v in Enum.GetValues<AccessoryCategory>())
                                 {
                                     <option value="@v">@v.DisplayName()</option>
@@ -329,6 +364,7 @@ else
                         <div class="form-group">
                             <label>Metal</label>
                             <InputSelect @bind-Value="product.ByMetal" class="form-control">
+                                <option value="">Select metal…</option>
                                 @foreach (var v in Enum.GetValues<ByMetal>())
                                 {
                                     <option value="@v">@v.DisplayName()</option>
@@ -458,8 +494,26 @@ else
     [Parameter] public int Id { get; set; }
     private Product product = new() { StockStatus = SD.InStock, ProductCategory = ProductCategory.Watch };
     private List<Collection> collections = new();
+    private List<Product> allProducts = new();
     private bool loading = true, saving, saved;
     private string activeSlot = "primary";
+
+    // Searchable Watch Brand dropdown state
+    private bool brandOpen;
+    private string brandSearch = "";
+    private IEnumerable<WatchBrand> FilteredBrands =>
+        Enum.GetValues<WatchBrand>().Where(b =>
+            string.IsNullOrWhiteSpace(brandSearch) ||
+            b.DisplayName().Contains(brandSearch, StringComparison.OrdinalIgnoreCase));
+
+    private void ToggleBrandOpen() => brandOpen = !brandOpen;
+    private void OnBrandSearch(ChangeEventArgs e) => brandSearch = e.Value?.ToString() ?? "";
+    private void SelectBrand(WatchBrand b)
+    {
+        product.WatchBrand = b;
+        brandOpen = false;
+        brandSearch = "";
+    }
 
     private string? SelectedImageUrl => activeSlot switch
     {
@@ -474,9 +528,14 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        allProducts = await ProductService.GetAllAsync();
         if (Id != 0)
         {
             product = await ProductService.GetByIdAsync(Id) ?? product;
+        }
+        else
+        {
+            GenerateNumbers();
         }
         collections = await ProductService.GetCollectionsAsync();
         if (Id != 0 && product.CollectionIds.Count == 0)
@@ -541,6 +600,27 @@ else
     // Audience collections that are auto-managed by the Gender + Category selection.
     private static readonly string[] GenderCollectionNames =
         { "Mens Watches", "Ladies Watches", "Unisex Watches", "Mens Jewellery", "Ladies Jewellery" };
+
+    private void OnCategoryChanged()
+    {
+        // For a new product the auto numbers carry a category prefix, so regenerate them.
+        if (Id == 0) GenerateNumbers();
+        SyncGenderCollection();
+    }
+
+    private void GenerateNumbers()
+    {
+        var prefix = product.ProductCategory switch
+        {
+            ProductCategory.Watch => "WAT",
+            ProductCategory.Jewellery => "JWL",
+            ProductCategory.Accessory => "ACC",
+            _ => "PRD"
+        };
+        var seq = (allProducts.Any() ? allProducts.Max(p => p.Id) : 0) + 1;
+        product.ProductNumber = $"YR-{prefix}-{seq:D4}";
+        product.ModelNumber = $"{prefix}{DateTime.Now:yyMMdd}-{seq:D3}";
+    }
 
     private void SyncGenderCollection()
     {
@@ -671,7 +751,8 @@ else
         await ProductService.SaveProductAsync(product);
         saved = true;
         saving = false;
-        await Task.Delay(2000);
+        Toasts.Success(Id == 0 ? "Product created" : "Product saved");
+        await Task.Delay(1200);
         Nav.NavigateTo("admin/products");
     }
 }

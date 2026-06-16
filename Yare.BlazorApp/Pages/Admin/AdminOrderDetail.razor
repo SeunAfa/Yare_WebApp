@@ -3,6 +3,7 @@
 @inject IOrderService OrderService
 @inject IProductService ProductService
 @inject NavigationManager Nav
+@inject ToastService Toasts
 
 <PageTitle>Order #@OrderId — Yare Admin</PageTitle>
 
@@ -29,23 +30,24 @@ else if (order == null)
 }
 else
 {
-    <div class="admin-grid-2">
+    <div class="admin-grid-2 od-grid">
         <!-- Summary + status management -->
-        <div class="admin-card">
-            <h3 class="admin-card-title">Order Summary</h3>
-            <div class="od-row"><span>Placed</span><strong>@order.OrderDate.ToString("dd MMM yyyy, HH:mm")</strong></div>
-            <div class="od-row"><span>Status</span><span class="status-badge @GetStatusClass(order.OrderStatus)">@order.OrderStatus</span></div>
-            <div class="od-row"><span>Payment</span><span class="status-badge @(order.PaymentStatus == SD.PaymentStatusApproved ? "badge-shipped" : "badge-pending")">@order.PaymentStatus</span></div>
-            <div class="od-row"><span>Total</span><strong>@order.OrderTotal.ToString("C")</strong></div>
-
-            @if (!string.IsNullOrEmpty(order.TrackingNumber))
-            {
-                <div class="od-row"><span>Tracking</span><strong>@(string.IsNullOrEmpty(order.Carrier) ? "" : order.Carrier + " · ")@order.TrackingNumber</strong></div>
-            }
+        <div class="admin-card od-card">
+            <h3 class="admin-card-title"><i class="bi bi-receipt"></i> Order Summary</h3>
+            <div class="od-body">
+                <div class="od-row"><span><i class="bi bi-calendar3"></i> Placed</span><strong>@order.OrderDate.ToString("dd MMM yyyy, HH:mm")</strong></div>
+                <div class="od-row"><span><i class="bi bi-flag"></i> Status</span><span class="status-badge @GetStatusClass(order.OrderStatus)">@order.OrderStatus</span></div>
+                <div class="od-row"><span><i class="bi bi-credit-card"></i> Payment</span><span class="status-badge @(order.PaymentStatus == SD.PaymentStatusApproved ? "badge-shipped" : "badge-pending")">@order.PaymentStatus</span></div>
+                @if (!string.IsNullOrEmpty(order.TrackingNumber))
+                {
+                    <div class="od-row"><span><i class="bi bi-truck"></i> Tracking</span><strong>@(string.IsNullOrEmpty(order.Carrier) ? "" : order.Carrier + " · ")@order.TrackingNumber</strong></div>
+                }
+                <div class="od-row od-total"><span>Total</span><strong>@order.OrderTotal.ToString("C")</strong></div>
+            </div>
 
             <div class="od-status-update">
                 <label>Update status</label>
-                <div class="table-actions">
+                <div class="od-status-controls">
                     <select class="status-select" @bind="newStatus">
                         <option value="@SD.StatusPending">Pending</option>
                         <option value="@SD.StatusApproved">Approved</option>
@@ -56,19 +58,20 @@ else
                     </select>
                     <button class="btn-yare-sm" @onclick="SaveStatus" disabled="@(newStatus == order.OrderStatus)">Save</button>
                 </div>
-                @if (saved) { <p class="od-saved"><i class="bi bi-check2"></i> Status updated</p> }
             </div>
         </div>
 
         <!-- Customer + shipping -->
-        <div class="admin-card">
-            <h3 class="admin-card-title">Customer &amp; Delivery</h3>
-            <div class="od-address">
-                <p><strong>@order.FirstName @order.LastName</strong></p>
-                <p>@order.StreetAdress</p>
-                <p>@order.Borough, @order.City</p>
-                <p>@order.PostCode</p>
-                @if (!string.IsNullOrWhiteSpace(order.PhoneNumber)) { <p><i class="bi bi-telephone"></i> @order.PhoneNumber</p> }
+        <div class="admin-card od-card">
+            <h3 class="admin-card-title"><i class="bi bi-person"></i> Customer &amp; Delivery</h3>
+            <div class="od-body">
+                <div class="od-address">
+                    <p class="od-name"><strong>@order.FirstName @order.LastName</strong></p>
+                    <p><i class="bi bi-geo-alt"></i> @order.StreetAdress</p>
+                    <p>@order.Borough, @order.City</p>
+                    <p>@order.PostCode</p>
+                    @if (!string.IsNullOrWhiteSpace(order.PhoneNumber)) { <p><i class="bi bi-telephone"></i> @order.PhoneNumber</p> }
+                </div>
             </div>
         </div>
     </div>
@@ -116,7 +119,6 @@ else
     private Dictionary<int, Product> productMap = new();
     private bool loading = true;
     private string newStatus = "";
-    private bool saved;
 
     protected override async Task OnInitializedAsync()
     {
@@ -135,7 +137,7 @@ else
         if (order == null || newStatus == order.OrderStatus) return;
         await OrderService.UpdateOrderStatusAsync(order.Id, newStatus);
         order.OrderStatus = newStatus;
-        saved = true;
+        Toasts.Success($"Order #{order.Id} marked {newStatus}");
     }
 
     private string GetStatusClass(string? s) => s switch

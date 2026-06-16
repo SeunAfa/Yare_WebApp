@@ -754,25 +754,71 @@ textarea:focus {
   color: #fff;
 }
 
-/* Accessories mega — right image fills full height/width, flush */
+/* Accessories mega — mirrors the Jewellery layout exactly:
+   two link columns on the left, three image+link cards on the right */
 #yareAccessories-tabWrapper {
   background: var(--c-ink);
+  justify-content: center;
 }
 #yareAccessories-subMenu-tabWrapper-Left {
-  width: 48%;
-  /* right padding pushes the right-aligned links further left, away from the image */
-  padding: 12px 110px 12px 0;
+  width: auto;
   display: flex;
-  justify-content: flex-end;
+  padding: 26px 0 30px 0;
+}
+#yareAccessories-subMenu-tabWrapper-Left .subMenu-tablinksList-Wrapper {
+  padding-top: 0;
 }
 #yareAccessories-subMenu-tabWrapper-Right {
-  width: 52%;
-  margin: 0;
-  padding: 0;
+  width: 62%;
+  display: flex;
+  padding: 26px 30px;
+}
+#yareAccessories-imgRight-Container {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  align-items: flex-start;
+}
+.yareAccessories-eachImgRight-imgContainer {
+  display: flex;
+  flex-direction: column;
+  width: 33.33%;
+  cursor: pointer;
+}
+.yareAccessories-eachImg-Container {
+  overflow: hidden;
+  width: 100%;
+  height: 190px;
+  margin-bottom: 16px;
+}
+.yareAccessories-eachImg {
+  width: 100%;
   height: 100%;
   background-size: cover;
   background-position: center;
-  background-image: url("../images/mega-accessories.jpg");
+  transition: transform 0.8s var(--ease);
+  filter: grayscale(0.15);
+}
+.yareAccessories-eachImgRight-imgContainer:hover .yareAccessories-eachImg {
+  transform: scale(1.06);
+  filter: none;
+}
+.yareAccessories-eachImg--gifts { background-image: url("../images/products/a3.png"); } /* Carbon Fibre Watch Roll */
+.yareAccessories-eachImg--care { background-image: url("../images/cat-accessories.jpg"); }
+.yareAccessories-eachImg--new { background-image: url("../images/products/a1.png"); } /* Alligator Watch Strap 20mm */
+.yareAccessories-eachLinks-Container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.yareAccessories-eachLinks {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.72);
+  padding: 0 !important;
+  line-height: 1.2;
+}
+.yareAccessories-eachLinks:hover {
+  color: #fff;
 }
 
 /* Collections mega */
@@ -788,18 +834,28 @@ textarea:focus {
   display: flex;
   padding: 12px 0;
 }
-/* tighten the gap between the three collections link columns */
+/* columns sit at their natural height so the Featured separator hugs the links
+   (no stretched empty space below the last link) */
 #yareCollections-subMenu-tabWrapper-Left {
-  align-items: stretch;
+  align-items: flex-start;
 }
 #yareCollections-subMenu-tabWrapper-Left .subMenu-tablinksList-Wrapper {
   padding-left: 18px;
   padding-right: 18px;
   height: auto;
 }
-/* vertical separator after the Featured column (full column height) */
+/* vertical separator after the Featured column — spans only the links, not the column padding */
 #yareCollections-subMenu-tabWrapper-Left .collection-featured-col {
-  border-right: 1px solid rgba(255, 255, 255, 0.14);
+  position: relative;
+}
+#yareCollections-subMenu-tabWrapper-Left .collection-featured-col::after {
+  content: "";
+  position: absolute;
+  top: 36px;    /* matches the column's top padding so the line starts at the first link */
+  bottom: 36px; /* matches the column's bottom padding so the line ends at the last link */
+  right: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.14);
 }
 #yareCollections-subMenu-tabWrapper-Right {
   width: 480px;
@@ -810,7 +866,8 @@ textarea:focus {
 .yareCollections-imgContainer-Right {
   width: 100%;
   height: 100%;
-  padding: 16px;
+  /* extra top padding aligns the first card with the link columns' first row */
+  padding: 48px 16px 16px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -3386,7 +3443,80 @@ a.auth-logo:visited {
 .sidebar-logout:hover {
   color: var(--c-red);
 }
+/* dashboard ranked charts */
+.dash-charts-grid { align-items: stretch; }
+.dash-chart-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.dash-chart-card .rank-chart {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+.dash-chart-card .rank-chart svg { width: 100%; height: auto; }
+.dash-chart-card .empty-state { flex: 1; }
+
 /* admin order detail */
+.od-grid { align-items: stretch; }
+.od-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+/* beat ".admin-card + .admin-card { margin-top:16px }" so both tiles align at the top */
+.od-grid.admin-grid-2 .od-card {
+  margin: 0;
+}
+.od-card .admin-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.od-card .admin-card-title .bi { color: var(--c-gold); }
+.od-body { flex: 1; }
+.od-total {
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--c-line-soft);
+  font-size: 15px;
+}
+.od-total strong { color: var(--c-gold-deep); font-size: 16px; }
+.od-name { font-size: 15px !important; margin-bottom: 10px !important; }
+.od-address .bi { color: var(--c-gold); margin-right: 4px; }
+.od-status-controls {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+.od-status-controls .status-select {
+  flex: 0 1 200px;
+  max-width: 220px;
+}
+/* the shared .btn-yare-sm is light-theme (dark text on transparent) and vanished
+   on the dark admin card — give the Save button an explicit gold style */
+.od-status-controls .btn-yare-sm {
+  flex: 0 0 auto;
+  padding: 0 22px;
+  background: var(--c-gold);
+  border-color: var(--c-gold);
+  color: #15151a;
+}
+.od-status-controls .btn-yare-sm:hover:not(:disabled) {
+  background: var(--c-gold-deep);
+  border-color: var(--c-gold-deep);
+  color: #15151a;
+}
+.od-status-controls .btn-yare-sm:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.od-row > span:first-child .bi {
+  margin-right: 5px;
+  opacity: 0.6;
+}
 .od-row {
   display: flex;
   justify-content: space-between;
@@ -3825,6 +3955,154 @@ a.auth-logo:visited {
 }
 .table-link:hover { text-decoration: underline; }
 .admin-card .table-link { color: var(--c-gold-soft); }
+
+/* ─── Auto-generated field tag ─── */
+.auto-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 7px;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+  background: rgba(201, 162, 39, 0.12);
+  border: 1px solid rgba(201, 162, 39, 0.4);
+  border-radius: 999px;
+  vertical-align: middle;
+}
+input.form-control[readonly] {
+  background: rgba(0, 0, 0, 0.03);
+  color: #555;
+  cursor: not-allowed;
+}
+
+/* ─── Searchable select (Watch Brand) ─── */
+.searchable-select {
+  position: relative;
+}
+.ss-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  background: #fff;
+}
+.ss-trigger .ss-placeholder {
+  color: #9a9a9a;
+}
+.ss-trigger .bi {
+  font-size: 0.75rem;
+  color: #888;
+  transition: transform 0.15s ease;
+}
+.searchable-select.open .ss-trigger .bi {
+  transform: rotate(180deg);
+}
+.ss-panel {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
+  overflow: hidden;
+}
+.ss-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-bottom: 1px solid #eee;
+}
+.ss-search .bi {
+  color: #999;
+  font-size: 0.85rem;
+}
+.ss-search input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 0.9rem;
+  background: transparent;
+}
+.ss-options {
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 4px;
+}
+.ss-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 9px 12px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #2a2a2a;
+}
+.ss-option:hover {
+  background: rgba(201, 162, 39, 0.1);
+}
+.ss-option.selected {
+  background: rgba(201, 162, 39, 0.16);
+  font-weight: 600;
+}
+.ss-empty {
+  padding: 14px 12px;
+  text-align: center;
+  color: #999;
+  font-size: 0.85rem;
+}
+
+/* ─── Toasts ─── */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 360px;
+}
+.toast-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 13px 16px;
+  background: #1c1c1c;
+  color: #fff;
+  border-left: 3px solid var(--c-gold);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.3);
+  font-size: 13px;
+  font-family: var(--font-body);
+  cursor: pointer;
+  animation: toastIn 0.25s ease;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.toast-icon { font-size: 17px; flex: 0 0 auto; }
+.toast-msg { flex: 1 1 auto; }
+.toast-close { opacity: 0.45; font-size: 15px; flex: 0 0 auto; }
+.toast-item:hover .toast-close { opacity: 1; }
+.toast-success { border-left-color: #3aa66b; }
+.toast-success .toast-icon { color: #3aa66b; }
+.toast-error { border-left-color: var(--c-red); }
+.toast-error .toast-icon { color: var(--c-red); }
+.toast-warning { border-left-color: #c9a227; }
+.toast-warning .toast-icon { color: #c9a227; }
+.toast-info { border-left-color: var(--c-gold); }
+.toast-info .toast-icon { color: var(--c-gold); }
+@media (max-width: 600px) {
+  .toast-container { left: 16px; right: 16px; bottom: 16px; max-width: none; }
+}
 .table-footer {
   padding-top: 12px;
   font-size: 11px;

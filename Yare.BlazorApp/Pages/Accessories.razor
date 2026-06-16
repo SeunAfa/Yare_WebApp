@@ -41,8 +41,30 @@
             case "lighters": title = "Lighters"; p = x => x.AccessoryCategory == AccessoryCategory.Lighters; break;
             case "pens": title = "Pens"; p = x => x.AccessoryCategory == AccessoryCategory.Pens; break;
             case "cleaning-products": title = "Cleaning Products"; p = x => x.AccessoryCategory == AccessoryCategory.CleaningProducts; break;
+
+            // By material — best-effort match on the metal/material display name
+            case "leather": title = "Leather Accessories"; p = x => MetalMatches(x, "Leather"); break;
+            case "gold": title = "Gold Accessories"; p = x => MetalMatches(x, "Gold"); break;
+            case "silver": title = "Silver Accessories"; p = x => MetalMatches(x, "Silver"); break;
+            case "steel": title = "Stainless Steel Accessories"; p = x => MetalMatches(x, "Steel"); break;
+
+            // The Gift Edit & Care — curated selections (show the full range under a themed title)
+            case "gifts-for-him": title = "Gifts for Him"; break;
+            case "gifts-for-her": title = "Gifts for Her"; break;
+            case "gift-sets": title = "Gift Sets"; break;
+            case "travel": title = "Travel Rolls"; p = x => x.AccessoryCategory == AccessoryCategory.CasesAndBoxes; break;
+            case "new-in": title = "New In"; break;
+            case "best-sellers": title = "Best Sellers"; break;
+
             default: title = "Accessories"; break;
         }
         filtered = p == null ? all : all.Where(p).ToList();
+        if ((View ?? "").ToLowerInvariant() == "new-in")
+        {
+            filtered = filtered.OrderByDescending(x => x.CreatedDateTime).ToList();
+        }
     }
+
+    private static bool MetalMatches(Product x, string keyword) =>
+        x.ByMetal?.DisplayName().Contains(keyword, StringComparison.OrdinalIgnoreCase) ?? false;
 }

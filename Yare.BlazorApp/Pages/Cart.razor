@@ -38,7 +38,7 @@
                                      alt="@first.ProductName" class="cart-item-img" />
                             </a>
                             <div class="cart-item-info">
-                                <p class="cart-item-cat">@first.ProductCategory</p>
+                                <p class="cart-item-cat">@CategoryLabel(first.ProductCategory)</p>
                                 <h4 class="cart-item-name">
                                     <a href="product/@first.ProductId">@first.ProductName</a>
                                 </h4>
@@ -188,6 +188,14 @@
     private List<CartItem> cart = new();
     private double total;
     private bool loading = true;
+
+    // Show the plural storefront label rather than the raw singular enum name
+    private static string CategoryLabel(string? cat) => cat switch
+    {
+        "Watch" => "Watches",
+        "Accessory" => "Accessories",
+        _ => cat ?? ""
+    };
 
     // Engraving edit state — only one editor open at a time
     private int? editingEngravingId;

@@ -27,7 +27,7 @@ else
         <div class="pd-sticky-inner">
             <img src="@(product.PrimaryDisplayImageUrl ?? "")" alt="" class="pd-sticky-img" />
             <div class="pd-sticky-info">
-                <p class="pd-sticky-cat">@product.ProductCategory · Ref. @product.ProductNumber</p>
+                <p class="pd-sticky-cat">@CategoryLabel(product.ProductCategory) · Ref. @product.ProductNumber</p>
                 <h4 class="pd-sticky-name">@product.ProductName</h4>
             </div>
             <div class="pd-sticky-price">
@@ -49,7 +49,7 @@ else
         <div class="container">
             <nav class="breadcrumb-nav">
                 <a href="">Home</a> /
-                <a href="@product.ProductCategory?.ToString().ToLower()">@product.ProductCategory</a> /
+                <a href="@CategoryRoute(product.ProductCategory)">@CategoryLabel(product.ProductCategory)</a> /
                 <span>@product.ProductName</span>
             </nav>
 
@@ -73,7 +73,7 @@ else
                 <div class="product-info">
                     <!-- Scroll-trigger sentinel: when this leaves view, the sticky bar appears -->
                     <div id="pd-header-sentinel">
-                        <p class="product-detail-cat">@product.ProductCategory</p>
+                        <p class="product-detail-cat">@CategoryLabel(product.ProductCategory)</p>
                         <h1 class="product-detail-name">@product.ProductName</h1>
                         <p class="product-detail-number">Ref. @product.ProductNumber</p>
 
@@ -223,6 +223,23 @@ else
     private bool engravingOpen;
     private string engravingText = string.Empty;
     private bool isStaff;
+
+    // Map the product category enum to its plural storefront label + route
+    private static string CategoryLabel(ProductCategory? cat) => cat switch
+    {
+        ProductCategory.Watch => "Watches",
+        ProductCategory.Jewellery => "Jewellery",
+        ProductCategory.Accessory => "Accessories",
+        _ => "Shop"
+    };
+
+    private static string CategoryRoute(ProductCategory? cat) => cat switch
+    {
+        ProductCategory.Watch => "watches",
+        ProductCategory.Jewellery => "jewellery",
+        ProductCategory.Accessory => "accessories",
+        _ => "watches"
+    };
 
     protected override async Task OnInitializedAsync()
     {

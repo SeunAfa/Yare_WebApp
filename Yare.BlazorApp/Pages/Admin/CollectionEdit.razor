@@ -2,6 +2,7 @@
 @layout AdminLayout
 @inject IProductService ProductService
 @inject NavigationManager Nav
+@inject ToastService Toasts
 
 <PageTitle>@(Id == 0 ? "Add" : "Edit") Collection — Yare Admin</PageTitle>
 
@@ -151,7 +152,8 @@ else
         await ProductService.SaveCollectionAsync(collection);
         saved = true;
         saving = false;
-        await Task.Delay(1500);
+        Toasts.Success(Id == 0 ? "Collection created" : "Collection saved");
+        await Task.Delay(1200);
         Nav.NavigateTo("admin/collections");
     }
 

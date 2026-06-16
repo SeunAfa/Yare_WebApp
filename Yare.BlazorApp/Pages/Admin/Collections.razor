@@ -2,6 +2,7 @@
 @layout AdminLayout
 @inject IProductService ProductService
 @inject NavigationManager Nav
+@inject ToastService Toasts
 
 <PageTitle>Collections — Yare Admin</PageTitle>
 
@@ -143,6 +144,7 @@
         await ProductService.DeleteCollectionAsync(deleteId);
         collections.RemoveAll(c => c.Id == deleteId);
         deleteId = 0;
+        Toasts.Success("Collection deleted");
     }
 
     private static string GroupLabel(string? group) => group switch

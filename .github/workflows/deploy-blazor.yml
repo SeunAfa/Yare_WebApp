@@ -21,11 +21,9 @@ jobs:
 
       - name: Restore
         run: dotnet restore Yare.BlazorApp/Yare.BlazorApp.csproj
-        working-directory: Yare_WebApplication
 
       - name: Publish Blazor WASM
         run: dotnet publish Yare.BlazorApp/Yare.BlazorApp.csproj -c Release -o release --nologo
-        working-directory: Yare_WebApplication
 
       - name: Fix base href for GitHub Pages
         run: |

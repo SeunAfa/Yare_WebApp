@@ -8,6 +8,8 @@ public class Product
     public int Id { get; set; }
 
     [Display(Name = "Product Name")]
+    [Required(ErrorMessage = "Product name is required.")]
+    [StringLength(120, MinimumLength = 2, ErrorMessage = "Product name must be 2–120 characters.")]
     public string? ProductName { get; set; }
 
     [Display(Name = "Product Number")]
@@ -17,13 +19,21 @@ public class Product
     public string? ModelNumber { get; set; }
 
     public string? Supplier { get; set; }
+
+    [Range(0, 1_000_000, ErrorMessage = "Cost must be zero or more.")]
     public double CostOfProduct { get; set; }
     public double TargetPrice01 { get; set; }
     public double TargetPrice02 { get; set; }
     public double TargetPrice03 { get; set; }
+    [Range(0.01, 1_000_000, ErrorMessage = "Price must be greater than zero.")]
     public double Price { get; set; }
     public double PriceWas { get; set; }
+
+    [Required(ErrorMessage = "Gender is required.")]
     public Gender? Gender { get; set; }
+
+    [Required(ErrorMessage = "Quantity is required.")]
+    [Range(0, 100_000, ErrorMessage = "Quantity must be between 0 and 100,000.")]
     public int? Quantity { get; set; }
     public int RemainigQuantity { get; set; }
     public string? StockStatus { get; set; }
@@ -42,6 +52,7 @@ public class Product
     public DateTime CreatedDateTime { get; set; } = DateTime.Now;
     public DateTime LastUpdate { get; set; } = DateTime.Now;
 
+    [Required(ErrorMessage = "Category is required.")]
     public ProductCategory? ProductCategory { get; set; }
     public ByMetal? ByMetal { get; set; }
     public List<int> CollectionIds { get; set; } = new();

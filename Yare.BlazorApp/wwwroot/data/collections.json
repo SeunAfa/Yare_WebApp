@@ -11,7 +11,7 @@
     "id": 2,
     "collectionName": "New Arrivals",
     "description": "The latest additions to our curated collection, freshly arrived.",
-    "imageUrl": "images/collection-watches.jpg",
+    "imageUrl": "images/hublot.jpg",
     "group": "General",
     "productIds": [7, 8, 9, 10, 3]
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "collectionName": "Luxury Collection",
     "description": "Exceptional pieces representing the pinnacle of craft and design.",
-    "imageUrl": "images/coll-ring.jpg",
+    "imageUrl": "images/luxRing.png",
     "group": "General",
     "productIds": [1, 6, 9, 11, 12, 13, 15]
   },
@@ -35,7 +35,7 @@
     "id": 5,
     "collectionName": "Ladies Collection",
     "description": "Elegance in every detail. Jewellery and watches for the modern woman.",
-    "imageUrl": "images/cat-jewellery.jpg",
+    "imageUrl": "images/ladies-jewellery.png",
     "group": "General",
     "productIds": [5, 6, 11, 12, 13, 14, 15]
   },
@@ -59,7 +59,7 @@
     "id": 8,
     "collectionName": "Exclusive Brands",
     "description": "Hand-picked pieces from the most prestigious names in the industry.",
-    "imageUrl": "images/brand-top.jpg",
+    "imageUrl": "images/rolex.png",
     "group": "Featured",
     "productIds": [1, 2, 3, 4, 6, 9, 10]
   },
@@ -99,7 +99,7 @@
     "id": 13,
     "collectionName": "Audemars Piguet",
     "description": "The Royal Oak and beyond — Swiss horology at its most iconic.",
-    "imageUrl": "images/collections/audemars-piguet.jpg",
+    "imageUrl": "images/collections/ap.png",
     "group": "Brand",
     "productIds": []
   },
@@ -123,7 +123,7 @@
     "id": 16,
     "collectionName": "Cartier",
     "description": "Timeless elegance from the jeweller of kings.",
-    "imageUrl": "images/brand-1.jpg",
+    "imageUrl": "images/cartier.png",
     "group": "Brand",
     "productIds": []
   },
@@ -131,7 +131,7 @@
     "id": 17,
     "collectionName": "Omega",
     "description": "From the Moon to the ocean depths — legendary Swiss engineering.",
-    "imageUrl": "images/brand-2.jpg",
+    "imageUrl": "images/omega.png",
     "group": "Brand",
     "productIds": [2, 6]
   },
@@ -139,7 +139,7 @@
     "id": 18,
     "collectionName": "TAG Heuer",
     "description": "Bold chronographs built for performance and precision.",
-    "imageUrl": "images/brand-3.jpg",
+    "imageUrl": "images/tagHeuer.png",
     "group": "Brand",
     "productIds": [3]
   },
@@ -147,7 +147,7 @@
     "id": 19,
     "collectionName": "Hublot",
     "description": "The art of fusion — bold materials, bold design.",
-    "imageUrl": "images/brand-1.jpg",
+    "imageUrl": "images/hublot.png",
     "group": "Brand",
     "productIds": [1]
   },
@@ -155,7 +155,7 @@
     "id": 20,
     "collectionName": "Tudor",
     "description": "Rugged, dependable watches with serious in-house credentials.",
-    "imageUrl": "images/brand-2.jpg",
+    "imageUrl": "images/tudor.png",
     "group": "Brand",
     "productIds": [4]
   },
@@ -171,7 +171,7 @@
     "id": 22,
     "collectionName": "Jaeger-LeCoultre",
     "description": "Masterpieces from the watchmaker's watchmaker.",
-    "imageUrl": "images/collections/jaeger-lecoultre.jpg",
+    "imageUrl": "images/jaeger.png",
     "group": "Brand",
     "productIds": []
   },
@@ -179,7 +179,7 @@
     "id": 23,
     "collectionName": "Baume & Mercier",
     "description": "Accessible luxury with a focus on craftsmanship and elegance.",
-    "imageUrl": "images/brand-3.jpg",
+    "imageUrl": "images/baume.png",
     "group": "Brand",
     "productIds": []
   },
@@ -195,7 +195,7 @@
     "id": 25,
     "collectionName": "Bell & Ross",
     "description": "Aviation-inspired design built for instrument-panel legibility.",
-    "imageUrl": "images/brand-top.jpg",
+    "imageUrl": "images/bellRoss.png",
     "group": "Brand",
     "productIds": []
   },
@@ -203,7 +203,7 @@
     "id": 26,
     "collectionName": "Chopard",
     "description": "Geneva craftsmanship spanning fine watches and high jewellery.",
-    "imageUrl": "images/collections/chopard.jpg",
+    "imageUrl": "images/chopard.png",
     "group": "Brand",
     "productIds": []
   },
@@ -211,7 +211,7 @@
     "id": 27,
     "collectionName": "Mens Watches",
     "description": "Timepieces designed for him — bold, technical and confident.",
-    "imageUrl": "images/collection-watches.jpg",
+    "imageUrl": "images/mensrolex.png",
     "group": "Audience",
     "productIds": [1, 2, 4, 8, 10]
   },
@@ -227,7 +227,7 @@
     "id": 29,
     "collectionName": "Unisex Watches",
     "description": "Versatile timepieces that suit any wrist.",
-    "imageUrl": "images/collection-watches.jpg",
+    "imageUrl": "images/tissotUnisex.png",
     "group": "Audience",
     "productIds": [3, 7, 9]
   },
@@ -235,7 +235,7 @@
     "id": 30,
     "collectionName": "Mens Jewellery",
     "description": "Cufflinks, chains and statement pieces crafted for him.",
-    "imageUrl": "images/collection-jewellery.jpg",
+    "imageUrl": "images/mensJewellery.png",
     "group": "Audience",
     "productIds": []
   },
@@ -243,7 +243,7 @@
     "id": 31,
     "collectionName": "Ladies Jewellery",
     "description": "Fine jewellery for her — rings, necklaces, earrings and more.",
-    "imageUrl": "images/cat-jewellery.jpg",
+    "imageUrl": "images/ladiesJewellery.png",
     "group": "Audience",
     "productIds": [11, 12, 13, 14, 15]
   }

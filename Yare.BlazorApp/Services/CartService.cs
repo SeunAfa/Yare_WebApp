@@ -6,11 +6,13 @@ namespace Yare.BlazorApp.Services;
 public class CartService : ICartService
 {
     private readonly ILocalStorageService _localStorage;
+    private readonly ToastService _toasts;
     public event Action? OnChange;
 
-    public CartService(ILocalStorageService localStorage)
+    public CartService(ILocalStorageService localStorage, ToastService toasts)
     {
         _localStorage = localStorage;
+        _toasts = toasts;
     }
 
     public async Task<List<CartItem>> GetCartAsync()
@@ -48,6 +50,7 @@ public class CartService : ICartService
             });
         }
         await _localStorage.SetItemAsync(SD.CartKey, cart);
+        _toasts.Success($"{product.ProductName} added to your bag");
         OnChange?.Invoke();
     }
 
