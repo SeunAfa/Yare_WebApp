@@ -2,6 +2,6 @@
   <rect width="64" height="64" rx="8" fill="#0a0a0b"/>
   <text x="32" y="46" text-anchor="middle"
         font-family="'Cormorant Garamond', 'Times New Roman', serif"
-        font-size="44" font-weight="500" fill="#c9a227"
+        font-size="44" font-weight="500" fill="#ffffff"
         letter-spacing="0">Y</text>
 </svg>
