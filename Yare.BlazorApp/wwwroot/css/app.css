@@ -789,9 +789,17 @@ textarea:focus {
   padding: 12px 0;
 }
 /* tighten the gap between the three collections link columns */
+#yareCollections-subMenu-tabWrapper-Left {
+  align-items: stretch;
+}
 #yareCollections-subMenu-tabWrapper-Left .subMenu-tablinksList-Wrapper {
   padding-left: 18px;
   padding-right: 18px;
+  height: auto;
+}
+/* vertical separator after the Featured column (full column height) */
+#yareCollections-subMenu-tabWrapper-Left .collection-featured-col {
+  border-right: 1px solid rgba(255, 255, 255, 0.14);
 }
 #yareCollections-subMenu-tabWrapper-Right {
   width: 480px;
@@ -3809,6 +3817,14 @@ a.auth-logo:visited {
   display: flex;
   gap: 4px;
 }
+.table-link {
+  font-size: 13px;
+  color: var(--c-gold-deep);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+}
+.table-link:hover { text-decoration: underline; }
+.admin-card .table-link { color: var(--c-gold-soft); }
 .table-footer {
   padding-top: 12px;
   font-size: 11px;

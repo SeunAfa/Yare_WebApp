@@ -7,7 +7,7 @@
 <div class="admin-page-header">
     <div>
         <h1>Orders</h1>
-        <p>Manage and update customer orders</p>
+        <p>View customer orders</p>
     </div>
 </div>
 
@@ -52,17 +52,7 @@
                             <td><span class="status-badge @GetStatusClass(o.OrderStatus)">@o.OrderStatus</span></td>
                             <td><span class="status-badge @(o.PaymentStatus == SD.PaymentStatusApproved ? "badge-shipped" : "badge-pending")">@o.PaymentStatus</span></td>
                             <td>
-                                <div class="table-actions">
-                                    <a href="@($"admin/orders/{o.Id}")" class="btn-icon" title="View details"><i class="bi bi-eye"></i></a>
-                                    <select class="status-select" @onchange="@(e => UpdateStatus(o.Id, e.Value?.ToString() ?? string.Empty))">
-                                        <option value="">Update Status</option>
-                                        <option value="@SD.StatusApproved">Approve</option>
-                                        <option value="@SD.StatusInProcess">Processing</option>
-                                        <option value="@SD.StatusShipped">Shipped</option>
-                                        <option value="@SD.StatusCancelled">Cancel</option>
-                                        <option value="@SD.StatusRefunded">Refund</option>
-                                    </select>
-                                </div>
+                                <a href="@($"admin/orders/{o.Id}")" class="table-link">View</a>
                             </td>
                         </tr>
                     }
@@ -89,14 +79,6 @@
     private IEnumerable<OrderHeader> Filtered => orders.Where(o =>
         (string.IsNullOrEmpty(search) || $"{o.FirstName} {o.LastName} {o.Id}".Contains(search, StringComparison.OrdinalIgnoreCase)) &&
         (string.IsNullOrEmpty(statusFilter) || o.OrderStatus == statusFilter));
-
-    private async Task UpdateStatus(int id, string status)
-    {
-        if (string.IsNullOrEmpty(status)) return;
-        await OrderService.UpdateOrderStatusAsync(id, status);
-        var order = orders.FirstOrDefault(o => o.Id == id);
-        if (order != null) order.OrderStatus = status;
-    }
 
     private string GetStatusClass(string? s) => s switch
     {
