@@ -479,19 +479,38 @@
 <!-- Mobile nav -->
 @if (mobileNavOpen)
 {
-    <div class="mobile-nav-overlay" @onclick="() => mobileNavOpen = false"></div>
+    <div class="mobile-nav-overlay" @onclick="CloseMobile"></div>
     <div class="mobile-nav-panel">
-        <button class="mobile-nav-close" @onclick="() => mobileNavOpen = false">&times;</button>
-        <a href="" @onclick="() => mobileNavOpen = false">Home</a>
-        <a href="watches" @onclick="() => mobileNavOpen = false">Watches</a>
-        <a href="jewellery" @onclick="() => mobileNavOpen = false">Jewellery</a>
-        <a href="accessories" @onclick="() => mobileNavOpen = false">Accessories</a>
-        <a href="collections" @onclick="() => mobileNavOpen = false">Collections</a>
-        <a href="search" @onclick="() => mobileNavOpen = false">Search</a>
-        @if (isAdmin || isEmployee) { <a href="admin" @onclick="() => mobileNavOpen = false" style="color:var(--c-gold-soft)">Admin Panel</a> }
-        @if (currentUser != null) { <a href="my-orders" @onclick="() => mobileNavOpen = false">My Orders</a> }
+        <button class="mobile-nav-close" @onclick="CloseMobile">&times;</button>
+        <a href="" @onclick="CloseMobile">Home</a>
+
+        @foreach (var grp in mobileMenuGroups)
+        {
+            <div class="mnav-group">
+                <button type="button" class="mnav-toggle @(mobileSubOpen == grp.Key ? "open" : "")" @onclick="() => ToggleSub(grp.Key)">
+                    <span>@grp.Label</span>
+                    <i class="bi bi-chevron-down mnav-chevron"></i>
+                </button>
+                @if (mobileSubOpen == grp.Key)
+                {
+                    <div class="mnav-sub">
+                        @foreach (var link in grp.Links)
+                        {
+                            <a href="@link.Href" @onclick="CloseMobile">@link.Label</a>
+                        }
+                        <a href="@grp.ViewAllHref" class="mnav-viewall" @onclick="CloseMobile">View All @grp.Label</a>
+                    </div>
+                }
+            </div>
+        }
+
+        <a href="search" @onclick="CloseMobile">Search</a>
+        <a href="cart" @onclick="CloseMobile">Shopping Bag@(cartCount > 0 ? $" ({cartCount})" : "")</a>
+        <a href="store-locator" @onclick="CloseMobile">Store Locator</a>
+        @if (isAdmin || isEmployee) { <a href="admin" @onclick="CloseMobile" style="color:var(--c-gold-soft)">Admin Panel</a> }
+        @if (currentUser != null) { <a href="my-orders" @onclick="CloseMobile">My Orders</a> }
         @if (currentUser != null) { <button @onclick="Logout">Logout</button> }
-        else { <a href="login" @onclick="() => mobileNavOpen = false">Login</a> }
+        else { <a href="login" @onclick="CloseMobile">Login</a> }
     </div>
 }
 
@@ -522,9 +541,58 @@
     private AppUser? currentUser;
     private int cartCount;
     private bool mobileNavOpen;
+    private string? mobileSubOpen;
     private bool isAdmin, isEmployee;
     private int? activeTab;
     private string searchQuery = "";
+
+    private void CloseMobile() { mobileNavOpen = false; mobileSubOpen = null; }
+    private void ToggleSub(string key) => mobileSubOpen = mobileSubOpen == key ? null : key;
+
+    // Mobile menu accordions — mirror the desktop mega menus: tapping a category
+    // expands its sub-links + a "View All" link instead of navigating immediately.
+    private record MobileMenuGroup(string Key, string Label, string ViewAllHref, (string Label, string Href)[] Links);
+    private static readonly MobileMenuGroup[] mobileMenuGroups =
+    {
+        new("watches", "Watches", "watches", new (string, string)[]
+        {
+            ("Mens Watches", "watches?view=mens"),
+            ("Ladies Watches", "watches?view=ladies"),
+            ("Unisex Watches", "watches?view=unisex"),
+            ("Luxury Watches", "watches?view=luxury"),
+            ("Diamond Watches", "watches?view=diamond"),
+            ("Swiss Watches", "watches?view=swiss"),
+            ("Best Sellers", "watches?view=best-sellers"),
+        }),
+        new("jewellery", "Jewellery", "jewellery", new (string, string)[]
+        {
+            ("Mens Jewellery", "jewellery?view=mens"),
+            ("Ladies Jewellery", "jewellery?view=ladies"),
+            ("Rings", "jewellery?view=rings"),
+            ("Necklaces", "jewellery?view=necklaces"),
+            ("Earrings", "jewellery?view=earrings"),
+            ("Bracelets", "jewellery?view=bracelets"),
+            ("Engagement Rings", "jewellery?view=engagement-rings"),
+        }),
+        new("accessories", "Accessories", "accessories", new (string, string)[]
+        {
+            ("Watch Straps", "accessories?view=watch-straps"),
+            ("Cases & Boxes", "accessories?view=cases-boxes"),
+            ("Wallets", "accessories?view=wallets"),
+            ("Pens", "accessories?view=pens"),
+            ("Keyrings", "accessories?view=keyrings"),
+            ("Cleaning Products", "accessories?view=cleaning-products"),
+        }),
+        new("collections", "Collections", "collections", new (string, string)[]
+        {
+            ("Best Sellers", "collections/1"),
+            ("Our Top Ten", "collections/7"),
+            ("Exclusive Brands", "collections/8"),
+            ("Exclusive Watches", "collections/9"),
+            ("Exclusive Jewellery", "collections/10"),
+            ("Limited Edition", "collections/11"),
+        }),
+    };
 
     private static readonly string[] popularSearches =
     {

@@ -1122,6 +1122,52 @@ textarea:focus {
   color: var(--c-gold-soft);
 }
 
+/* Mobile menu accordions (mirror the desktop mega menus) */
+.mnav-group {
+  border-bottom: 1px solid var(--c-line);
+}
+.mobile-nav-panel .mnav-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: none;
+}
+.mnav-chevron {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.45);
+  transition: transform 0.25s var(--ease), color 0.25s var(--ease);
+}
+.mnav-toggle.open {
+  color: var(--c-gold-soft);
+}
+.mnav-toggle.open .mnav-chevron {
+  transform: rotate(180deg);
+  color: var(--c-gold-soft);
+}
+.mnav-sub {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0.4rem;
+}
+.mobile-nav-panel .mnav-sub a {
+  padding: 0.5rem 0 0.5rem 0.9rem;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.58);
+  border-bottom: none;
+}
+.mobile-nav-panel .mnav-sub a:hover {
+  color: #fff;
+}
+.mobile-nav-panel .mnav-sub .mnav-viewall {
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 10px;
+  color: var(--c-gold-soft);
+}
+
 /* ═════════════ HOME · HERO SLIDER ═════════════ */
 #slider-hmPg-Container {
   width: 100%;
@@ -4625,6 +4671,8 @@ input.form-control[readonly] {
   gap: 1.6rem;
   justify-content: center;
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 .footer-links {
   font-size: 11px;
@@ -4632,14 +4680,23 @@ input.form-control[readonly] {
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.7) !important;
 }
+/* Match the rest of the site's animated links: gold underline on hover,
+   with a subtle brighten — same effect everywhere */
+.footer-links {
+  transition: color var(--t);
+}
 .footer-links:hover {
   color: #fff !important;
+}
+.footer-links::after {
+  bottom: -3px;
 }
 .social-links-List {
   display: flex;
   gap: 1.6rem;
   list-style: none;
-  margin-top: 4px;
+  margin: 4px 0 0;
+  padding: 0;
 }
 .footer-Icons {
   font-size: 1.2rem;
@@ -4760,8 +4817,47 @@ input.form-control[readonly] {
   .mobile-hamburger {
     display: flex;
   }
+
+  /* Product-list toolbar: 4 controls overflowed on one row. Wrap it —
+     Filters + Sort on top, product count on its own line, hide grid toggle. */
+  .product-list-toolbar {
+    flex-wrap: wrap;
+    gap: 10px;
+    height: auto;
+    padding-bottom: 12px;
+  }
+  .product-list-toolbar .grid-toggle {
+    display: none;
+  }
+  .product-list-toolbar .filter-toggle {
+    order: 1;
+  }
+  .product-list-toolbar .sort-select {
+    order: 2;
+    margin-left: auto;
+  }
+  .product-list-toolbar .result-count {
+    order: 3;
+    flex: 0 0 100%;
+    margin: 0;
+  }
+  /* On mobile the left utility links are hidden, which left an empty grid
+     column on the right. Use a simple flex row so the logo sits at the left
+     edge and the icons + hamburger reach the right edge — full width. */
   #headerNav-Wrapper {
     height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .navigationContainer-Center,
+  .navigationContainer-Right {
+    justify-self: auto;
+  }
+  /* Top nav on mobile = logo + hamburger only. The account, store-locator and
+     shopping-bag icons are moved into the slide-out menu to declutter. */
+  .navigationContainer-Right > *:not(.mobile-hamburger) {
+    display: none;
   }
   /* Mobile relies on the hamburger slide-nav; hide desktop submenu + mega menu */
   #subMenu-Navigation {
@@ -4772,23 +4868,24 @@ input.form-control[readonly] {
     display: none !important;
   }
 
+  /* Stack all three categories as full-width cards with explicit heights
+     (percentage heights collapsed to 0 when the wrapper height went auto) */
   #shopBy-Category-Wrapper {
     flex-direction: column;
     height: auto;
+    gap: 12px;
   }
   #shopBy-Category-leftContainer,
   #shopBy-Category-rightContainer {
     width: 100%;
   }
-  #shopBy-Category-leftContainer {
-    height: 300px;
-  }
   #shopBy-Category-rightContainer {
-    flex-direction: row;
+    flex-direction: column;
+    gap: 12px;
   }
+  .shopBy-categoryItem-Left,
   .shopBy-categoryItem-Right {
     height: 200px;
-    flex: 1;
   }
 
   .productCard-eachSlide-Content {
@@ -4858,10 +4955,15 @@ input.form-control[readonly] {
     grid-template-columns: repeat(2, 1fr);
   }
 
+  /* Hero slider was ~78vh tall on mobile, pushing all content off-screen.
+     Cap it to a compact banner height so the page below is visible. */
+  #slider-hmPg-Container {
+    height: clamp(340px, 52vh, 440px);
+  }
   .slide-1-infoContent,
   .slide-2-infoContent,
   .slide-3-infoContent {
-    max-width: 78%;
+    max-width: 82%;
   }
   .slide-2-infoContent {
     text-align: left;
@@ -4883,12 +4985,6 @@ input.form-control[readonly] {
   .productCard-eachSlide-Content,
   .jewelleryCategory-eachSlide-Content {
     grid-template-columns: 1fr 1fr;
-  }
-  #shopBy-Category-rightContainer {
-    flex-direction: column;
-  }
-  .shopBy-categoryItem-Right {
-    height: 180px;
   }
   .cart-item-img {
     width: 76px;
@@ -5094,6 +5190,44 @@ input.form-control[readonly] {
 @media (max-width: 480px) {
   .popular-products-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile: declutter section title rows (title + "Explore All") */
+@media (max-width: 768px) {
+  .title-Container {
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .title-Container h5 {
+    font-size: 1.4rem;
+    padding-top: 12px;
+    line-height: 1.15;
+  }
+  .shopBy-Btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    gap: 4px;
+  }
+  .shopBy-Btn .shopBy-btnIcon {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* Footer: clean vertical link list instead of an uneven 2+2+1 wrap */
+  .footer {
+    gap: 1.1rem;
+  }
+  .footer-links-List {
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  /* Tighter top-nav gutters on mobile (was a ~16px clamp each side) */
+  .top-nav-bar {
+    padding: 0 10px;
   }
 }
 
